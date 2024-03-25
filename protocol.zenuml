@@ -1,0 +1,73 @@
+@Actor user as User
+
+cl as Client
+
+group Backend {
+    sv as Server
+    db as Database
+}
+
+cl->sv.requestConnection() {
+    if (connectionIsNotFull) {
+        return Connect_ACK
+        for (newPlayerList) {
+            return newPlayersList
+        }
+    }
+    else {
+        return Error + Error_Code
+    }
+    cl->user.notify(status)
+}
+
+user->cl: ready
+    cl->sv.ready() {
+        while (somePlayersAreNotReady) {
+            sv->sv.wait()
+        }
+        sv->db.getKeyword() {
+            return keyword
+        }
+        return gameStarted
+    }
+
+loop(gameIsNotOver) {
+    forEach(Turn) {
+        sv->cl: gameStatus
+        if (yourTurn) {
+            cl.startTimer(30)
+        }
+        else {
+            cl.wait()
+        }
+        user -> cl: guess
+        if (notTimeout) {
+            cl->sv.guess() {
+                sv.checkGuess(guess) {
+                    return guessResult
+                }
+                return guessResult
+                if (guessIsKeyWord){
+                    if (guessResult = True){
+                        return GameIsOver
+                    }
+                    else{
+                        return PlayerLost
+                    }
+                }
+                sv.updateGameStatus()
+            }
+            
+        }
+        else {
+            cl->sv.timeout() {
+                sv.updateGameStatus()
+            }
+        }
+    }
+}
+
+sv->cl: gameResult
+
+
+sv->cl: closeConnection()
