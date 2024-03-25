@@ -7,17 +7,17 @@ group Backend {
     db as Database
 }
 
-cl->sv.requestConnection() {
-    if (connectionIsNotFull) {
-        return Connect_ACK
-        for (newPlayerList) {
-            return newPlayersList
+while (UserIsNotConnected) {
+    user->cl: submitName
+    cl->sv.requestConnect(name) {
+        isGood = sv.checkName(name)
+        if (isGood) {
+            return Name_ACK
+        }
+        else {
+            return Error + Error_Code
         }
     }
-    else {
-        return Error + Error_Code
-    }
-    cl->user.notify(status)
 }
 
 user->cl: ready
@@ -69,5 +69,4 @@ loop(gameIsNotOver) {
 
 sv->cl: gameResult
 
-
-sv->cl: closeConnection()
+sv->sv.reset()

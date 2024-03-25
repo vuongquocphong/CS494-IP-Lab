@@ -12,20 +12,21 @@
 |3                  |Timeout                    |
 
 ## Server
-|Message type value | Meaning                    |
-|-------------------|----------------------------|
-|4                  |Server Connection Message   |
-|5                  |PlayerList                  |
-|6                  |Game Started                |
-|7                  |Game Status                 |
-|8                  |Guess Result                |
-|9                  |Game Result                 |
+|Message type value | Meaning                   |
+|-------------------|---------------------------|
+|4                  |Server Connection Success  |
+|5                  |Server Connection Failure  |
+|6                  |Player List                |
+|7                  |Game Started               |
+|8                  |Game Status                |
+|9                  |Guess Result               |
+|10                 |Game Result                |
 
 # Client Messages
 ## Client Connection Message
-|Message type|
-|------------|
-|1 byte      |
+|Message type|Name      |
+|------------|----------|
+|1 byte      |10 bytes  |
 
 ## Ready/Unready
 |Message type|Ready |
@@ -38,9 +39,93 @@
 |1              |Ready      |
 
 ## Guess
-|Message type|Guess Type|Value  |
-|------------|----------|-------|
-|1 byte      |1 byte    | 4 byte|
+|Message type|Guess Type|Guess      |
+|------------|----------|-----------|
+|1 byte      |1 byte    |30 bytes   |
 
-|Guess Type |Meaning |
-|-----------|--------|
+|Guess Type |Meaning         |
+|-----------|----------------|
+|0          |single character|
+|1          |full keyword    |
+
+## Timeout
+|Message type|
+|------------|
+|1 byte      |
+
+# Server Messages
+## Server Connection Success
+|Message type|
+|------------|
+|1 byte      |
+
+
+## Server Connection Failure
+|Message type|Error Code|Error Message  |
+|------------|----------|---------------|
+|1 byte      |1 byte    |128 bytes      |
+
+|Error code |Error message          |
+|-----------|-----------------------|
+|0          |Invalid name           |
+|1          |Game in progress       |
+|2          |Server is full         |
+|3          |Internal server error  |
+|4          |Name already taken     |    
+
+## PlayerList
+|Message type|Player Count|Player Name 1|Player Name 2|...|
+|------------|------------|-------------|-------------|---|
+|1 byte      |1 byte      |10 bytes     |10 bytes     |...|
+
+## Game Started
+|Message type|Keyword Length|Keyword    |
+|------------|--------------|-----------|
+|1 byte      |1 byte        |30 bytes   |
+
+## Game Status
+|Message type|Game Turn |Current Turn   |Keyword    |Player Info 1|Player Info 2|...|
+|------------|----------|---------------|-----------|-------------|-------------|---|
+|1 byte      |1 byte    |1 byte         |30 bytes   |14 bytes     |14 bytes     |...|
+
+### Player Info
+|Player Name|Player Score   |Player State   |Turn order |
+|-----------|---------------|---------------|-----------|
+|10 bytes   |2 bytes        |1 bytes        |1 bytes    |
+
+#### Player State
+
+|Value  |Meaning        |
+|-------|---------------|
+|0      |Playing        |
+|1      |Lost           |
+|2      |Disconnected   |
+
+#### Turn order
+Ranges from 0-9.
+
+## Guess Result
+|Message type|Result|
+|------------|------|
+|1 byte      |1 byte|
+
+|Result value|Meaning         |
+|------------|----------------|
+|0           |Correct         |
+|1           |Incorrect       |
+|2           |Duplicate guess |
+|3           |Invalid guess   |
+
+
+## Game Result
+|Message type|Player Result 1   |Player Result 2    |...|
+|------------|------------------|-------------------|---|
+|1 byte      |1 byte            |1 byte             |...|
+
+### Player Result
+|Player Name|Player Score   |Player Rank|
+|-----------|---------------|-----------|
+|10 bytes   |2 bytes        |1 byte     |
+
+#### Player Rank
+Ranges from 1-10.
