@@ -84,9 +84,9 @@
 |1 byte      |1 byte        |30 bytes   |
 
 ## Game Status
-|Message type|Game Turn |Current Turn   |Keyword    |Player Info 1|Player Info 2|...|
-|------------|----------|---------------|-----------|-------------|-------------|---|
-|1 byte      |1 byte    |1 byte         |30 bytes   |14 bytes     |14 bytes     |...|
+|Message type|Number of Players|Game Turn |Current Turn   |Keyword    |Player Info 1|Player Info 2|...|
+|------------|-----------------|----------|---------------|-----------|-------------|-------------|---|
+|1 byte      |1 byte           |1 byte    |1 byte         |30 bytes   |14 bytes     |14 bytes     |...|
 
 ### Player Info
 |Player Name|Player Score   |Player State   |Turn order |
