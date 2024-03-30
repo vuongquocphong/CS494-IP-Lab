@@ -100,6 +100,7 @@
 |0      |Playing        |
 |1      |Lost           |
 |2      |Disconnected   |
+|3      |Win            |
 
 #### Turn order
 Ranges from 0-9.
