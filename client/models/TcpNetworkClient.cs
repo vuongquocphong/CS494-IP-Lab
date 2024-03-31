@@ -1,17 +1,23 @@
+using Mediator;
+
 namespace NetworkClient
 {
     class TcpNetworkClient: INetworkClient
     {
-        public TcpNetworkClient(Mediator.IMediator mediator): base(mediator)
+        public IMediator Mediator { get; set; }
+        public TcpNetworkClient(Mediator.IMediator mediator)
         {
+            this.Mediator = mediator;
         }
-        public void Send()
+        public void Send(string message)
         {
             // Send data to server
         }
         public void Receive()
         {
             // Receive data from server
+            // Notify mediator
+            this.Mediator.Notify(this, "Received from TCP network client");
         }
     }
 }

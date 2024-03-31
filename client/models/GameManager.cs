@@ -2,7 +2,8 @@ using Mediator;
 
 namespace GameManager
 {
-    class GameManager {
+    class GameManager
+    {
         public string KeyWord { get; set; }
         public int NumberOfPlayers { get; set; }
         public List<PlayerInfo.PlayerInfo> PlayersList { get; set; }
@@ -22,5 +23,13 @@ namespace GameManager
             Player = new Player.Player();
             Mediator = mediator;
         }
+        public void RequestConnect(string name)
+        {
+            // Send message to server
+            // to connect player
+            // Notify mediator
+            this.Mediator.Notify(this, name);
+        }
+        
     }
 }

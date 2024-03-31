@@ -1,17 +1,24 @@
+using Mediator;
+
 namespace NetworkClient
 {
     class MockNetworkClient: INetworkClient
-    {
-        public MockNetworkClient(Mediator.IMediator mediator): base(mediator)
+    {   
+        public IMediator Mediator { get; set; }
+        public MockNetworkClient(IMediator mediator)
         {
+            this.Mediator = mediator;
         }
-        public void Send()
+
+        public void Send(string message)
         {
             // Send data to server
         }
         public void Receive()
         {
             // Receive data from server
+            // Notify mediator
+            this.Mediator.Notify(this, "Received from mock network client");
         }
     }
 }
