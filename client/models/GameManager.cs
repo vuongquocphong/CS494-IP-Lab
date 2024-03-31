@@ -28,7 +28,7 @@ namespace GameManager
             // Send message to server
             // to connect player
             // Notify mediator
-            this.Mediator.Notify(this, name);
+            this.Mediator.Notify(this, "connect");
         }
         
     }
