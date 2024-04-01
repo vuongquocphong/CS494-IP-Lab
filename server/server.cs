@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
@@ -15,7 +14,7 @@ namespace Server
             ExecuteServer();
         }
 
-        public static void ExecuteServer()
+        public static async void ExecuteServer()
         {
             // Establish the local endpoint 
             // for the socket. Dns.GetHostName
@@ -23,12 +22,12 @@ namespace Server
             // running the application.
             IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
             IPAddress ipAddr = ipHost.AddressList[0];
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddr, 11111);
+            IPEndPoint localEndPoint = new(ipAddr, 11111);
 
             // Creation TCP/IP Socket using 
             // Socket Class Constructor
-            Socket listener = new Socket(ipAddr.AddressFamily,
-                            SocketType.Stream, ProtocolType.Tcp);
+            Socket listener = await new Task<Socket>(() => new Socket(ipAddr.AddressFamily,
+                SocketType.Stream, ProtocolType.Tcp));
 
             try
             {
@@ -57,8 +56,8 @@ namespace Server
                     Socket clientSocket = listener.Accept();
 
                     // Data buffer
-                    byte[] bytes = new Byte[1024];
-                    string data = null;
+                    byte[] bytes = new byte[1024];
+                    string? data = null;
 
                     while (true)
                     {
