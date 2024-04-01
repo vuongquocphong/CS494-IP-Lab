@@ -60,12 +60,17 @@ namespace SocketClientTestApp
 
                 pSocketClient.Connect(IPAddress.Parse("127.0.0.1"), 9000);
 
-                for (int i = 0; i < 10; i++)
-                    pSocketClient.Send("My Message");
+                while (true) {
+                    // Send a message to the server
+                    pSocketClient.Send("Hello from the client");
 
-                Console.ReadLine();
+                    Console.WriteLine("Press Enter to send another message or 'Q' to quit");
+                    string? strInput = Console.ReadLine();
+                    if (strInput != null && strInput.Equals("Q", StringComparison.CurrentCultureIgnoreCase))
+                        break;
+                }
+
                 pSocketClient.Disconnect();
-                Console.ReadLine();
                 pSocketClient.Dispose();
             }
             catch (Exception pException)
