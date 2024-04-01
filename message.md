@@ -21,7 +21,7 @@
 |8                  |Game Status                |
 |9                  |Guess Result               |
 |10                 |Game Result                |
-
+|11                 |Players Ready Status       |
 # Client Messages
 ## Client Connection Message
 |Message type|Name      |
@@ -130,3 +130,14 @@ Ranges from 0-9.
 
 #### Player Rank
 Ranges from 1-10.
+
+## Players Ready Status
+|Message type|Player Count|Player Ready 1|Player Ready 2|...|
+|------------|------------|--------------|--------------|---|
+|1 byte      |1 byte      |1 byte        |1 byte        |...|
+
+|Player Ready value|Meaning    |
+|------------------|-----------|
+|0                 |Unready    |
+|1                 |Ready      |
+
