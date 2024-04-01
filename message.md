@@ -21,7 +21,7 @@
 |8                  |Game Status                |
 |9                  |Guess Result               |
 |10                 |Game Result                |
-|11                 |Players Ready Status       |
+
 # Client Messages
 ## Client Connection Message
 |Message type|Name      |
@@ -74,9 +74,14 @@
 |4          |Name already taken     |    
 
 ## PlayerList
-|Message type|Player Count|Player Name 1|Player Name 2|...|
-|------------|------------|-------------|-------------|---|
-|1 byte      |1 byte      |10 bytes     |10 bytes     |...|
+|Message type|Player Count|Player Name 1|Player 1 Ready Status  |Player Name 2|Player 2 Ready Status  |...|
+|------------|------------|-------------|-----------------------|-------------|-----------------------|---|
+|1 byte      |1 byte      |10 bytes     |1 byte                 |10 bytes     |1 byte                 |...|
+
+|Player Ready value|Meaning    |
+|------------------|-----------|
+|0                 |Unready    |
+|1                 |Ready      |
 
 ## Game Started
 |Message type|Keyword Length|Keyword    |
@@ -130,14 +135,3 @@ Ranges from 0-9.
 
 #### Player Rank
 Ranges from 1-10.
-
-## Players Ready Status
-|Message type|Player Count|Player Ready 1|Player Ready 2|...|
-|------------|------------|--------------|--------------|---|
-|1 byte      |1 byte      |1 byte        |1 byte        |...|
-
-|Player Ready value|Meaning    |
-|------------------|-----------|
-|0                 |Unready    |
-|1                 |Ready      |
-
