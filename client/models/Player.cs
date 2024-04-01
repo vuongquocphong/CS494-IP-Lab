@@ -8,10 +8,15 @@ namespace Player
         public Player(string name): base(name)
         {
         }
-        public void SendGuess()
+        public char GuessChar()
         {
-            // Creation of message that
-            // we will send to Server
+            // Ask user to input character
+            return 'c';
+        }
+        public string GuessWord()
+        {
+            // Ask user to input word
+            return "word";
         }
     }
 }

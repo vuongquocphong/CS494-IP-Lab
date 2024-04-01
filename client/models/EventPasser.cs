@@ -1,3 +1,4 @@
+using Mediator;
 using NetworkClient;
 
 namespace EventPasser
@@ -12,22 +13,22 @@ namespace EventPasser
             NetworkClientComp = networkClient;
         }
 
-        public void Notify(object sender, string ev)
+        public void Notify(object sender, Event ev)
         {
             if (sender is GameManager.GameManager)
             {
-                ReactOnGameManager();
+                ReactOnGameManager(ev);
             }
             else if (sender is INetworkClient)
             {
-                ReactOnNetworkClient();
+                ReactOnNetworkClient(ev);
             }
         }
-        private void ReactOnGameManager()
+        private void ReactOnGameManager(Event ev)
         {
             // React on GameManager
         }
-        private void ReactOnNetworkClient()
+        private void ReactOnNetworkClient(Event ev)
         {
             // React on NetworkClient
         }

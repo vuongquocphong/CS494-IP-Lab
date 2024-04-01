@@ -18,7 +18,7 @@ namespace NetworkClient
         {
             // Receive data from server
             // Notify mediator
-            this.Mediator.Notify(this, "mockrcv");
+            this.Mediator.Notify(this, Event.MOCKRCV);
         }
     }
 }

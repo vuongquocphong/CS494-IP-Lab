@@ -17,7 +17,7 @@ namespace NetworkClient
         {
             // Receive data from server
             // Notify mediator
-            this.Mediator.Notify(this, "tcprcv");
+            this.Mediator.Notify(this, Event.TCPRCV);
         }
     }
 }
