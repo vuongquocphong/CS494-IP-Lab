@@ -1,69 +1,158 @@
-﻿using System.Net;
+﻿// using System.Net;
+
+// namespace Sockets
+// {
+
+//     public delegate void MessageHandler(SocketBase socket, int numberOFBytes);
+
+//     public delegate void CloseHandler(SocketBase socket);
+
+//     public delegate void ErrorHandler(SocketBase socket, Exception exception);
+
+//     public abstract class SocketBase(IPAddress iPAddress, int port, MessageHandler messageHandler, CloseHandler closeHandler, ErrorHandler errorHandler) : IDisposable
+//     {
+//         protected internal MessageHandler messageHandler = messageHandler;
+
+//         protected internal CloseHandler closeHandler = closeHandler;
+
+//         protected internal ErrorHandler errorHandler = errorHandler;
+
+//         protected internal IPAddress ipAdress = iPAddress;
+
+//         protected internal int port = port;
+
+//         // protected internal bool isDisposed = false;
+
+//         protected internal byte[] rawBuffer = [];
+
+//         protected internal int bufferSize = 0;
+
+//         public IPAddress IpAdress
+//         {
+//             get => ipAdress;
+//             set
+//             {
+//                 ipAdress = value;
+//             }
+//         }
+
+//         public int Port
+//         {
+//             get => port;
+//             set
+//             {
+//                 port = value;
+//             }
+//         }
+
+//         public byte[] RawBuffer
+//         {
+//             get => rawBuffer;
+//             set
+//             {
+//                 rawBuffer = value;
+//             }
+//         }
+
+//         public int BufferSize
+//         {
+//             get => bufferSize;
+//             set
+//             {
+//                 bufferSize = value;
+//             }
+//         }
+
+//         public abstract void Dispose();
+
+//     }
+// }
+using System.Net;
 
 namespace Sockets
 {
+	/// <summary> 
+	/// Called when a message is received 
+	/// </summary>
+	public delegate void MessageHandler(SocketBase socket, int iNumberOfBytes);
 
-    public delegate void MessageHandler(SocketBase socket, int numberOFBytes);
+	/// <summary> 
+	/// Called when a connection is closed
+	///  </summary>
+	public delegate void CloseHandler(SocketBase socket);
 
-    public delegate void CloseHandler(SocketBase socket);
+	/// <summary>
+	///  Called when a socket error occurs 
+	///  </summary>
+	public delegate void ErrorHandler(SocketBase socket, Exception exception);
 
-    public delegate void ErrorHandler(SocketBase socket, Exception exception);
+	/// <summary>
+	/// Abstract class that defines base implementations
+	/// </summary>
+	public abstract class SocketBase : IDisposable
+	{
+		/// <summary>
+		/// A reference to a user defined object
+		/// </summary>
+		// protected internal object? userArg;
+		/// <summary>
+		/// A reference to a user supplied function to be called when a socket message arrives 
+		/// </summary>
+		protected internal MessageHandler messageHandler = null!;
+		/// <summary>
+		/// A reference to a user supplied function to be called when a socket connection is closed 
+		/// </summary>
+		protected internal CloseHandler closeHandler = null!;
+		/// <summary>
+		/// A reference to a user supplied function to be called when a socket error occurs
+		/// </summary>
+		protected internal ErrorHandler errorHandler = null!;
+		/// <summary>
+		/// Flag to indicate if the class has been disposed
+		/// </summary>
+		protected internal bool disposed;
+		/// <summary>
+		/// The IpAddress the client is connect to
+		/// </summary>
+		protected internal IPAddress ipAddress = null!;
+		/// <summary>
+		/// The Port to either connect to or listen on
+		/// </summary>
+		protected internal int port;
+		/// <summary>
+		/// A raw buffer to capture data comming off the socket
+		/// </summary>
+		protected internal byte[] rawBuffer = null!;
+		/// <summary>
+		/// Size of the raw buffer for received socket data
+		/// </summary>
+		protected internal int sizeOfRawBuffer;
 
-    public abstract class SocketBase(IPAddress iPAddress, int port, MessageHandler messageHandler, CloseHandler closeHandler, ErrorHandler errorHandler) : IDisposable
-    {
-        protected internal MessageHandler messageHandler = messageHandler;
+		public IPAddress IpAddress
+		{
+			get => ipAddress;
+			set => ipAddress = value;
+		}
 
-        protected internal CloseHandler closeHandler = closeHandler;
+		public int Port
+		{
+			get => port;
+			set => port = value;
+		}
 
-        protected internal ErrorHandler errorHandler = errorHandler;
+		public byte[] RawBuffer
+		{
+			get => rawBuffer;
+			set => rawBuffer = value;
+		}
 
-        protected internal IPAddress ipAdress = iPAddress;
+		public int SizeOfRawBuffer
+		{
+			get => sizeOfRawBuffer;
+			set => sizeOfRawBuffer = value;
+		}
 
-        protected internal int port = port;
+		public virtual void Dispose() { }
 
-        // protected internal bool isDisposed = false;
-
-        protected internal byte[] rawBuffer = [];
-
-        protected internal int bufferSize = 0;
-
-        public IPAddress IpAdress
-        {
-            get => ipAdress;
-            set
-            {
-                ipAdress = value;
-            }
-        }
-
-        public int Port
-        {
-            get => port;
-            set
-            {
-                port = value;
-            }
-        }
-
-        public byte[] RawBuffer
-        {
-            get => rawBuffer;
-            set
-            {
-                rawBuffer = value;
-            }
-        }
-
-        public int BufferSize
-        {
-            get => bufferSize;
-            set
-            {
-                bufferSize = value;
-            }
-        }
-
-        public abstract void Dispose();
-
-    }
+	}
 }

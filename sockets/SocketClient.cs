@@ -1,76 +1,542 @@
+// using System.Net;
+// using System.Net.Sockets;
+
+// Console.WriteLine("Press any key to exit...");
+
+// namespace Sockets
+// {
+//     public class SocketClient : SocketBase
+//     {
+//         private readonly Socket clientSocket;
+
+//         public SocketClient(IPAddress iPAddress, int port, MessageHandler messageHandler, CloseHandler closeHandler, ErrorHandler errorHandle) : base(iPAddress, port, messageHandler, closeHandler, errorHandle)
+//         {
+//             clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
+//             {
+//                 Blocking = false
+//             };
+//         }
+
+//         public void Connect()
+//         {
+//             clientSocket.BeginConnect(IpAdress, Port, new AsyncCallback(ConnectCallback), clientSocket);
+//         }
+
+//         private void ConnectCallback(IAsyncResult ar)
+//         {
+//             clientSocket.EndConnect(ar);
+//             if (clientSocket.RemoteEndPoint != null)
+//             {
+//                 Console.WriteLine("Socket connected to {0}", clientSocket.RemoteEndPoint.ToString());
+//             }
+
+//             Receive();
+//         }
+
+//         public void Receive()
+//         {
+//             clientSocket.BeginReceive(RawBuffer, 0, BufferSize, 0, new AsyncCallback(ReceiveCallback), clientSocket);
+//         }
+
+//         private void ReceiveCallback(IAsyncResult ar)
+//         {
+//             int bytesRead = clientSocket.EndReceive(ar);
+
+//             if (bytesRead > 0)
+//             {
+//                 // Call the custom message handler
+//                 messageHandler(this, bytesRead);
+
+//                 // Continue receiving data
+//                 clientSocket.BeginReceive(RawBuffer, 0, BufferSize, 0, new AsyncCallback(ReceiveCallback), clientSocket);
+//             }
+//         }
+
+//         public void Send(byte[] data)
+//         {
+//             clientSocket.BeginSend(data, 0, data.Length, 0, new AsyncCallback(SendCallback), clientSocket);
+//         }
+
+//         private void SendCallback(IAsyncResult ar)
+//         {
+
+//             // Complete sending the data to the remote device.
+//             int bytesSent = clientSocket.EndSend(ar);
+
+//             Console.WriteLine("Sent {0} bytes to server.", bytesSent);
+//         }
+
+//         public override void Dispose()
+//         {
+//             GC.SuppressFinalize(this);
+//             clientSocket.Shutdown(SocketShutdown.Both);
+//             clientSocket.Close();
+//         }
+//     }
+// }
+
+using System.Collections;
 using System.Net;
 using System.Net.Sockets;
 
-Console.WriteLine("Press any key to exit...");
-
 namespace Sockets
 {
+    /// <summary> 
+    /// This class abstracts a socket 
+    /// </summary>
     public class SocketClient : SocketBase
     {
-        private readonly Socket clientSocket;
+        private readonly Queue messageQueue = new();
+        private byte[]? theRest;
+        private bool m_Connected = false;
 
-        public SocketClient(IPAddress iPAddress, int port, MessageHandler messageHandler, CloseHandler closeHandler, ErrorHandler errorHandle) : base(iPAddress, port, messageHandler, closeHandler, errorHandle)
+        #region Private Properties
+        /// <summary>
+        /// A network stream object 
+        /// </summary>
+        private NetworkStream networkStream = null!;
+        /// <summary>
+        /// A TcpClient object for socket connection 
+        /// </summary>
+        private TcpClient? tcpClient;
+        /// <summary>
+        /// A callback object for processing recieved socket data 
+        /// </summary>
+        private readonly AsyncCallback callbackReadMethod;
+        /// <summary>
+        /// A callback object for processing send socket data
+        /// </summary>
+        private readonly AsyncCallback callbackWriteMethod;
+        /// <summary>
+        /// Size of the receive buffer. Defaults to 1048576
+        /// </summary>
+        private readonly int receiveBufferSize = 1048576;
+        /// <summary>
+        /// Size of the send buffer. Defaults to 1048576
+        /// </summary>
+        private readonly int sendBufferSize = 1048576;
+        /// <summary>
+        /// The SocketServer for this socket object
+        /// </summary>
+        private readonly SocketServer socketServer = null!;
+
+        public SocketServer SocketServer
         {
-            clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
-            {
-                Blocking = false
-            };
+            get { return socketServer; }
         }
 
-        public void Connect()
+        /// <summary>
+        /// The socket for the client connection 
+        /// </summary>
+        private Socket? clientSocket;
+
+        #endregion Private Properties
+
+        #region Constructor & Destructor
+
+        /// <summary> 
+        /// Constructor for client support
+        /// </summary>
+        /// <param name="sizeOfRawBuffer"> The size of the raw buffer </param>
+        /// <param name="userArg"> A Reference to the Users arguments </param>
+        /// <param name="messageHandler">  Reference to the user defined message handler method </param>
+        /// <param name="closeHandler">  Reference to the user defined close handler method </param>
+        /// <param name="errorHandler">  Reference to the user defined error handler method </param>
+        public SocketClient(int sizeOfRawBuffer,
+            MessageHandler messageHandler, CloseHandler closeHandler,
+            ErrorHandler errorHandler)
         {
-            clientSocket.BeginConnect(IpAdress, Port, new AsyncCallback(ConnectCallback), clientSocket);
+            // Create the raw buffer
+            SizeOfRawBuffer = sizeOfRawBuffer;
+            RawBuffer = new byte[SizeOfRawBuffer];
+
+            // Save the user argument
+            // this.userArg = userArg;
+
+            // Set the handler methods
+            this.messageHandler = messageHandler;
+            this.closeHandler = closeHandler;
+            this.errorHandler = errorHandler;
+
+            // Set the async socket method handlers
+            callbackReadMethod = new AsyncCallback(ReceiveComplete);
+            callbackWriteMethod = new AsyncCallback(SendComplete);
+
+            m_Connected = true;
+            // Init the dispose flag
+            disposed = false;
         }
 
-        private void ConnectCallback(IAsyncResult ar)
+        /// <summary> Constructor for SocketServer Suppport </summary>
+        /// <param name="socketServer"> A Reference to the parent SocketServer </param>
+        /// <param name="clientSocket"> The Socket object we are encapsulating </param>
+        /// <param name="socketListArray"> The index of the SocketServer Socket List Array </param>
+        /// <param name="ipAddress"> The IpAddress of the remote server </param>
+        /// <param name="port"> The Port of the remote server </param>
+        /// <param name="messageHandler"> Reference to the user defined message handler function </param>
+        /// <param name="closeHandler"> Reference to the user defined close handler function </param>
+        /// <param name="errorHandler"> Reference to the user defined error handler function </param>
+        /// <param name="sizeOfRawBuffer"> The size of the raw buffer </param>
+        /// <param name="userArg"> A Reference to the Users arguments </param>
+        public SocketClient(SocketServer socketServer, Socket clientSocket,
+            IPAddress ipAddress, int port, int sizeOfRawBuffer,
+            MessageHandler messageHandler, CloseHandler closeHandler,
+            ErrorHandler errorHandler)
+            : this(sizeOfRawBuffer, messageHandler, closeHandler, errorHandler)
         {
-            clientSocket.EndConnect(ar);
-            if (clientSocket.RemoteEndPoint != null)
-            {
-                Console.WriteLine("Socket connected to {0}", clientSocket.RemoteEndPoint.ToString());
-            }
 
+            // Set reference to SocketServer
+            this.socketServer = socketServer;
+
+            // Init the socket references
+            this.clientSocket = clientSocket;
+
+            // Set the Ipaddress and Port
+            this.IpAddress = ipAddress;
+            this.Port = port;
+
+            // Init the NetworkStream reference
+            networkStream = new NetworkStream(this.clientSocket);
+
+            // Set these socket options
+            this.clientSocket.SetSocketOption(SocketOptionLevel.Socket,
+                SocketOptionName.ReceiveBuffer, receiveBufferSize);
+            this.clientSocket.SetSocketOption(SocketOptionLevel.Socket,
+                SocketOptionName.SendBuffer, sendBufferSize);
+            this.clientSocket.SetSocketOption(SocketOptionLevel.Socket,
+                SocketOptionName.DontLinger, 1);
+            this.clientSocket.SetSocketOption(SocketOptionLevel.Tcp,
+                SocketOptionName.NoDelay, 1);
+
+            // Wait for a message
             Receive();
         }
 
-        public void Receive()
+        /// <summary> 
+        /// Overloaded constructor for client support
+        /// </summary>
+        /// <param name="sendBufferSize"></param>
+        /// <param name="receiveBufferSize"></param>
+        /// <param name="sizeOfRawBuffer"> The size of the raw buffer </param>
+        /// <param name="userArg"> A Reference to the Users arguments </param>
+        /// <param name="messageHandler">  Reference to the user defined message handler method </param>
+        /// <param name="closeHandler">  Reference to the user defined close handler method </param>
+        /// <param name="errorHandler">  Reference to the user defined error handler method </param>
+        public SocketClient(int sendBufferSize, int receiveBufferSize,
+            int sizeOfRawBuffer,
+            MessageHandler messageHandler,
+            CloseHandler closeHandler,
+            ErrorHandler errorHandler
+            ) : this(sizeOfRawBuffer, messageHandler, closeHandler, errorHandler)
         {
-            clientSocket.BeginReceive(RawBuffer, 0, BufferSize, 0, new AsyncCallback(ReceiveCallback), clientSocket);
+            //Set the size of the send/receive buffers
+            this.sendBufferSize = sendBufferSize;
+            this.receiveBufferSize = receiveBufferSize;
         }
 
-        private void ReceiveCallback(IAsyncResult ar)
+        /// <summary> 
+        /// Finialize 
+        /// </summary>
+
+        ~SocketClient()
         {
-            int bytesRead = clientSocket.EndReceive(ar);
+            if (!disposed)
+                Dispose();
+        }
 
-            if (bytesRead > 0)
+        /// <summary>
+        /// Disposes of internal objects
+        /// </summary>
+        public override void Dispose()
+        {
+            try
             {
-                // Call the custom message handler
-                messageHandler(this, bytesRead);
+                // Flag that dispose has been called
+                disposed = true;
+                // Disconnect the client from the server
+                Disconnect();
+            }
+            catch
+            {
+            }
+            // Remove the socket from the list
+            socketServer?.RemoveSocket(this);
 
-                // Continue receiving data
-                clientSocket.BeginReceive(RawBuffer, 0, BufferSize, 0, new AsyncCallback(ReceiveCallback), clientSocket);
+            base.Dispose();
+        }
+
+
+        #endregion Constructor & Destructor
+
+        private void SaveTheRestofTheStream(byte[] src, int ptr, int TotalLen)
+        {
+            theRest = new byte[TotalLen - ptr];
+            for (int i = 0; ptr < TotalLen; i++)
+                theRest[i] = RawBuffer[ptr++];
+
+            return;
+        }
+        private void ParseMessage(int TotalLength)
+        {
+            int ptr = 0;
+
+            try
+            {
+                while (ptr < TotalLength)
+                {
+                    if ((TotalLength - ptr) <= 6)
+                    {
+                        SaveTheRestofTheStream(RawBuffer, ptr, TotalLength);
+                        return;
+                    }
+
+                    string len = System.Text.ASCIIEncoding.ASCII.GetString(RawBuffer, ptr, 6);
+                    int iLen = int.Parse(len);
+                    byte[] msg;
+
+                    if (iLen + 6 > (TotalLength - ptr))
+                    {
+                        SaveTheRestofTheStream(RawBuffer, ptr, TotalLength);
+                        return;
+                    }
+
+                    ptr += 6;
+
+                    msg = new byte[iLen];
+                    for (int i = 0; i < iLen; i++)
+                        msg[i] = RawBuffer[ptr++];
+
+                    messageQueue.Enqueue(msg);
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error:SocketClient: Got Exception while ParseMessage");
             }
         }
 
-        public void Send(byte[] data)
+        /// <summary> 
+        /// Called when a message arrives
+        ///  </summary>
+        /// <param name="ar"> An async result interface </param>
+        private void ReceiveComplete(IAsyncResult ar)
         {
-            clientSocket.BeginSend(data, 0, data.Length, 0, new AsyncCallback(SendCallback), clientSocket);
+            try
+            {
+                // Is the Network Stream object valid
+                if (networkStream.CanRead)
+                {
+                    // Read the current bytes from the stream buffer
+                    int bytesRecieved = networkStream.EndRead(ar);
+                    // If there are bytes to process else the connection is lost
+                    if (bytesRecieved > 0)
+                    {
+                        try
+                        {
+                            if (theRest != null)
+                            {
+                                int i;
+                                byte[] tmp = new byte[bytesRecieved + theRest.Length];
+
+                                for (i = 0; i < theRest.Length; i++)
+                                    tmp[i] = theRest[i];
+
+                                for (int j = 0; j < bytesRecieved; j++)
+                                    tmp[i++] = RawBuffer[j];
+
+                                RawBuffer = tmp;
+
+                                bytesRecieved = bytesRecieved + theRest.Length;
+
+                                theRest = null;
+                            }
+
+                            ParseMessage(bytesRecieved);
+
+                            if (messageQueue.Count > 0)
+                            {
+                                RawBuffer = (byte[])messageQueue.Dequeue()!;
+                                // A message came in send it to the MessageHandler
+                                messageHandler(this, RawBuffer.Length);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            throw;
+                        }
+                        // Wait for a new message
+
+                        if (m_Connected == true)
+                            Receive();
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error:SocketClient: Got Exception while ReceiveComplite");
+
+                try
+                {
+                    System.Diagnostics.Debugger.Break();
+                    // The connection must have dropped call the CloseHandler
+                    closeHandler(this);
+                }
+                catch
+                {
+                }
+            }
         }
 
-        private void SendCallback(IAsyncResult ar)
+        /// <summary> 
+        /// Called when a message is sent
+        ///  </summary>
+        /// <param name="ar"> An async result interface </param>
+        private void SendComplete(IAsyncResult ar)
         {
-
-            // Complete sending the data to the remote device.
-            int bytesSent = clientSocket.EndSend(ar);
-
-            Console.WriteLine("Sent {0} bytes to server.", bytesSent);
+            try
+            {
+                // Is the Network Stream object valid
+                if (networkStream.CanWrite)
+                    networkStream.EndWrite(ar);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error:SocketClient: Got Exception while SendComplete");
+            }
         }
 
-        public override void Dispose()
+        /// <summary> 
+        /// The socket for the client connection 
+        /// </summary>
+        public Socket ClientSocket
         {
-            GC.SuppressFinalize(this);
-            clientSocket.Shutdown(SocketShutdown.Both);
-            clientSocket.Close();
+            get
+            {
+                return clientSocket!;
+            }
+            set
+            {
+                clientSocket = value;
+            }
         }
+
+        /// <summary> 
+        /// Function used to connect to a server 
+        /// </summary>
+        /// <param name="strIpAddress"> The address to connect to </param>
+        /// <param name="iPort"> The Port to connect to </param>
+        public void Connect(IPAddress ipAddress, int port)
+        {
+            try
+            {
+                if (networkStream == null)
+                {
+                    // Set the Ipaddress and Port
+                    IpAddress = ipAddress;
+                    Port = port;
+
+                    // Attempt to establish a connection
+                    tcpClient = new TcpClient(ipAddress.ToString(), port);
+                    networkStream = tcpClient.GetStream();
+
+                    // Set these socket options
+                    tcpClient.ReceiveBufferSize = receiveBufferSize;
+                    tcpClient.SendBufferSize = sendBufferSize;
+                    tcpClient.NoDelay = true;
+                    tcpClient.LingerState = new LingerOption(false, 0);
+
+                    m_Connected = true;
+                    // Start to receive messages
+                    Receive();
+                }
+            }
+            catch (SocketException e)
+            {
+                Console.WriteLine("Error:SocketClient: Got Exception while Connect:" + e.Message);
+                throw new Exception(e.Message, e.InnerException);
+            }
+        }
+
+        /// <summary> 
+        /// Function used to disconnect from the server 
+        /// </summary>
+        public virtual void Disconnect()
+        {
+            if (m_Connected == true)
+            {
+                // Close down the connection
+                networkStream?.Close();
+                tcpClient?.Close();
+                clientSocket?.Close();
+
+                // Clean up the connection state
+                networkStream = null!;
+                tcpClient = null;
+                clientSocket = null;
+
+                m_Connected = false;
+            }
+        }
+
+        /// <summary>
+        ///  Function to send a string to the server 
+        ///  </summary>
+        /// <param name="message"> A string to send </param>
+        public bool Send(string message)
+        {
+            byte[] rawBuffer = System.Text.Encoding.ASCII.GetBytes(message.Length.ToString("000000") + message);
+            return Send(rawBuffer);
+        }
+
+        /// <summary>
+        ///  Function to send a string to the server 
+        ///  </summary>
+        /// <param name="message"> A string to send </param>
+        virtual public bool SendNotification(string message)
+        {
+            return Send(message);
+        }
+
+        /// <summary> 
+        /// Function to send a raw buffer to the server 
+        /// </summary>
+        /// <param name="rawBuffer"> A Raw buffer of bytes to send </param>
+        public bool Send(byte[] rawBuffer)
+        {
+            if ((networkStream != null) && networkStream.CanWrite)
+            //&& 
+            //(clientSocket != null) && (this.clientSocket.Connected == true))
+            {
+                // Issue an asynchronus write
+                networkStream.BeginWrite(rawBuffer, 0, rawBuffer.GetLength(0), callbackWriteMethod, null);
+                return true;
+            }
+            else
+                return false;
+        }
+
+        /// <summary> 
+        /// Wait for a message to arrive
+        /// </summary>
+        public void Receive()
+        {
+            while (messageQueue.Count != 0)
+            {
+                RawBuffer = (byte[])messageQueue.Dequeue()!;
+
+                messageHandler(this, RawBuffer.Length);
+            }
+
+            if ((networkStream != null) && networkStream.CanRead)
+            {
+                RawBuffer = new byte[SizeOfRawBuffer];
+                // Issue an asynchronous read
+                networkStream.BeginRead(RawBuffer, 0, SizeOfRawBuffer, callbackReadMethod, null);
+            }
+            else
+                throw new Exception("Socket Closed");
+        }
+
     }
 }
