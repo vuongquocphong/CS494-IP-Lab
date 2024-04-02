@@ -20,10 +20,9 @@
 | 4                  | Server Connection Success |
 | 5                  | Server Connection Failure |
 | 6                  | Player List               |
-| 7                  | Game Started              |
-| 8                  | Game Status               |
-| 9                  | Guess Result              |
-| 10                 | Game Result               |
+| 7                  | Game Status               |
+| 8                  | Guess Result              |
+| 9                  | Game Result               |
 
 # Client Messages
 
@@ -85,9 +84,9 @@
 
 ## PlayerList
 
-| Message type | Player Count | Player Name 1 | Player 1 Ready Status | Player Name 2 | Player 2 Ready Status | ... |
-| ------------ | ------------ | ------------- | --------------------- | ------------- | --------------------- | --- |
-| 1 byte       | 1 byte       | 10 bytes      | 1 byte                | 10 bytes      | 1 byte                | ... |
+| Message type | Player Count | Name Length 1 | Player Name 1 | Player 1 Ready Status | Name Length 2 | Player Name 2 | Player 2 Ready Status | ... |
+| ------------ | ------------ | ------------- | ------------- | --------------------- | ------------- | ------------- | --------------------- | --- |
+| 1 byte       | 1 byte       | 1 byte        | 10 bytes      | 1 byte                | 1 byte        | 10 bytes      | 1 byte                | ... |
 
 | Player Ready value | Meaning |
 | ------------------ | ------- |

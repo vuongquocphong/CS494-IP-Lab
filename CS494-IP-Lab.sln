@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "socket-client-test", "socke
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "socket-server-test", "socket-server-test\socket-server-test.csproj", "{23B1F803-3B38-4753-8951-22BB170A82DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "message", "message\message.csproj", "{AFF78B1A-B6B5-45C2-B1BC-E80905BD6368}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{23B1F803-3B38-4753-8951-22BB170A82DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23B1F803-3B38-4753-8951-22BB170A82DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23B1F803-3B38-4753-8951-22BB170A82DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFF78B1A-B6B5-45C2-B1BC-E80905BD6368}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFF78B1A-B6B5-45C2-B1BC-E80905BD6368}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFF78B1A-B6B5-45C2-B1BC-E80905BD6368}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFF78B1A-B6B5-45C2-B1BC-E80905BD6368}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
