@@ -116,8 +116,8 @@ namespace Sockets
             this.clientSocket = clientSocket;
 
             // Set the Ipaddress and Port
-            this.IpAddress = ipAddress;
-            this.Port = port;
+            IpAddress = ipAddress;
+            Port = port;
 
             // Init the NetworkStream reference
             networkStream = new NetworkStream(this.clientSocket);
@@ -214,7 +214,10 @@ namespace Sockets
                         return;
                     }
 
-                    ushort len = BitConverter.ToUInt16(RawBuffer.AsSpan()[ptr..(ptr + 2)]);
+                    byte[] blen = RawBuffer[ptr..(ptr + 2)];
+                    if (BitConverter.IsLittleEndian)
+                        Array.Reverse(blen);
+                    ushort len = BitConverter.ToUInt16(blen);
 
                     byte[] msg;
 
@@ -299,7 +302,7 @@ namespace Sockets
             }
             catch (Exception)
             {
-                Console.WriteLine("Error:SocketClient: Got Exception while ReceiveComplite");
+                Console.WriteLine("Error:SocketClient: Got Exception while ReceiveComplete");
 
                 try
                 {
@@ -349,8 +352,8 @@ namespace Sockets
         /// <summary> 
         /// Function used to connect to a server 
         /// </summary>
-        /// <param name="strIpAddress"> The address to connect to </param>
-        /// <param name="iPort"> The Port to connect to </param>
+        /// <param name="IpAddress"> The address to connect to </param>
+        /// <param name="Port"> The Port to connect to </param>
         public void Connect(IPAddress ipAddress, int port)
         {
             try
@@ -413,7 +416,8 @@ namespace Sockets
             byte[] ushortBytes = BitConverter.GetBytes((ushort)message.Length);
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(ushortBytes);
-            byte[] rawBuffer = Encoding.ASCII.GetBytes(ushortBytes + message);
+            string len = Encoding.UTF8.GetString(ushortBytes);
+            byte[] rawBuffer = Encoding.UTF8.GetBytes(len + message);
             return Send(rawBuffer);
         }
 

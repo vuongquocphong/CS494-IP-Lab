@@ -46,9 +46,9 @@ namespace SocketServerTestApp
             {
                 SocketClient pSocket = (SocketClient)socket;
                 // Find a complete message
-                string strMessage = Encoding.ASCII.GetString(pSocket.RawBuffer, 0, iNumberOfBytes);
+                string strMessage = Encoding.UTF8.GetString(pSocket.RawBuffer, 0, iNumberOfBytes);
 
-                Console.WriteLine("Message=<{1}> Received {0} messages", m_Count++, strMessage);
+                Console.WriteLine("Message=<{1}> Received {0} messages", ++m_Count, strMessage);
             }
             catch (Exception pException)
             {
