@@ -1,8 +1,8 @@
 # General Message Format
 
-| Message type | ... |
-| ------------ | --- |
-| 1 byte       |     |
+| Total Length | Message type | ... |
+| ------------ | ------------ | --- |
+| 2 bytes      | 1 byte       |     |
 
 ## Client
 
@@ -71,9 +71,9 @@
 
 ## Server Connection Failure
 
-| Message type | Error Code | Error Message Length | Error Message |
-| ------------ | ---------- | -------------------- | ------------- |
-| 1 byte       | 1 byte     | 1 byte               | 128 bytes     |
+| Message type | Error Code | Error Message |
+| ------------ | ---------- | ------------- |
+| 1 byte       | 1 byte     | max 128 bytes |
 
 | Error code | Error message         |
 | ---------- | --------------------- |
@@ -96,21 +96,21 @@
 
 ## Game Started
 
-| Message type | Keyword Length | Keyword  |
-| ------------ | -------------- | -------- |
-| 1 byte       | 1 byte         | 30 bytes |
+| Message type | Keyword  |
+| ------------ | -------- |
+| 1 byte       | 30 bytes |
 
 ## Game Status
 
-| Message type | Number of Players | Game Turn | Current Turn | Keyword  | Player Info 1 | Player Info 2 | ... |
-| ------------ | ----------------- | --------- | ------------ | -------- | ------------- | ------------- | --- |
-| 1 byte       | 1 byte            | 1 byte    | 1 byte       | 30 bytes | 14 bytes      | 14 bytes      | ... |
+| Message type | Player Count | Game Turn | Current Turn | Keyword Length | Keyword  | Player Info 1 | Player Info 2 | ... |
+| ------------ | ------------ | --------- | ------------ | -------------- | -------- | ------------- | ------------- | --- |
+| 1 byte       | 1 byte       | 1 byte    | 1 byte       | 1 byte         | 30 bytes | max 15 bytes  | max 15 bytes  | ... |
 
 ### Player Info
 
-| Player Name | Player Score | Player State | Turn order |
-| ----------- | ------------ | ------------ | ---------- |
-| 10 bytes    | 2 bytes      | 1 bytes      | 1 bytes    |
+| Name Length | Player Name | Player Score | Player State | Turn order |
+| ----------- | ----------- | ------------ | ------------ | ---------- |
+| 1 byte      | 10 bytes    | 2 bytes      | 1 bytes      | 1 bytes    |
 
 #### Player State
 
@@ -142,13 +142,13 @@ Ranges from 0-9.
 
 | Message type | Player Result 1 | Player Result 2 | ... |
 | ------------ | --------------- | --------------- | --- |
-| 1 byte       | 1 byte          | 1 byte          | ... |
+| 1 byte       | max 14 byte     | max 14 byte     | ... |
 
 ### Player Result
 
-| Player Name | Player Score | Player Rank |
-| ----------- | ------------ | ----------- |
-| 10 bytes    | 2 bytes      | 1 byte      |
+| Name Length | Player Name | Player Score | Player Rank |
+| ----------- | ----------- | ------------ | ----------- |
+| 1 byte      | 10 bytes    | 2 bytes      | 1 byte      |
 
 #### Player Rank
 

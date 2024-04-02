@@ -1,83 +1,7 @@
-// using System.Net;
-// using System.Net.Sockets;
-
-// Console.WriteLine("Press any key to exit...");
-
-// namespace Sockets
-// {
-//     public class SocketClient : SocketBase
-//     {
-//         private readonly Socket clientSocket;
-
-//         public SocketClient(IPAddress iPAddress, int port, MessageHandler messageHandler, CloseHandler closeHandler, ErrorHandler errorHandle) : base(iPAddress, port, messageHandler, closeHandler, errorHandle)
-//         {
-//             clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
-//             {
-//                 Blocking = false
-//             };
-//         }
-
-//         public void Connect()
-//         {
-//             clientSocket.BeginConnect(IpAdress, Port, new AsyncCallback(ConnectCallback), clientSocket);
-//         }
-
-//         private void ConnectCallback(IAsyncResult ar)
-//         {
-//             clientSocket.EndConnect(ar);
-//             if (clientSocket.RemoteEndPoint != null)
-//             {
-//                 Console.WriteLine("Socket connected to {0}", clientSocket.RemoteEndPoint.ToString());
-//             }
-
-//             Receive();
-//         }
-
-//         public void Receive()
-//         {
-//             clientSocket.BeginReceive(RawBuffer, 0, BufferSize, 0, new AsyncCallback(ReceiveCallback), clientSocket);
-//         }
-
-//         private void ReceiveCallback(IAsyncResult ar)
-//         {
-//             int bytesRead = clientSocket.EndReceive(ar);
-
-//             if (bytesRead > 0)
-//             {
-//                 // Call the custom message handler
-//                 messageHandler(this, bytesRead);
-
-//                 // Continue receiving data
-//                 clientSocket.BeginReceive(RawBuffer, 0, BufferSize, 0, new AsyncCallback(ReceiveCallback), clientSocket);
-//             }
-//         }
-
-//         public void Send(byte[] data)
-//         {
-//             clientSocket.BeginSend(data, 0, data.Length, 0, new AsyncCallback(SendCallback), clientSocket);
-//         }
-
-//         private void SendCallback(IAsyncResult ar)
-//         {
-
-//             // Complete sending the data to the remote device.
-//             int bytesSent = clientSocket.EndSend(ar);
-
-//             Console.WriteLine("Sent {0} bytes to server.", bytesSent);
-//         }
-
-//         public override void Dispose()
-//         {
-//             GC.SuppressFinalize(this);
-//             clientSocket.Shutdown(SocketShutdown.Both);
-//             clientSocket.Close();
-//         }
-//     }
-// }
-
 using System.Collections;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
 namespace Sockets
 {
@@ -268,7 +192,7 @@ namespace Sockets
 
         #endregion Constructor & Destructor
 
-        private void SaveTheRestofTheStream(byte[] src, int ptr, int TotalLen)
+        private void SaveTheRestofTheStream(int ptr, int TotalLen)
         {
             theRest = new byte[TotalLen - ptr];
             for (int i = 0; ptr < TotalLen; i++)
@@ -284,34 +208,35 @@ namespace Sockets
             {
                 while (ptr < TotalLength)
                 {
-                    if ((TotalLength - ptr) <= 6)
+                    if ((TotalLength - ptr) <= 2)
                     {
-                        SaveTheRestofTheStream(RawBuffer, ptr, TotalLength);
+                        SaveTheRestofTheStream(ptr, TotalLength);
                         return;
                     }
 
-                    string len = System.Text.ASCIIEncoding.ASCII.GetString(RawBuffer, ptr, 6);
-                    int iLen = int.Parse(len);
+                    ushort len = BitConverter.ToUInt16(RawBuffer.AsSpan()[ptr..(ptr + 2)]);
+
                     byte[] msg;
 
-                    if (iLen + 6 > (TotalLength - ptr))
+                    if (len + 2 > (TotalLength - ptr))
                     {
-                        SaveTheRestofTheStream(RawBuffer, ptr, TotalLength);
+                        SaveTheRestofTheStream(ptr, TotalLength);
                         return;
                     }
 
-                    ptr += 6;
+                    ptr += 2;
 
-                    msg = new byte[iLen];
-                    for (int i = 0; i < iLen; i++)
+                    msg = new byte[len];
+                    for (int i = 0; i < len; i++)
                         msg[i] = RawBuffer[ptr++];
 
                     messageQueue.Enqueue(msg);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 Console.WriteLine("Error:SocketClient: Got Exception while ParseMessage");
+                Console.WriteLine(e);
             }
         }
 
@@ -346,7 +271,7 @@ namespace Sockets
 
                                 RawBuffer = tmp;
 
-                                bytesRecieved = bytesRecieved + theRest.Length;
+                                bytesRecieved += theRest.Length;
 
                                 theRest = null;
                             }
@@ -485,7 +410,10 @@ namespace Sockets
         /// <param name="message"> A string to send </param>
         public bool Send(string message)
         {
-            byte[] rawBuffer = System.Text.Encoding.ASCII.GetBytes(message.Length.ToString("000000") + message);
+            byte[] ushortBytes = BitConverter.GetBytes((ushort)message.Length);
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(ushortBytes);
+            byte[] rawBuffer = Encoding.ASCII.GetBytes(ushortBytes + message);
             return Send(rawBuffer);
         }
 
