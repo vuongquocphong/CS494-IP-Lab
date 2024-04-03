@@ -1,0 +1,253 @@
+[gd_scene load_steps=5 format=3 uid="uid://ds0gnfffdhbwx"]
+
+[sub_resource type="Theme" id="Theme_dipls"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cw0pc"]
+bg_color = Color(0.129412, 0.129412, 0.129412, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 0.509804, 0.309804, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5n75x"]
+bg_color = Color(0.129412, 0.129412, 0.129412, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 0.509804, 0.309804, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o87om"]
+bg_color = Color(0.129412, 0.129412, 0.129412, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 0.509804, 0.309804, 1)
+
+[node name="Panel" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.035
+anchor_top = 0.062
+anchor_right = 0.461
+anchor_bottom = 0.93
+offset_left = -0.32
+offset_top = -0.176006
+theme = SubResource("Theme_dipls")
+columns = 3
+
+[node name="VBoxNameContainer" type="VBoxContainer" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="GridContainer/VBoxNameContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.509804, 0.309804, 1)
+theme_override_font_sizes/font_size = 25
+text = "Name"
+uppercase = true
+
+[node name="Label2" type="Label" parent="GridContainer/VBoxNameContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Player 1"
+
+[node name="Label3" type="Label" parent="GridContainer/VBoxNameContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Player 2"
+
+[node name="Label4" type="Label" parent="GridContainer/VBoxNameContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "Player 3"
+
+[node name="Label5" type="Label" parent="GridContainer/VBoxNameContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Player 4"
+
+[node name="VBoxPointContainer" type="VBoxContainer" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="GridContainer/VBoxPointContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.509804, 0.309804, 1)
+theme_override_font_sizes/font_size = 25
+text = "Points"
+uppercase = true
+
+[node name="Label2" type="Label" parent="GridContainer/VBoxPointContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "100"
+
+[node name="Label3" type="Label" parent="GridContainer/VBoxPointContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "75"
+
+[node name="Label4" type="Label" parent="GridContainer/VBoxPointContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "70"
+
+[node name="Label5" type="Label" parent="GridContainer/VBoxPointContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "65"
+
+[node name="VBoxGuessContainer" type="VBoxContainer" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="GridContainer/VBoxGuessContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(1, 0.509804, 0.309804, 1)
+theme_override_font_sizes/font_size = 25
+text = "Guess"
+uppercase = true
+
+[node name="Label2" type="Label" parent="GridContainer/VBoxGuessContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+
+[node name="Label3" type="Label" parent="GridContainer/VBoxGuessContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+
+[node name="Label4" type="Label" parent="GridContainer/VBoxGuessContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "python"
+
+[node name="Label5" type="Label" parent="GridContainer/VBoxGuessContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+
+[node name="GuessMode" type="LineEdit" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.165
+anchor_right = 0.812
+anchor_bottom = 0.232
+offset_left = -8.0
+offset_top = -31.92
+offset_right = -8.0
+offset_bottom = -31.92
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_uneditable_color = Color(1, 0.509804, 0.309804, 1)
+theme_override_colors/caret_color = Color(0.396078, 0.396078, 0.396078, 1)
+theme_override_font_sizes/font_size = 25
+text = "Guess Mode: Character"
+editable = false
+
+[node name="GuessEditText" type="LineEdit" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.246
+anchor_right = 0.812
+anchor_bottom = 0.313
+offset_left = -8.0
+offset_top = -32.0
+offset_right = -8.0
+offset_bottom = -32.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/caret_color = Color(0.396078, 0.396078, 0.396078, 1)
+theme_override_font_sizes/font_size = 25
+placeholder_text = "Enter your guess"
+
+[node name="SubmitButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.846
+anchor_top = 0.246
+anchor_right = 0.954
+anchor_bottom = 0.313
+offset_left = -7.59204
+offset_top = -32.408
+offset_right = -8.00806
+offset_bottom = -32.824
+theme_override_colors/font_color = Color(1, 0.509804, 0.309804, 1)
+theme_override_font_sizes/font_size = 25
+text = "SUBMIT"
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.393
+anchor_right = 0.954
+anchor_bottom = 0.93
+offset_left = -8.0
+offset_top = -32.0
+offset_right = -8.0
+offset_bottom = -32.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_cw0pc")
+
+[node name="KeywordPanel" type="Panel" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.076
+anchor_top = 0.098
+anchor_right = 0.931
+anchor_bottom = 0.215
+offset_left = 1.25138
+offset_top = -0.10165
+offset_right = 0.0794678
+offset_bottom = -0.814842
+theme_override_styles/panel = SubResource("StyleBoxFlat_5n75x")
+
+[node name="Label" type="Label" parent="Panel/KeywordPanel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.003
+anchor_right = 1.0
+anchor_bottom = 1.008
+offset_left = 1.335
+offset_top = 0.335999
+offset_bottom = 0.0159988
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.509804, 0.309804, 1)
+theme_override_font_sizes/font_size = 25
+text = "P Y T H O N"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HintPanel" type="Panel" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.076
+anchor_top = 0.25
+anchor_right = 0.929
+anchor_bottom = 0.887
+theme_override_styles/panel = SubResource("StyleBoxFlat_o87om")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel/HintPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/normal_font_size = 22
+text = "( ) is a high-level, general-purpose programming language. Its design philosophy emphasizes code readability with the use of significant indentation."
