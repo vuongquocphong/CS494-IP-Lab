@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://bgb6u25myuvdp"]
+
+[node name="WaitingPanel" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="WaitingText" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 114.0
+offset_top = 456.0
+offset_right = 578.0
+offset_bottom = 492.0
+theme_override_font_sizes/normal_font_size = 21
+text = "Waiting for other players ready to play..."
+
+[node name="ReadyButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 485.0
+offset_top = 533.0
+offset_right = 651.0
+offset_bottom = 585.0
+text = "READY"
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 438.0
+grow_horizontal = 2
+columns = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.87
+text = "Name"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Ready"
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.47
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 780.0
+offset_top = 451.0
+offset_right = 985.0
+offset_bottom = 491.0
+theme_override_font_sizes/normal_font_size = 21
+text = "5/7 players ready"
