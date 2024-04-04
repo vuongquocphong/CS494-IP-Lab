@@ -21,9 +21,9 @@
         public abstract byte[] Serialize();
     }
 
-    public class MessageFactory 
+    public abstract class MessageFactory 
     {
-        public static Message CreateMessage(byte[] message)
+        public virtual Message CreateMessage(byte[] message)
         {
             int type = message[0];
             return type switch
