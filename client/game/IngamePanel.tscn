@@ -1,4 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://ds0gnfffdhbwx"]
+[gd_scene load_steps=6 format=3 uid="uid://ds0gnfffdhbwx"]
+
+[ext_resource type="Script" path="res://IngamePanelScript/IngamePanel.cs" id="1_uj51d"]
 
 [sub_resource type="Theme" id="Theme_dipls"]
 
@@ -32,6 +34,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_uj51d")
 
 [node name="GridContainer" type="GridContainer" parent="."]
 layout_mode = 1
@@ -243,9 +246,13 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_o87om")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Panel/HintPanel"]
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 14.7222
+offset_top = 14.0
+offset_right = -14.0
+offset_bottom = -14.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/default_color = Color(1, 1, 1, 1)
