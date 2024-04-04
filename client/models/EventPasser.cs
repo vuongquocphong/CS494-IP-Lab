@@ -1,34 +1,23 @@
-using Mediator;
+using GameComponents;
+using Messages;
 using NetworkClient;
 
-namespace EventPasser
+namespace Mediator
 {
-    class EventPasser: Mediator.IMediator
+    class EventPasser: IMediator
     {
-        GameManager.GameManager GameManagerComp;
-        INetworkClient NetworkClientComp;
-        public EventPasser(GameManager.GameManager gameManager, INetworkClient networkClient)
+        
+
+        public void Notify(Component sender, Message msg)
         {
-            GameManagerComp = gameManager;
-            NetworkClientComp = networkClient;
+            throw new NotImplementedException();
         }
 
-        public void Notify(object sender, Event ev)
-        {
-            if (sender is GameManager.GameManager)
-            {
-                ReactOnGameManager(ev);
-            }
-            else if (sender is INetworkClient)
-            {
-                ReactOnNetworkClient(ev);
-            }
-        }
-        private void ReactOnGameManager(Event ev)
+        private void ReactOnGameManager(Message msg)
         {
             // React on GameManager
         }
-        private void ReactOnNetworkClient(Event ev)
+        private void ReactOnNetworkClient(Message msg)
         {
             // React on NetworkClient
         }

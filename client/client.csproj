@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\sockets\sockets.csproj" />
+    <ProjectReference Include="..\message\message.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
