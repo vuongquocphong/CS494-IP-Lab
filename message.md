@@ -126,9 +126,9 @@ Ranges from 0-9.
 
 ## Guess Result
 
-| Message type | Result |
-| ------------ | ------ |
-| 1 byte       | 1 byte |
+| Message type | Result | Guess Type | Guess    |
+| ------------ | ------ | ---------- | -------- |
+| 1 byte       | 1 byte | 1 byte     | 30 bytes |
 
 | Result value | Meaning         |
 | ------------ | --------------- |
@@ -139,15 +139,15 @@ Ranges from 0-9.
 
 ## Game Result
 
-| Message type | Player Result 1 | Player Result 2 | ... |
-| ------------ | --------------- | --------------- | --- |
-| 1 byte       | max 14 byte     | max 14 byte     | ... |
+| Message type | Player Count | Player Result 1 | Player Result 2 | ... |
+| ------------ | ------------ | --------------- | --------------- | --- |
+| 1 byte       | 1 byte       | max 14 bytes    | max 14 bytes    | ... |
 
 ### Player Result
 
-| Name Length | Player Name | Player Score | Player Rank |
-| ----------- | ----------- | ------------ | ----------- |
-| 1 byte      | 10 bytes    | 2 bytes      | 1 byte      |
+| Name Length | Player Name  | Player Score | Player Rank |
+| ----------- | ------------ | ------------ | ----------- |
+| 1 byte      | max 10 bytes | 2 bytes      | 1 byte      |
 
 #### Player Rank
 
