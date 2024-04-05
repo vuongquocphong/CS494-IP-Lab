@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://bgb6u25myuvdp"]
+[gd_scene load_steps=2 format=3 uid="uid://bgb6u25myuvdp"]
+
+[ext_resource type="Script" path="res://WaitingPanel.cs" id="1_cip1c"]
 
 [node name="WaitingPanel" type="Panel"]
 anchors_preset = 15
@@ -6,6 +8,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_cip1c")
 
 [node name="WaitingText" type="RichTextLabel" parent="."]
 layout_mode = 0
@@ -18,11 +21,19 @@ text = "Waiting for other players ready to play..."
 
 [node name="ReadyButton" type="Button" parent="."]
 layout_mode = 0
-offset_left = 485.0
+offset_left = 269.0
 offset_top = 533.0
-offset_right = 651.0
+offset_right = 435.0
 offset_bottom = 585.0
 text = "READY"
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 713.0
+offset_top = 533.0
+offset_right = 879.0
+offset_bottom = 585.0
+text = "BACK"
 
 [node name="GridContainer" type="GridContainer" parent="."]
 layout_mode = 1
@@ -51,7 +62,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 1.47
 
-[node name="RichTextLabel" type="RichTextLabel" parent="."]
+[node name="ReadyPlayersLabel" type="RichTextLabel" parent="."]
 layout_mode = 0
 offset_left = 780.0
 offset_top = 451.0
