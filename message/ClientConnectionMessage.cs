@@ -7,6 +7,12 @@ namespace Messages
     {
         public string Username { get; set; }
 
+        public ClientConnectionMessage(string username)
+        {
+            MessageType = MessageType.ClientConnectionMessage;
+            Username = username;
+        }
+
         public ClientConnectionMessage(byte[] message)
         {
             MessageType = MessageType.ClientConnectionMessage;

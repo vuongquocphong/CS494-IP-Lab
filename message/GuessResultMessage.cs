@@ -18,6 +18,14 @@ namespace Messages
 
         public string Guess { get; set; }
 
+        public GuessResultMessage(GuessResult result, GuessType guessType, string guess)
+        {
+            MessageType = MessageType.GuessResult;
+            Result = result;
+            GuessType = guessType;
+            Guess = guess;
+        }
+
         public GuessResultMessage(byte[] message)
         {
             MessageType = MessageType.GuessResult;

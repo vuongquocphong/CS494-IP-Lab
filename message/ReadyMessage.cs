@@ -5,6 +5,12 @@ namespace Messages
     {
         public bool Ready { get; set; }
 
+        public ReadyMessage(bool ready)
+        {
+            MessageType = MessageType.Ready;
+            Ready = ready;
+        }
+
         public ReadyMessage(byte[] message)
         {
             MessageType = MessageType.Ready;

@@ -8,6 +8,13 @@ namespace Messages
 
         public List<Tuple<string, bool>> Players { get; set; }
 
+        public PlayerListMessage(int playerCount, List<Tuple<string, bool>> players)
+        {
+            MessageType = MessageType.PlayerList;
+            PlayerCount = playerCount;
+            Players = players;
+        }
+
         public PlayerListMessage(byte[] message)
         {
             MessageType = MessageType.PlayerList;

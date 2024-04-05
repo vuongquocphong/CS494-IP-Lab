@@ -15,6 +15,12 @@ namespace Messages
     {
         public List<PlayerResult> Results { get; set; }
 
+        public GameResultMessage(List<PlayerResult> results)
+        {
+            MessageType = MessageType.GameResult;
+            Results = results;
+        }
+
         public GameResultMessage(byte[] message)
         {
             MessageType = MessageType.GameResult;

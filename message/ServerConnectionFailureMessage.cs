@@ -17,6 +17,13 @@ namespace Messages
 
         public string ErrorMessage { get; set; }
 
+        public ServerConnectionFailureMessage(ErrorCode errorCode, string errorMessage)
+        {
+            MessageType = MessageType.ServerConnectionFailure;
+            ErrorCode = errorCode;
+            ErrorMessage = errorMessage;
+        }
+
         public ServerConnectionFailureMessage(byte[] message)
         {
             MessageType = MessageType.ServerConnectionFailure;

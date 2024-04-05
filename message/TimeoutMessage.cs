@@ -1,5 +1,9 @@
 namespace Messages {
     public class TimeoutMessage : Message {
+        public TimeoutMessage() {
+            MessageType = MessageType.Timeout;
+        }
+
         public TimeoutMessage(byte[] _) {
             MessageType = MessageType.Timeout;
         }

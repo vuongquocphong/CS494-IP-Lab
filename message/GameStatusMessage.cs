@@ -28,6 +28,17 @@ namespace Messages
 
         public List<PlayerInfo> PlayersList { get; set; } = [];
 
+        public GameStatusMessage(int playerCount, int gameTurn, int currentTurn, string keyword, List<PlayerInfo> playersList)
+        {
+            MessageType = MessageType.GameStatus;
+            PlayerCount = playerCount;
+            GameTurn = gameTurn;
+            CurrentTurn = currentTurn;
+            KeywordLength = keyword.Length;
+            Keyword = keyword;
+            PlayersList = playersList;
+        }
+
         public GameStatusMessage(byte[] message)
         {
             MessageType = MessageType.GameStatus;
