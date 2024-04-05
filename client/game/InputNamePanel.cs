@@ -34,8 +34,7 @@ public partial class InputNamePanel : Panel
 		if (!IsValidName(name))
 		{
 			var InvalidMessageNode = GetNode<RichTextLabel>("InvalidMessageLabel");
-			InvalidMessageNode.Clear();
-			InvalidMessageNode.AddText("Invalid name, please try again!");
+			InvalidMessageNode.Text = "Invalid name, please try again!";
 			InvalidMessageNode.VisibleCharacters = -1;
 		}
 		else

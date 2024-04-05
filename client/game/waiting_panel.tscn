@@ -70,3 +70,6 @@ offset_right = 985.0
 offset_bottom = 491.0
 theme_override_font_sizes/normal_font_size = 21
 text = "5/7 players ready"
+
+[connection signal="pressed" from="ReadyButton" to="." method="OnReadyButtonPressed"]
+[connection signal="pressed" from="BackButton" to="." method="OnBackButtonPressed"]

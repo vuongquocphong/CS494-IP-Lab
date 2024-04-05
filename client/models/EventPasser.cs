@@ -49,16 +49,8 @@ namespace EventPasser
 
         private void ReactOnInputNamePanel(Event ev)
         {
-            switch(ev)
-            {
-                case Event.ADDPLAYER:
-                    var name = InputNamePanelComp.GetName();
-                    GameManagerComp.AddPlayer(name);
-                    break;
-                case Event.CONNECT:
-
-                    break;
-            }
+            var name = InputNamePanelComp.GetName();
+            
         }
 
 
