@@ -2,9 +2,10 @@ using Godot;
 using System;
 using System.Data;
 using Mediator;
+using Messages;
+using GameComponents;
 public partial class InputNamePanel : Panel
 {
-	private IMediator MediatorComp;
 	private Boolean IsValidName(String name)
 	{
 		if (name.Length <= 0 || name.Length > 10)
@@ -42,7 +43,7 @@ public partial class InputNamePanel : Panel
 		}
 		else
 		{
-			MediatorComp.Notify(this, Event.CONNECT);
+			GetTree().ChangeSceneToFile("res://WaitingPanel.tscn");
 		}
 	}
 	

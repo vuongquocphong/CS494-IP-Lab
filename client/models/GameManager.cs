@@ -1,12 +1,15 @@
 using Mediator;
+using Messages;
 using StateManager;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace GameComponents
 {
-    public class GameManager(IMediator mediator) : Component(mediator)
+    public class GameManager : Component
     {
-        private IState _state = null!;
+        private GameManager instance = null!;
+        private State m_State = null!;
         public string LocalPlayerName { get; set; } = "";
         public string KeyWord { get; set; } = "";
         public int NumberOfPlayers { get; set; } = 0;
@@ -14,7 +17,23 @@ namespace GameComponents
         public int NumberOfTurns { get; set; } = 0;
         public bool GameState { get; set; } = false;
         public PlayerInfo CurrentPlayer { get; set; } = null!;
-        public IMediator Mediator { get; set; } = mediator;
+        public IMediator Mediator { get; set; } = null!;
+
+        private GameManager(IMediator mediator) : base(mediator) {
+            this.Mediator = mediator;
+        }
+
+        public GameManager Init(IMediator mediator) {
+            instance ??= new GameManager(mediator);
+            return instance;
+        }
+
+        public GameManager GetInstance() {
+            if (instance == null) {
+                throw new Exception("Game Manager is not initialized");
+            }
+            return instance;
+        }
 
         public void RequestConnect(string name)
         {
@@ -22,6 +41,30 @@ namespace GameComponents
             // to connect player
             // Notify mediator
             // Mediator.Notify(this, Event.CONNECT);
+            this.Mediator.Notify(this, new ClientConnectionMessage(name));
+        }
+
+        public void ConnectSuccess() {
+            switch(m_State) {
+                case StartState:
+                    TransitionTo(new WaitingState());
+                    break;
+                default:
+                    break;
+            }
+        }
+        public void ConnectFail(ServerConnectionFailureMessage msg) {
+            string InvalidName = "InvalidName";
+            InvalidName = 
+            msg.ErrorCode switch {
+                ErrorCode.InvalidName => "InvalidName",
+                ErrorCode.ServerIsFull => "ServerIsFull",
+                ErrorCode.GameInProgress => "GameInProgress",
+                ErrorCode.InternalServerError => "InternalServerError",
+                ErrorCode.NameAlreadyTaken => "NameAlreadyTaken",
+                _ => "Unknown"
+            };
+            
         }
         public void Ready() {
             // Send message to server
@@ -47,11 +90,10 @@ namespace GameComponents
             PlayersList.Add(new PlayerInfo(name));
         }
 
-        public void TransitionTo(IState state)
+        public void TransitionTo(State state)
         {
-            _state = state;
-            _state.Handle(this);
+            m_State = state;
+            m_State.OnReady();
         }
-
     }
 }

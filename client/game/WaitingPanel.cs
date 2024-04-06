@@ -39,6 +39,6 @@ public partial class WaitingPanel : Panel
 
 	public void OnBackButtonPressed()
 	{
-
+		GetTree().ChangeSceneToFile("res://input_name_panel.tscn");
 	}
 }
