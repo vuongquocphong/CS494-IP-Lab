@@ -10,6 +10,7 @@ config_version=5
 
 [application]
 
+run/main_scene="res://input_name_panel.tscn"
 config/name="Game"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://icon.svg"
