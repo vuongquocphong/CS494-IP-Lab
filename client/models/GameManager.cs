@@ -1,10 +1,13 @@
 using Mediator;
+using StateManager;
 using System.Collections.Generic;
 
 namespace GameComponents
 {
-    class GameManager(IMediator mediator) : Component(mediator)
+    public class GameManager(IMediator mediator) : Component(mediator)
     {
+        private IState _state = null!;
+        public string LocalPlayerName { get; set; } = "";
         public string KeyWord { get; set; } = "";
         public int NumberOfPlayers { get; set; } = 0;
         public List<PlayerInfo> PlayersList { get; set; } = [];
@@ -41,7 +44,13 @@ namespace GameComponents
 
         internal void AddPlayer(string name)
         {
-            PlayersList.Add(new PlayerInfo.PlayerInfo(name));
+            PlayersList.Add(new PlayerInfo(name));
+        }
+
+        public void TransitionTo(IState state)
+        {
+            _state = state;
+            _state.Handle(this);
         }
 
     }

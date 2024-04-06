@@ -1,6 +1,6 @@
 namespace GameComponents
 {
-    enum PlayerState
+    public enum PlayerState
     {
         Playing,
         Lost,
@@ -8,12 +8,12 @@ namespace GameComponents
         Win
     }
 
-    enum GuessType
+    public enum GuessType
     {
         Character,
         Word
     }
-    class PlayerInfo(string name)
+    public class PlayerInfo(string name)
     {
 
         public string Name { get; set; } = name;
