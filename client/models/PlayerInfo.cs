@@ -1,4 +1,4 @@
-namespace PlayerInfo
+namespace GameComponents
 {
     enum PlayerState
     {
@@ -13,33 +13,12 @@ namespace PlayerInfo
         Character,
         Word
     }
-    class PlayerInfo
+    class PlayerInfo(string name)
     {
 
-        public string Name { get; set; }
-        public int Point { get; set; }
-        public bool ReadyStatus { get; set; }
-        public PlayerState State { get; set; }
-        public GuessType GuessType { get; set; }
-        public string Guess { get; set; }
-
-        public PlayerInfo()
-        {
-            Name = "";
-            Point = 0;
-            ReadyStatus = false;
-            State = PlayerState.Playing;
-            GuessType = GuessType.Character;
-            Guess = "";
-        }
-        public PlayerInfo(string name)
-        {
-            Name = name;
-            Point = 0;
-            ReadyStatus = false;
-            State = PlayerState.Playing;
-            GuessType = GuessType.Character;
-            Guess = "";
-        }
+        public string Name { get; set; } = name;
+        public int Point { get; set; } = 0;
+        public bool ReadyStatus { get; set; } = false;
+        public PlayerState State { get; set; } = PlayerState.Playing;
     }
 }
