@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Text;
-
+using Messages;
 using Sockets;
 
 namespace SocketServerTestApp
@@ -8,6 +8,7 @@ namespace SocketServerTestApp
     public class Form1
     {
         static int m_Count = 0;
+        private readonly MessageFactory MessageFactory = new();
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -37,6 +38,18 @@ namespace SocketServerTestApp
             Console.WriteLine("Close Handler");
             Console.WriteLine("IpAddress: " + socket.IpAddress);
         }
+
+        public static void PrintByteArray(byte[] bytes)
+        {
+            var sb = new StringBuilder("new byte[] { ");
+            foreach (var b in bytes)
+            {
+                sb.Append(b + ", ");
+            }
+            sb.Append('}');
+            Console.WriteLine(sb.ToString());
+        }
+
         /// <summary> Called when a message is extracted from the socket </summary>
         /// <param name="pSocket"> The SocketClient object the message came from </param>
         /// <param name="iNumberOfBytes"> The number of bytes in the RawBuffer inside the SocketClient </param>
@@ -46,9 +59,14 @@ namespace SocketServerTestApp
             {
                 SocketClient pSocket = (SocketClient)socket;
                 // Find a complete message
-                string strMessage = Encoding.UTF8.GetString(pSocket.RawBuffer, 0, iNumberOfBytes);
+                // PrintByteArray(pSocket.RawBuffer);
+                byte[] message = pSocket.RawBuffer[0..iNumberOfBytes];
 
-                Console.WriteLine("Message=<{1}> Received {0} messages", ++m_Count, strMessage);
+                PrintByteArray(message);
+
+                Message msg = MessageFactory.CreateMessage(message);
+
+                Console.WriteLine("Message=<{1}> Received {0} messages", m_Count++, ((ClientConnectionMessage)msg).Username);
             }
             catch (Exception pException)
             {

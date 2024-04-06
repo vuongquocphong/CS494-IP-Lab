@@ -16,7 +16,7 @@
 
     public abstract class Message
     {
-        protected MessageType MessageType { get; set; }
+        public MessageType MessageType { get; protected set; }
 
         public abstract byte[] Serialize();
     }

@@ -420,22 +420,17 @@ namespace Sockets
             byte[] rawBuffer = Encoding.UTF8.GetBytes(len + message);
             return Send(rawBuffer);
         }
-
-        /// <summary>
-        ///  Function to send a string to the server 
-        ///  </summary>
-        /// <param name="message"> A string to send </param>
-        virtual public bool SendNotification(string message)
-        {
-            return Send(message);
-        }
-
         /// <summary> 
         /// Function to send a raw buffer to the server 
         /// </summary>
         /// <param name="rawBuffer"> A Raw buffer of bytes to send </param>
-        public bool Send(byte[] rawBuffer)
+        public bool Send(byte[] message)
         {
+            byte[] ushortBytes = BitConverter.GetBytes((ushort)message.Length);
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(ushortBytes);
+            string len = Encoding.UTF8.GetString(ushortBytes);
+            byte[] rawBuffer = Encoding.UTF8.GetBytes(len + Encoding.UTF8.GetString(message));
             if ((networkStream != null) && networkStream.CanWrite)
             //&& 
             //(clientSocket != null) && (this.clientSocket.Connected == true))

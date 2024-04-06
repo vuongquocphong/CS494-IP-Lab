@@ -269,7 +269,7 @@ namespace Sockets
                     SocketClient socket = (SocketClient)socketClientList[x]!;
 
                     if (socket.ClientSocket.Connected == true &&
-                        socket.SendNotification(data) == true)
+                        socket.Send(data) == true)
                         count++;
                     else
                     {

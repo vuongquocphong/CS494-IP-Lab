@@ -2,6 +2,7 @@
 using System.Text;
 
 using Sockets;
+using Messages;
 
 namespace SocketClientTestApp
 {
@@ -60,9 +61,13 @@ namespace SocketClientTestApp
 
                 pSocketClient.Connect(IPAddress.Parse("127.0.0.1"), 9000);
 
+
                 while (true) {
                     // Send a message to the server
-                    pSocketClient.Send("Hello from the client");
+                    // pSocketClient.Send("Hello from the client");
+                    string username = "TestUser" + new Random().Next(1000);
+
+                    pSocketClient.Send(new ClientConnectionMessage(username).Serialize());
 
                     Console.WriteLine("Press Enter to send another message or 'Q' to quit");
                     string? strInput = Console.ReadLine();
