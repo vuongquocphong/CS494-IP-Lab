@@ -45,6 +45,10 @@ namespace Messages
             {
                 byte[] playerNameBytes = Encoding.UTF8.GetBytes(result.PlayerName);
                 byte[] scoreBytes = BitConverter.GetBytes(result.Score);
+                if (BitConverter.IsLittleEndian)
+                {
+                    Array.Reverse(scoreBytes);
+                }
                 byte[] rankBytes = [result.Rank];
                 byte[] playerResult = new byte[3 + playerNameBytes.Length];
                 playerResult[0] = (byte)playerNameBytes.Length;
