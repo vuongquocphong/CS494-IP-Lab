@@ -28,11 +28,17 @@ namespace GameServer
         GameOver
     }
 
-    public class ServerPlayerInfo(string username, int score, ServerPlayerState state)
+    public class ServerPlayerInfo(string address, string username, int score, ServerPlayerState state)
     {
+        private readonly string m_address = address;
         public string Username { get; set; } = username;
         public int Score { get; set; } = score;
         public ServerPlayerState State { get; set; } = state;
+
+        public string PlayerId
+        {
+            get { return m_address; }
+        }
     }
 
     public class ServerHandler
@@ -47,13 +53,32 @@ namespace GameServer
 
         private string m_KeyWord = null!;
 
+        private string m_Description = null!;
+
         private string m_Revealed = null!;
 
         public ServerHandler()
         {
         }
 
-        public AddPlayerResult AddPlayer(string username)
+        public ServerPlayerInfo? GetPlayer(string playerId)
+        {
+            return m_Players.Find(player => player.PlayerId == playerId);
+        }
+
+        public void StartGame()
+        {
+            if (m_Players.Count < 2)
+            {
+                throw new InvalidOperationException("Not enough players");
+            }
+            m_ServerState = ServerState.GameInProgress;
+            m_KeyWord = "test";
+            m_Description = "test description";
+            m_Revealed = new string(m_KeyWord.Select(c => '_').ToArray());
+        }
+
+        public AddPlayerResult AddPlayer(string address, string username)
         {
             if (m_Players.Count >= MaxPlayers)
             {
@@ -75,11 +100,27 @@ namespace GameServer
                 return AddPlayerResult.InvalidName;
             }
 
-            m_Players.Add(new ServerPlayerInfo(username, 0, ServerPlayerState.NotReady));
+            m_Players.Add(new ServerPlayerInfo(address, username, 0, ServerPlayerState.NotReady));
             return AddPlayerResult.Success;
         }
 
-        public GuessResult Guess(string playerName, GuessType type, string guess) {
+        public void Ready(string playerId, bool ready)
+        {
+            if (m_ServerState != ServerState.WaitingForPlayers)
+            {
+                throw new InvalidOperationException("Game is not waiting for players");
+            }
+            for (int i = 0; i < m_Players.Count; i++)
+            {
+                if (m_Players[i].PlayerId == playerId)
+                {
+                    m_Players[i].State = ready ? ServerPlayerState.Ready : ServerPlayerState.NotReady;
+                    break;
+                }
+            }
+        }
+
+        public GuessResult Guess(string playerId, GuessType type, string guess) {
             if (m_ServerState != ServerState.GameInProgress)
             {
                 throw new InvalidOperationException("Game is not in progress");
@@ -112,7 +153,7 @@ namespace GameServer
                 }
                 for (int i = 0; i < m_Players.Count; i++)
                 {
-                    if (m_Players[i].Username == playerName)
+                    if (m_Players[i].PlayerId == playerId)
                     {
                         m_Players[i].State = ServerPlayerState.GameOver;
                         break;
@@ -123,6 +164,23 @@ namespace GameServer
             else
             {
                 return GuessResult.Invalid;
+            }
+        }
+
+        public void Timeout(string playerId)
+        {
+            if (m_ServerState != ServerState.GameInProgress)
+            {
+                throw new InvalidOperationException("Game is not in progress");
+            }
+            for (int i = 0; i < m_Players.Count; i++)
+            {
+                if (m_Players[i].PlayerId == playerId)
+                {
+                    // TODO: Next turn
+                    m_Players[i].State = ServerPlayerState.GameOver;
+                    break;
+                }
             }
         }
     }

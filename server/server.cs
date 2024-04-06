@@ -76,17 +76,14 @@ namespace GameServer
                     case MessageType.ClientConnectionMessage:
                         HandleClientConnection(pSocket, (ClientConnectionMessage)msg);
                         break;
-                    case MessageType.Guess:
-                        GuessMessage clientGuessMessage = (GuessMessage)msg;
-                        Console.WriteLine("ClientGuessMessage: {0}", clientGuessMessage.Guess);
-                        break;
                     case MessageType.Ready:
-                        ReadyMessage clientReadyMessage = (ReadyMessage)msg;
-                        Console.WriteLine("ClientReadyMessage: {0}", clientReadyMessage.Ready);
+                        HandleReady(pSocket, (ReadyMessage)msg);
+                        break;
+                    case MessageType.Guess:
+                        HandleGuess(pSocket, (GuessMessage)msg);
                         break;
                     case MessageType.Timeout:
-                        TimeoutMessage timeoutMessage = (TimeoutMessage)msg;
-                        Console.WriteLine("TimeoutMessage: {0}", timeoutMessage);
+                        HandleTimeout(pSocket, (TimeoutMessage)msg);
                         break;
                     default:
                         Console.WriteLine("Unknown message type");
@@ -103,14 +100,15 @@ namespace GameServer
         /// <param name="pSocket"> The SocketClient object the message came from </param>
         static public void AcceptHandler(SocketClient pSocket)
         {
-            
+
             Console.WriteLine("Accept Handler");
             Console.WriteLine("IpAddress: " + pSocket.IpAddress + ":" + pSocket.Port);
         }
 
         public static void HandleClientConnection(SocketClient pSocket, ClientConnectionMessage message)
         {
-            AddPlayerResult result = ServerHandler.AddPlayer(message.Username);
+            string address = pSocket.IpAddress.ToString() + ":" + pSocket.Port;
+            AddPlayerResult result = ServerHandler.AddPlayer(address, message.Username);
             switch (result)
             {
                 case AddPlayerResult.ServerIsFull:
@@ -140,33 +138,50 @@ namespace GameServer
             }
         }
 
+        public static void HandleReady(SocketClient pSocket, ReadyMessage message)
+        {
+            string address = pSocket.IpAddress.ToString() + ":" + pSocket.Port;
+            ServerHandler.Ready(address, message.Ready);
+        }
+
         public static void HandleGuess(SocketClient pSocket, GuessMessage message)
         {
-            GuessResult result = ServerHandler.Guess(message.PlayerName, message.Type, message.Guess);
+            string address = pSocket.IpAddress.ToString() + ":" + pSocket.Port;
+            string playerName = ServerHandler.GetPlayer(address)!.Username;
+            GuessResult result = ServerHandler.Guess(address, message.GuessType, message.Guess);
             switch (result)
             {
                 case GuessResult.Invalid:
                     pSocket.Send(
-                        new GuessResponseMessage(
-                            message.PlayerName, message.Type, message.Guess, GuessResult.Invalid
+                        new GuessResultMessage(GuessResult.Invalid, message.GuessType, playerName, message.Guess
                         ).Serialize()
                     );
                     break;
                 case GuessResult.Correct:
                     pSocket.Send(
-                        new GuessResponseMessage(
-                            message.PlayerName, message.Type, message.Guess, GuessResult.Correct
+                        new GuessResultMessage(GuessResult.Correct, message.GuessType, playerName, message.Guess
                         ).Serialize()
                     );
                     break;
                 case GuessResult.Incorrect:
                     pSocket.Send(
-                        new GuessResponseMessage(
-                            message.PlayerName, message.Type, message.Guess, GuessResult.Incorrect
+                        new GuessResultMessage(GuessResult.Incorrect, message.GuessType, playerName, message.Guess
+                        ).Serialize()
+                    );
+                    break;
+                case GuessResult.Duplicate:
+                    pSocket.Send(
+                        new GuessResultMessage(GuessResult.Duplicate, message.GuessType, playerName, message.Guess
                         ).Serialize()
                     );
                     break;
             }
+        }
+
+        public static void HandleTimeout(SocketClient pSocket, TimeoutMessage message)
+        {
+            string address = pSocket.IpAddress.ToString() + ":" + pSocket.Port;
+            ServerHandler.Timeout(address);
         }
     }
 }
