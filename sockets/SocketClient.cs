@@ -411,15 +411,15 @@ namespace Sockets
         ///  Function to send a string to the server 
         ///  </summary>
         /// <param name="message"> A string to send </param>
-        public bool Send(string message)
-        {
-            byte[] ushortBytes = BitConverter.GetBytes((ushort)message.Length);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(ushortBytes);
-            string len = Encoding.UTF8.GetString(ushortBytes);
-            byte[] rawBuffer = Encoding.UTF8.GetBytes(len + message);
-            return Send(rawBuffer);
-        }
+        // public bool Send(string message)
+        // {
+        //     byte[] ushortBytes = BitConverter.GetBytes((ushort)message.Length);
+        //     if (BitConverter.IsLittleEndian)
+        //         Array.Reverse(ushortBytes);
+        //     string len = Encoding.UTF8.GetString(ushortBytes);
+        //     byte[] rawBuffer = Encoding.UTF8.GetBytes(len + message);
+        //     return Send(rawBuffer);
+        // }
         /// <summary> 
         /// Function to send a raw buffer to the server 
         /// </summary>

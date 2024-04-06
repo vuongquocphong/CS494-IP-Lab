@@ -257,7 +257,7 @@ namespace Sockets
         /// Notifies connected clients of new alert from system
         /// </summary>
         /// <param name="data"></param>
-        public int NotifyConnectedClients(string data)
+        public int NotifyConnectedClients(byte[] data)
         {
             int count = 0;
             ArrayList? ObjectsToRemove = null;

@@ -53,12 +53,23 @@ namespace GameServer
 
         private string m_KeyWord = null!;
 
-        private string m_Description = null!;
+        private string m_Hint = null!;
 
         private string m_Revealed = null!;
 
+        public List<ServerPlayerInfo> Players => m_Players;
+
+        public string KeyWord => m_KeyWord;
+
+        public string Hint => m_Hint;
+
         public ServerHandler()
         {
+        }
+
+        public List<Tuple<string, bool>> GetPlayerReadyList()
+        {
+            return m_Players.Select(player => new Tuple<string, bool>(player.Username, player.State == ServerPlayerState.Ready)).ToList();
         }
 
         public ServerPlayerInfo? GetPlayer(string playerId)
@@ -74,7 +85,7 @@ namespace GameServer
             }
             m_ServerState = ServerState.GameInProgress;
             m_KeyWord = "test";
-            m_Description = "test description";
+            m_Hint = "test description";
             m_Revealed = new string(m_KeyWord.Select(c => '_').ToArray());
         }
 

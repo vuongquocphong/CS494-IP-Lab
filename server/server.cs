@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Reflection.Metadata;
 using System.Text;
 using Messages;
 using Sockets;
@@ -9,8 +8,8 @@ namespace GameServer
     public class ServerEntryPoint
     {
         static int m_Count = 0;
-        private readonly MessageFactory MessageFactory = new();
-        private static ServerHandler ServerHandler = new();
+        private static readonly ServerHandler ServerHandler = new();
+        static readonly SocketServer socketServer = new();
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -18,7 +17,6 @@ namespace GameServer
         static void Main()
         {
             // Instantiate a CSocketServer object
-            SocketServer socketServer = new();
             // Start listening for connections
             socketServer.Start(IPAddress.Parse("127.0.0.1"), 9000, 1024,
                 new MessageHandler(MessageHandlerServer),
@@ -134,6 +132,9 @@ namespace GameServer
                     break;
                 case AddPlayerResult.Success:
                     pSocket.Send(new ServerConnectionSuccessMessage().Serialize());
+                    socketServer.NotifyConnectedClients(
+                        new PlayerListMessage(ServerHandler.GetPlayerReadyList()).Serialize()
+                    );
                     break;
             }
         }
@@ -142,6 +143,24 @@ namespace GameServer
         {
             string address = pSocket.IpAddress.ToString() + ":" + pSocket.Port;
             ServerHandler.Ready(address, message.Ready);
+            socketServer.NotifyConnectedClients(
+                new PlayerListMessage(ServerHandler.GetPlayerReadyList()).Serialize()
+            );
+            int readyCount = 0;
+            for (int i = 0; i < ServerHandler.Players.Count; i++)
+            {
+                if (ServerHandler.Players[i].State == ServerPlayerState.Ready)
+                {
+                    readyCount++;
+                }
+            }
+            if (readyCount == ServerHandler.Players.Count)
+            {
+                ServerHandler.StartGame();
+                socketServer.NotifyConnectedClients(
+                    new GameStartedMessage(ServerHandler.KeyWord, ServerHandler.Hint).Serialize()
+                );
+            }
         }
 
         public static void HandleGuess(SocketClient pSocket, GuessMessage message)
@@ -152,25 +171,25 @@ namespace GameServer
             switch (result)
             {
                 case GuessResult.Invalid:
-                    pSocket.Send(
+                    socketServer.NotifyConnectedClients(
                         new GuessResultMessage(GuessResult.Invalid, message.GuessType, playerName, message.Guess
                         ).Serialize()
                     );
                     break;
                 case GuessResult.Correct:
-                    pSocket.Send(
+                    socketServer.NotifyConnectedClients(
                         new GuessResultMessage(GuessResult.Correct, message.GuessType, playerName, message.Guess
                         ).Serialize()
                     );
                     break;
                 case GuessResult.Incorrect:
-                    pSocket.Send(
+                    socketServer.NotifyConnectedClients(
                         new GuessResultMessage(GuessResult.Incorrect, message.GuessType, playerName, message.Guess
                         ).Serialize()
                     );
                     break;
                 case GuessResult.Duplicate:
-                    pSocket.Send(
+                    socketServer.NotifyConnectedClients(
                         new GuessResultMessage(GuessResult.Duplicate, message.GuessType, playerName, message.Guess
                         ).Serialize()
                     );
@@ -178,7 +197,7 @@ namespace GameServer
             }
         }
 
-        public static void HandleTimeout(SocketClient pSocket, TimeoutMessage message)
+        public static void HandleTimeout(SocketClient pSocket, TimeoutMessage _)
         {
             string address = pSocket.IpAddress.ToString() + ":" + pSocket.Port;
             ServerHandler.Timeout(address);
