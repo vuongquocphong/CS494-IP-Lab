@@ -1,7 +1,8 @@
 namespace StateManager {
-    public class StartState : IState {
+    public class StartState : State {
+        override
         public void Handle(GameComponents.GameManager gameManager) {
-            gameManager.TransitionTo(new PlayingState());
+            throw new System.NotImplementedException();
         }
     }
 }

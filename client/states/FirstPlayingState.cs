@@ -1,7 +1,8 @@
 namespace StateManager {
-    public class FirstPlayingState : IState {
+    public class FirstPlayingState : State {
+        override
         public void Handle(GameComponents.GameManager gameManager) {
-            gameManager.TransitionTo(new PlayingState());
+            throw new System.NotImplementedException();
         }
     }
 }
