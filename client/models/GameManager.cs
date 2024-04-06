@@ -6,7 +6,7 @@ using System.ComponentModel;
 
 namespace GameComponents
 {
-    public class GameManager : Component
+    public class GameManager
     {
         private GameManager instance = null!;
         private State m_State = null!;
@@ -45,13 +45,7 @@ namespace GameComponents
         }
 
         public void ConnectSuccess() {
-            switch(m_State) {
-                case StartState:
-                    TransitionTo(new WaitingState());
-                    break;
-                default:
-                    break;
-            }
+            this.Mediator.Notify(this, )
         }
         public void ConnectFail(ServerConnectionFailureMessage msg) {
             string InvalidName = "InvalidName";
