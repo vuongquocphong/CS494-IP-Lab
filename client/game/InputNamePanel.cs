@@ -25,6 +25,11 @@ public partial class InputNamePanel : Panel
 		return true;
 	}
 
+	public void SetInvalidMessage(String invalidMessage){
+		var InvalidMessageNode = GetNode<RichTextLabel>("InvalidMessageLabel");
+			InvalidMessageNode.Text = invalidMessage;
+			InvalidMessageNode.VisibleCharacters = -1;
+	}
 	public String GetName(){
 		return GetNode<LineEdit>("NameLineEdit").Text;
 	}
@@ -33,9 +38,7 @@ public partial class InputNamePanel : Panel
 		var name = GetNode<LineEdit>("NameLineEdit").Text;
 		if (!IsValidName(name))
 		{
-			var InvalidMessageNode = GetNode<RichTextLabel>("InvalidMessageLabel");
-			InvalidMessageNode.Text = "Invalid name, please try again!";
-			InvalidMessageNode.VisibleCharacters = -1;
+			SetInvalidMessage("Invalid name, please try again!");
 		}
 		else
 		{
