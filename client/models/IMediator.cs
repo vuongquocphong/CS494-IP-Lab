@@ -1,15 +1,17 @@
 namespace Mediator
 {
-    enum Event
+    public enum Event
     {
         CONNECT,
         READY,
         GUESS,
         TIMEOUT,
         MOCKRCV,
-        TCPRCV
+        TCPRCV,
+        ADDPLAYER,
+        
     }
-    interface IMediator
+    public interface IMediator
     {   
         abstract void Notify(object sender, Event ev);
     }

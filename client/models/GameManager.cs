@@ -51,5 +51,11 @@ namespace GameManager
             // Notify mediator
             this.Mediator.Notify(this, Event.TIMEOUT);
         }
+
+        internal void AddPlayer(string name)
+        {
+            PlayersList.Add(new PlayerInfo.PlayerInfo(name));
+        }
+
     }
 }
