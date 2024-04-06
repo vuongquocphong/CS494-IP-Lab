@@ -6,26 +6,13 @@ using Messages;
 using GameComponents;
 public partial class InputNamePanel : Panel
 {
-	private Boolean IsValidName(String name)
-	{
-		if (name.Length <= 0 || name.Length > 10)
-		{
-			return false;
-		}
-		foreach (char character in name){
-			if (
-				(character < 'a' || character > 'z') &&
-				(character < 'A' || character > 'Z') &&
-				(character < '0' || character > '9') &&
-				(character != '_')
-			)
-			{
-				return false;
-			}
-		}
-		return true;
-	}
+	private IMediator MediatorComp;
 
+	public InputNamePanel(){}
+	
+	public void SetMediator(IMediator mediatorComp){
+		MediatorComp = mediatorComp;
+	}
 	public void SetInvalidMessage(String invalidMessage){
 		var InvalidMessageNode = GetNode<RichTextLabel>("InvalidMessageLabel");
 			InvalidMessageNode.Text = invalidMessage;
@@ -36,15 +23,11 @@ public partial class InputNamePanel : Panel
 	}
 	public void OnPlayButtonPressed()
 	{
-		var name = GetNode<LineEdit>("NameLineEdit").Text;
-		if (!IsValidName(name))
-		{
-			SetInvalidMessage("Invalid name, please try again!");
-		}
-		else
-		{
-			GetTree().ChangeSceneToFile("res://WaitingPanel.tscn");
-		}
+		MediatorComp.Notify(this, Event.REQUEST_CONNECT);
+	}
+
+	public void OnReceiveMessage(String Keyword){
+
 	}
 	
 }

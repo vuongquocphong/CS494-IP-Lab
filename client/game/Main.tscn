@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://b4daxnwgl8vj7"]
+[gd_scene load_steps=2 format=3 uid="uid://ps043xndppan"]
 
-[ext_resource type="Script" path="res://Main.cs" id="1_jg0ju"]
+[ext_resource type="Script" path="res://Main.cs" id="1_dsdy0"]
 
 [node name="Main" type="Node"]
-script = ExtResource("1_jg0ju")
+script = ExtResource("1_dsdy0")
+
+[connection signal="ready" from="." to="." method="OnReady"]

@@ -9,11 +9,10 @@ public partial class WaitingPanel : Panel
 	private Int32 Index;
 	private Int32 NumberOfReadyPlayers;
 
-    public override void _Ready()
-    {
-        base._Ready();
-		Ready = false;
-    }
+	public WaitingPanel() {}
+	public void SetMediator(IMediator mediatorComp){
+		MediatorComp = mediatorComp;
+	}
 
     // private List<Tuple<String, Boolean>> PlayerList = new List<Tuple<string, bool>>();
     public void OnReadyButtonPressed()
@@ -40,6 +39,6 @@ public partial class WaitingPanel : Panel
 	public void OnBackButtonPressed()
 	{
 		
-		GetTree().ChangeSceneToFile("res://InputNamePanel.tscn");
+		MediatorComp.Notify(this, Event.DISCONNECT);
 	}
 }

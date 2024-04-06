@@ -17,16 +17,16 @@ namespace GameComponents
         public int NumberOfTurns { get; set; } = 0;
         public bool GameState { get; set; } = false;
         public PlayerInfo CurrentPlayer { get; set; } = null!;
-        public IMediator Mediator { get; set; } = null!;
+        public IMediator MediatorComp { get; set; } = null!;
 
-        private GameManager(IMediator mediator) : base(mediator) {
-            this.Mediator = mediator;
-        }
+        // private GameManager(IMediator mediator) : base(mediator) {
+        //     this.Mediator = mediator;
+        // }
 
-        public GameManager Init(IMediator mediator) {
-            instance ??= new GameManager(mediator);
-            return instance;
-        }
+        // public GameManager Init(IMediator mediator) {
+        //     instance ??= new GameManager(mediator);
+        //     return instance;
+        // }
 
         public GameManager GetInstance() {
             if (instance == null) {
@@ -41,11 +41,11 @@ namespace GameComponents
             // to connect player
             // Notify mediator
             // Mediator.Notify(this, Event.CONNECT);
-            this.Mediator.Notify(this, new ClientConnectionMessage(name));
+            // this.Mediator.Notify(this, new ClientConnectionMessage(name));
         }
 
         public void ConnectSuccess() {
-            this.Mediator.Notify(this, )
+            MediatorComp.Notify(this, Mediator.Event.CONNECT_SUCCESS);
         }
         public void ConnectFail(ServerConnectionFailureMessage msg) {
             string InvalidName = "InvalidName";

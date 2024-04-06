@@ -4,7 +4,7 @@ using NetworkClient;
 
 namespace Mediator
 {
-    class MessagePasser(GameManager gameManager, INetworkClient networkClient) : IMediator
+    class MessagePasser(GameManager gameManager, INetworkClient networkClient) 
     {
         private GameManager gameManager = gameManager;
         private INetworkClient networkClient = networkClient;
