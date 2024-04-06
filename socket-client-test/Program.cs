@@ -18,15 +18,21 @@ namespace SocketClientTestApp
             TestClient();
         }
 
-        static public void MessageHandlerClient(SocketBase pSocket, int iNumberOfBytes)
+        /// <summary> Called when a message is extracted from the socket </summary>
+        /// <param name="pSocket"> The SocketClient object the message came from </param>
+        /// <param name="iNumberOfBytes"> The number of bytes in the RawBuffer inside the SocketClient </param>
+        static public void MessageHandlerClient(SocketBase socket, int iNumberOfBytes)
         {
             try
             {
-                // Convert the message from a byte array to a string
-                string strMessage = Encoding.ASCII.GetString(pSocket.RawBuffer, 0, iNumberOfBytes);
+                SocketClient pSocket = (SocketClient)socket;
+                // Find a complete message
+                // PrintByteArray(pSocket.RawBuffer);
+                byte[] message = pSocket.RawBuffer[0..iNumberOfBytes];
 
-                // Display the string to the console window
-                Console.WriteLine(strMessage);
+                Message msg = MessageFactory.CreateMessage(message);
+
+                Console.WriteLine("Message=<{0}> Received ", msg.MessageType.ToString());
             }
             catch (Exception pException)
             {

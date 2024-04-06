@@ -67,6 +67,10 @@ namespace SocketServerTestApp
                 Message msg = MessageFactory.CreateMessage(message);
 
                 Console.WriteLine("Message=<{1}> Received {0} messages", m_Count++, ((ClientConnectionMessage)msg).Username);
+
+                // Send a response
+                byte[] response = new ServerConnectionSuccessMessage().Serialize();
+                pSocket.Send(response);
             }
             catch (Exception pException)
             {
