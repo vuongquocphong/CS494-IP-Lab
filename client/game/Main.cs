@@ -9,7 +9,11 @@ public partial class Main : Node
     public override void _Ready()
     {
         base._Ready();
-		GetTree().ChangeSceneToFile("res://InputNamePanel.tscn");
-		eventPasser = new EventPasser(GetTree());
+		
     }
+
+	public void OnReady(){
+		
+		eventPasser = new EventPasser(GetTree());
+	}
 }
