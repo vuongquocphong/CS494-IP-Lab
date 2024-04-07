@@ -17,6 +17,7 @@ namespace GameServer
     {
         WaitingForPlayers,
         GameInProgress,
+        GameOver
     }
 
     public enum ServerPlayerState
@@ -25,7 +26,8 @@ namespace GameServer
         Ready,
         InGame,
         Guessing,
-        GameOver
+        GameOver,
+        Disconnected
     }
 
     public class ServerPlayerInfo(string address, string username, int score, ServerPlayerState state)
@@ -43,19 +45,23 @@ namespace GameServer
 
     public class ServerHandler
     {
+        static readonly Database database = new("database.txt");
+
         private readonly uint MaxPlayers = 10;
 
-        private ServerState m_ServerState = ServerState.WaitingForPlayers;
-
-        private readonly MessageFactory m_MessageFactory = new();
+        public ServerState ServerState { get; private set; } = ServerState.WaitingForPlayers;
 
         private List<ServerPlayerInfo> m_Players = [];
 
-        private string m_KeyWord = null!;
+        public uint CurrentPlayerTurn { get; private set; } = 0;
 
-        private string m_Hint = null!;
+        public uint CurrentGameTurn { get; private set; } = 0;
 
-        private string m_Revealed = null!;
+        internal string m_KeyWord = null!;
+
+        public string m_Hint = null!;
+
+        public string Revealed { get; private set; } = null!;
 
         public List<ServerPlayerInfo> Players => m_Players;
 
@@ -72,9 +78,26 @@ namespace GameServer
             return m_Players.Select(player => new Tuple<string, bool>(player.Username, player.State == ServerPlayerState.Ready)).ToList();
         }
 
+        public List<PlayerInfo> GetPlayerInfoList()
+        {
+            return m_Players.Select(player => new PlayerInfo(player.Username, (ushort)player.Score, (PlayerState)player.State)).ToList();
+        }
+
         public ServerPlayerInfo? GetPlayer(string playerId)
         {
             return m_Players.Find(player => player.PlayerId == playerId);
+        }
+
+        public void Disconnect(string playerId)
+        {
+            for (int i = 0; i < m_Players.Count; i++)
+            {
+                if (m_Players[i].PlayerId == playerId)
+                {
+                    m_Players[i].State = ServerPlayerState.Disconnected;
+                    break;
+                }
+            }
         }
 
         public void StartGame()
@@ -83,10 +106,58 @@ namespace GameServer
             {
                 throw new InvalidOperationException("Not enough players");
             }
-            m_ServerState = ServerState.GameInProgress;
-            m_KeyWord = "test";
-            m_Hint = "test description";
-            m_Revealed = new string(m_KeyWord.Select(c => '_').ToArray());
+            ServerState = ServerState.GameInProgress;
+            KeywordDescription kw = database.GetRandomKeyword();
+            m_KeyWord = kw.Keyword;
+            m_Hint = kw.Description;
+            CurrentPlayerTurn = 0;
+            CurrentGameTurn = 1;
+            Revealed = new string(m_KeyWord.Select(c => '_').ToArray());
+        }
+
+        public void NextTurn()
+        {
+            while (m_Players[(int)CurrentPlayerTurn].State
+                == ServerPlayerState.GameOver
+                || m_Players[(int)CurrentPlayerTurn].State
+                == ServerPlayerState.Disconnected
+            )
+            {
+                CurrentPlayerTurn = (uint)((CurrentPlayerTurn + 1) % m_Players.Count);
+            }
+            if (CurrentPlayerTurn == 0)
+            {
+                CurrentGameTurn++;
+                if (CurrentGameTurn > 5)
+                {
+                    FinishGame();
+                }
+            }
+        }
+
+        public void FinishGame()
+        {
+            ServerState = ServerState.GameOver;
+        }
+
+        public void ResetGame()
+        {
+            ServerState = ServerState.WaitingForPlayers;
+            m_Players = [];
+            m_KeyWord = null!;
+            m_Hint = null!;
+            Revealed = null!;
+        }
+
+        public List<PlayerResult> GetResults()
+        {
+            var results = m_Players.Select(player => new PlayerResult(player.Username, (ushort)player.Score, 0)).ToList();
+            results.Sort((a, b) => b.Score - a.Score);
+            for (int i = 0; i < results.Count; i++)
+            {
+                results[i].Rank = (byte)(i + 1);
+            }
+            return results;
         }
 
         public AddPlayerResult AddPlayer(string address, string username)
@@ -101,7 +172,7 @@ namespace GameServer
                 return AddPlayerResult.NameAlreadyTaken;
             }
 
-            if (m_ServerState == ServerState.GameInProgress)
+            if (ServerState == ServerState.GameInProgress)
             {
                 return AddPlayerResult.GameInProgress;
             }
@@ -117,7 +188,7 @@ namespace GameServer
 
         public void Ready(string playerId, bool ready)
         {
-            if (m_ServerState != ServerState.WaitingForPlayers)
+            if (ServerState != ServerState.WaitingForPlayers)
             {
                 throw new InvalidOperationException("Game is not waiting for players");
             }
@@ -131,8 +202,9 @@ namespace GameServer
             }
         }
 
-        public GuessResult Guess(string playerId, GuessType type, string guess) {
-            if (m_ServerState != ServerState.GameInProgress)
+        public GuessResult Guess(string playerId, GuessType type, string guess)
+        {
+            if (ServerState != ServerState.GameInProgress)
             {
                 throw new InvalidOperationException("Game is not in progress");
             }
@@ -144,12 +216,17 @@ namespace GameServer
                 }
                 if (m_KeyWord.Contains(guess))
                 {
-                    m_Revealed = new string(m_KeyWord.Select(c => c == guess[0] ? c : '_').ToArray());
-                    if (m_Revealed == m_KeyWord)
+                    if (Revealed.Contains(guess))
                     {
-                        // TODO: Finish game
+                        return GuessResult.Duplicate;
+                    }
+                    Revealed = new string(m_KeyWord.Select((c, i) => c == guess[0] ? c : Revealed[i]).ToArray());
+                    if (Revealed == m_KeyWord)
+                    {
+                        FinishGame();
                         return GuessResult.Correct;
                     }
+                    GetPlayer(playerId)!.Score++;
                     return GuessResult.Correct;
                 }
                 return GuessResult.Incorrect;
@@ -158,7 +235,7 @@ namespace GameServer
             {
                 if (guess == m_KeyWord)
                 {
-                    m_ServerState = ServerState.WaitingForPlayers;
+                    ServerState = ServerState.WaitingForPlayers;
                     // TODO: Finish game
                     return GuessResult.Correct;
                 }
@@ -175,23 +252,6 @@ namespace GameServer
             else
             {
                 return GuessResult.Invalid;
-            }
-        }
-
-        public void Timeout(string playerId)
-        {
-            if (m_ServerState != ServerState.GameInProgress)
-            {
-                throw new InvalidOperationException("Game is not in progress");
-            }
-            for (int i = 0; i < m_Players.Count; i++)
-            {
-                if (m_Players[i].PlayerId == playerId)
-                {
-                    // TODO: Next turn
-                    m_Players[i].State = ServerPlayerState.GameOver;
-                    break;
-                }
             }
         }
     }

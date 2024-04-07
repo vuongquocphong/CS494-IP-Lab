@@ -37,6 +37,7 @@ namespace GameServer
         {
             Console.WriteLine("Close Handler");
             Console.WriteLine("IpAddress: " + socket.IpAddress);
+            ServerHandler.Disconnect(socket.IpAddress.ToString());
         }
 
         public static void PrintByteArray(byte[] bytes)
@@ -195,12 +196,54 @@ namespace GameServer
                     );
                     break;
             }
+            if (ServerHandler.ServerState == ServerState.GameOver)
+            {
+                socketServer.NotifyConnectedClients(
+                    new GameResultMessage(ServerHandler.GetResults()).Serialize()
+                );
+            }
+            else
+            {
+                socketServer.NotifyConnectedClients(
+                    new GameStatusMessage(
+                        ServerHandler.Players.Count,
+                        (int)ServerHandler.CurrentGameTurn,
+                        (int)ServerHandler.CurrentPlayerTurn,
+                        ServerHandler.KeyWord,
+                        ServerHandler.GetPlayerInfoList()
+                    ).Serialize()
+                );
+                ServerHandler.NextTurn();
+            }
         }
 
         public static void HandleTimeout(SocketClient pSocket, TimeoutMessage _)
         {
             string address = pSocket.IpAddress.ToString() + ":" + pSocket.Port;
-            ServerHandler.Timeout(address);
+            if (ServerHandler.Players[(int)ServerHandler.CurrentPlayerTurn].PlayerId != address)
+            {
+                return;
+            }
+            ServerHandler.NextTurn();
+            if (ServerHandler.ServerState == ServerState.GameOver)
+            {
+                socketServer.NotifyConnectedClients(
+                    new GameResultMessage(ServerHandler.GetResults()).Serialize()
+                );
+            }
+            else
+            {
+                socketServer.NotifyConnectedClients(
+                    new GameStatusMessage(
+                        ServerHandler.Players.Count,
+                        (int)ServerHandler.CurrentGameTurn,
+                        (int)ServerHandler.CurrentPlayerTurn,
+                        ServerHandler.KeyWord,
+                        ServerHandler.GetPlayerInfoList()
+                    ).Serialize()
+                );
+                ServerHandler.NextTurn();
+            }
         }
     }
 }
