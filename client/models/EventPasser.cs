@@ -1,5 +1,7 @@
 using System.Data;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using Component;
 using GameComponents;
 using Godot;
 
@@ -7,59 +9,56 @@ namespace Mediator{
     
     public class EventPasser : IMediator 
     {
+        // Singleton
+        private static EventPasser _instance = null!;
 
+        // Constant path name
+        public const String INPUT_NAME_PANEL = "res://InputNamePanel.tscn";
+        public const String WAITING_PANEL = "res://WaitingPanel.tscn";
+        public const String INGAME_PANEL = "res://IngamePanel.tscn";
+        public const String SCOREBOARD_PANEL = "res://ScoreboardPanel.tscn";
+        
         // scripting components
-        private GameManager GameManagerComp;
-        private InputNamePanel InputNamePanelComp;
-        private WaitingPanel WaitingPanelComp;
-        private IngamePanel IngamePanelComp;
-        private ScoreboardPanel ScoreboardPanelComp;
-
-        // Resource loaders
-        private Node InputNameNode;
-        private Node WaitingNode;
-        private Node IngameNode;
-        private Node ScoreboardNode;
-        private Node CurrentScene;
+        public InputNameComponent InputNameComp;
+        public WaitingComponent WaitingComp;
+        public IngameComponent IngameComp;
+        public ScoreboardComponent ScoreboardComp;
+        public GameManager GameManagerComp;
         private SceneTree Tree; // Use this to navigate among scenes
-        public EventPasser(SceneTree tree)
+        private EventPasser(SceneTree Tree)
         {
-            // Initialize resource loaders
-            InputNameNode = ResourceLoader.Load<PackedScene>("res://InputNamePanel.tscn").Instantiate();
-            WaitingNode = ResourceLoader.Load<PackedScene>("res://WaitingPanel.tscn").Instantiate();
-            IngameNode = ResourceLoader.Load<PackedScene>("res://IngamePanel.tscn").Instantiate();
-            ScoreboardNode = ResourceLoader.Load<PackedScene>("res://ScoreboardPanel.tscn").Instantiate();
-            
-            // Get components
-
-
-
-            Tree = tree;
-            tree.Root.CallDeferred(Window.MethodName.AddChild, InputNameNode); // Start with InputNamePanel first
-            CurrentScene = Tree.CurrentScene;
-
-            // Set mediator
-            
-            
-            
+            InputNameComp = new InputNameComponent(this);
+            WaitingComp = new WaitingComponent(this);
+            IngameComp = new IngameComponent(this);
+            ScoreboardComp = new ScoreboardComponent(this);
+            GameManagerComp = new GameManager(this);
+            this.Tree = Tree;
         }
 
+        public static EventPasser GetInstance(SceneTree Tree)
+        {
+            if (_instance == null)
+            {
+                _instance = new EventPasser(Tree);
+            }
+            return _instance;
+        }
         public void Notify(object sender, Event ev){
             switch (sender) 
             {
                 case GameManager:
                     ReactOnGameManager(ev);
                     break;
-                case InputNamePanel:
+                case InputNameComponent:
                     ReactOnInputNamePanel(ev);
                     break;
-                case WaitingPanel:
+                case WaitingComponent:
                     ReactOnWaitingPanel(ev);
                     break;
-                case IngamePanel:
+                case IngameComponent:
                     ReactOnIngamePanel(ev);
                     break;
-                case ScoreboardPanel:
+                case ScoreboardComponent:
                     ReactOnScoreboardPanel(ev);
                     break;
             }
@@ -79,7 +78,7 @@ namespace Mediator{
         {
             switch(ev){
                 case Event.DISCONNECT:
-                    TransitionTo(InputNameNode);
+                    TransitionTo(INPUT_NAME_PANEL);
                     break;
             }
         }
@@ -88,7 +87,7 @@ namespace Mediator{
         {
             switch(ev){
                 case Event.REQUEST_CONNECT:
-                    TransitionTo(WaitingNode);
+                    TransitionTo(WAITING_PANEL);
                     break;
             }
         }
@@ -103,10 +102,8 @@ namespace Mediator{
             }
         }
 
-        private void TransitionTo(Node scene){
-            Tree.Root.RemoveChild(CurrentScene);
-            CurrentScene = scene;
-            Tree.Root.AddChild(scene);
+        private void TransitionTo(String SceneName){
+            Tree.ChangeSceneToFile(SceneName);
         }
     }
 }

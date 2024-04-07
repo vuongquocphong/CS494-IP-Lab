@@ -1,15 +1,13 @@
 using Mediator;
 using Messages;
-using StateManager;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Net;
 
 namespace GameComponents
 {
     public class GameManager
     {
-        private GameManager instance = null!;
-        private State m_State = null!;
         public string LocalPlayerName { get; set; } = "";
         public string KeyWord { get; set; } = "";
         public int NumberOfPlayers { get; set; } = 0;
@@ -19,21 +17,10 @@ namespace GameComponents
         public PlayerInfo CurrentPlayer { get; set; } = null!;
         public IMediator MediatorComp { get; set; } = null!;
 
-        // private GameManager(IMediator mediator) : base(mediator) {
-        //     this.Mediator = mediator;
-        // }
-
-        // public GameManager Init(IMediator mediator) {
-        //     instance ??= new GameManager(mediator);
-        //     return instance;
-        // }
-
-        public GameManager GetInstance() {
-            if (instance == null) {
-                throw new Exception("Game Manager is not initialized");
-            }
-            return instance;
+        public GameManager(IMediator MediatorComp){
+            this.MediatorComp = MediatorComp;
         }
+
 
         public void RequestConnect(string name)
         {
@@ -82,12 +69,6 @@ namespace GameComponents
         internal void AddPlayer(string name)
         {
             PlayersList.Add(new PlayerInfo(name));
-        }
-
-        public void TransitionTo(State state)
-        {
-            m_State = state;
-            m_State.OnReady();
         }
     }
 }

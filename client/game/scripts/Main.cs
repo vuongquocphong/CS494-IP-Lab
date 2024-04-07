@@ -14,6 +14,6 @@ public partial class Main : Node
 
 	public void OnReady(){
 		
-		eventPasser = new EventPasser(GetTree());
+		eventPasser = EventPasser.GetInstance(GetTree());
 	}
 }
