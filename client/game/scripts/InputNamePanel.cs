@@ -11,6 +11,7 @@ public partial class InputNamePanel : Panel
     {
         base._Ready();
 		eventPasser = EventPasser.GetInstance(GetTree());
+		eventPasser.InputNameComp.ComponentNode = this;
     }
     public void SetInvalidMessage(String invalidMessage){
 		var InvalidMessageNode = GetNode<RichTextLabel>("InvalidMessageLabel");

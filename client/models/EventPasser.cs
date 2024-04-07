@@ -13,10 +13,10 @@ namespace Mediator{
         private static EventPasser _instance = null!;
 
         // Constant path name
-        public const String INPUT_NAME_PANEL = "res://InputNamePanel.tscn";
-        public const String WAITING_PANEL = "res://WaitingPanel.tscn";
-        public const String INGAME_PANEL = "res://IngamePanel.tscn";
-        public const String SCOREBOARD_PANEL = "res://ScoreboardPanel.tscn";
+        public const String INPUT_NAME_PANEL = "res://scenes/InputNamePanel.tscn";
+        public const String WAITING_PANEL = "res://scenes/WaitingPanel.tscn";
+        public const String INGAME_PANEL = "res://scenes/IngamePanel.tscn";
+        public const String SCOREBOARD_PANEL = "res://scenes/ScoreboardPanel.tscn";
         
         // scripting components
         public InputNameComponent InputNameComp;
@@ -31,8 +31,10 @@ namespace Mediator{
             WaitingComp = new WaitingComponent(this);
             IngameComp = new IngameComponent(this);
             ScoreboardComp = new ScoreboardComponent(this);
-            GameManagerComp = new GameManager(this);
+            // GameManagerComp = new GameManager(this);
             this.Tree = Tree;
+            Node FirstScene = ResourceLoader.Load<PackedScene>(INPUT_NAME_PANEL).Instantiate();
+            this.Tree.CallDeferred(Window.MethodName.AddChild, FirstScene);
         }
 
         public static EventPasser GetInstance(SceneTree Tree)

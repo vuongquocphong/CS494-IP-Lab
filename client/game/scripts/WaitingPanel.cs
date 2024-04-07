@@ -14,7 +14,7 @@ public partial class WaitingPanel : Panel
     {
         base._Ready();
 		eventPasser = EventPasser.GetInstance(GetTree());
-		
+		eventPasser.WaitingComp.ComponentNode = this;
     }
 
     // private List<Tuple<String, Boolean>> PlayerList = new List<Tuple<string, bool>>();
