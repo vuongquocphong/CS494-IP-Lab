@@ -4,8 +4,10 @@ using GameComponents;
 using Godot;
 
 namespace Mediator{
+    
     public class EventPasser : IMediator 
     {
+
         // scripting components
         private GameManager GameManagerComp;
         private InputNamePanel InputNamePanelComp;
@@ -23,24 +25,23 @@ namespace Mediator{
         public EventPasser(SceneTree tree)
         {
             // Initialize resource loaders
-            
-            InputNameNode = tree.CurrentScene;
+            InputNameNode = ResourceLoader.Load<PackedScene>("res://InputNamePanel.tscn").Instantiate();
             WaitingNode = ResourceLoader.Load<PackedScene>("res://WaitingPanel.tscn").Instantiate();
             IngameNode = ResourceLoader.Load<PackedScene>("res://IngamePanel.tscn").Instantiate();
             ScoreboardNode = ResourceLoader.Load<PackedScene>("res://ScoreboardPanel.tscn").Instantiate();
             
             // Get components
-            InputNamePanelComp = InputNameNode as InputNamePanel;
-            WaitingPanelComp = WaitingNode as WaitingPanel;
-            IngamePanelComp = IngameNode as IngamePanel;
-            ScoreboardPanelComp = ScoreboardNode as ScoreboardPanel;
-            GameManagerComp = new GameManager();
-            
-            // Set mediator
-            InputNamePanelComp.SetMediator(this);
-            WaitingPanelComp.SetMediator(this);
-            this.Tree = tree;
+
+
+
+            Tree = tree;
+            tree.Root.CallDeferred(Window.MethodName.AddChild, InputNameNode); // Start with InputNamePanel first
             CurrentScene = Tree.CurrentScene;
+
+            // Set mediator
+            
+            
+            
         }
 
         public void Notify(object sender, Event ev){
