@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://c3j54yn3opsf6"]
 
-[ext_resource type="Script" path="res://ScoreboardPanel.cs" id="1_40bmd"]
+[ext_resource type="Script" path="res://scripts/ScoreboardPanel.cs" id="1_40bmd"]
 
 [sub_resource type="SystemFont" id="SystemFont_r8ut4"]
 font_weight = 700

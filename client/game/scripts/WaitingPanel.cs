@@ -3,16 +3,19 @@ using System;
 using Mediator;
 public partial class WaitingPanel : Panel
 {
-	private IMediator MediatorComp;
 	private Boolean Ready;
 
 	private Int32 Index;
 	private Int32 NumberOfReadyPlayers;
 
-	public WaitingPanel() {}
-	public void SetMediator(IMediator mediatorComp){
-		MediatorComp = mediatorComp;
-	}
+	private EventPasser eventPasser;
+
+    public override void _Ready()
+    {
+        base._Ready();
+		eventPasser = EventPasser.GetInstance(GetTree());
+		eventPasser.WaitingComp.ComponentNode = this;
+    }
 
     // private List<Tuple<String, Boolean>> PlayerList = new List<Tuple<string, bool>>();
     public void OnReadyButtonPressed()
@@ -39,6 +42,6 @@ public partial class WaitingPanel : Panel
 	public void OnBackButtonPressed()
 	{
 		
-		MediatorComp.Notify(this, Event.DISCONNECT);
+		// MediatorComp.Notify(this, Event.DISCONNECT);
 	}
 }
