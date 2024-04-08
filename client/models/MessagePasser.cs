@@ -1,17 +1,26 @@
 using GameComponents;
 using Messages;
 using NetworkClient;
+using MessageMediator;
 
-namespace Mediator
+namespace MessageMediator
 {
-    class MessagePasser(GameManager gameManager, INetworkClient networkClient) : IMediator
+    class MessagePasser(GameManager gameManager, INetworkClient networkClient): IMessageMediator
     {
         private GameManager gameManager = gameManager;
         private INetworkClient networkClient = networkClient;
 
-        public void Notify(Component sender, Message msg)
+        public void Notify(object sender, Message msg)
         {
-            throw new NotImplementedException();
+            switch (sender) 
+            {
+                case GameManager:
+                    ReactOnGameManager(msg);
+                    break;
+                case INetworkClient:
+                    ReactOnGameManager(msg);
+                    break;
+            }
         }
 
         private void ReactOnGameManager(Message msg)

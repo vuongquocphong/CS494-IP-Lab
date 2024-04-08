@@ -1,0 +1,80 @@
+[gd_scene load_steps=3 format=3 uid="uid://ovufx1nywkgl"]
+
+[ext_resource type="Script" path="res://InputNamePanel.cs" id="1_n0hc3"]
+
+[sub_resource type="FontFile" id="FontFile_u6o1g"]
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/16/0/kerning_overrides/16/0 = Vector2(0, 0)
+cache/0/16/0/kerning_overrides/40/0 = Vector2(0, 0)
+cache/0/40/0/ascent = 0.0
+cache/0/40/0/descent = 0.0
+cache/0/40/0/underline_position = 0.0
+cache/0/40/0/underline_thickness = 0.0
+cache/0/40/0/scale = 1.0
+cache/0/40/0/kerning_overrides/16/0 = Vector2(0, 0)
+cache/0/40/0/kerning_overrides/40/0 = Vector2(0, 0)
+
+[node name="InputNamePanel" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_n0hc3")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -343.0
+offset_top = 147.0
+offset_right = 343.0
+offset_bottom = 223.0
+grow_horizontal = 2
+theme_override_fonts/normal_font = SubResource("FontFile_u6o1g")
+theme_override_font_sizes/normal_font_size = 40
+text = "WELCOME TO THE MAGICAL WHEEL"
+
+[node name="NameLineEdit" type="LineEdit" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -374.5
+offset_top = -289.0
+offset_right = 374.5
+offset_bottom = -246.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 22
+placeholder_text = "ENTER YOUR NAME HERE..."
+
+[node name="PlayButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 402.0
+offset_top = 537.0
+offset_right = 755.0
+offset_bottom = 581.0
+theme_override_font_sizes/font_size = 30
+text = "PLAY"
+
+[node name="InvalidMessageLabel" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 210.0
+offset_top = 416.0
+offset_right = 727.0
+offset_bottom = 447.0
+theme_override_colors/default_color = Color(0.835294, 0.819608, 0, 1)
+theme_override_font_sizes/normal_font_size = 20
+text = "Invalid name, please try again"
+visible_characters = 0
+visible_ratio = 0.0
+
+[connection signal="pressed" from="PlayButton" to="." method="OnPlayButtonPressed"]

@@ -1,0 +1,110 @@
+[gd_scene load_steps=6 format=3 uid="uid://bgeyi5btktlmo"]
+
+[ext_resource type="Script" path="res://scripts/WaitingPanel.cs" id="1_cip1c"]
+
+[sub_resource type="Theme" id="Theme_b44ji"]
+
+[sub_resource type="Theme" id="Theme_tfm86"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f6hgw"]
+bg_color = Color(0.921569, 0.439216, 0.227451, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_linsj"]
+bg_color = Color(0.921569, 0.439216, 0.227451, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0, 0, 0, 1)
+
+[node name="WaitingPanel" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cip1c")
+
+[node name="WaitingText" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 114.0
+offset_top = 456.0
+offset_right = 578.0
+offset_bottom = 492.0
+theme_override_font_sizes/normal_font_size = 21
+text = "Waiting for other players ready to play..."
+
+[node name="ReadyButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 269.0
+offset_top = 533.0
+offset_right = 435.0
+offset_bottom = 585.0
+text = "READY"
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 713.0
+offset_top = 533.0
+offset_right = 879.0
+offset_bottom = 585.0
+text = "BACK"
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+offset_bottom = 438.0
+grow_horizontal = 2
+theme = SubResource("Theme_b44ji")
+columns = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 7
+size_flags_vertical = 3
+theme = SubResource("Theme_tfm86")
+
+[node name="Label" type="Label" parent="GridContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxFlat_f6hgw")
+text = "NAME"
+horizontal_alignment = 1
+
+[node name="ItemList" type="ItemList" parent="GridContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="GridContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxFlat_linsj")
+text = "STATE"
+horizontal_alignment = 1
+
+[node name="ItemList" type="ItemList" parent="GridContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ReadyPlayersLabel" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 780.0
+offset_top = 451.0
+offset_right = 985.0
+offset_bottom = 491.0
+theme_override_font_sizes/normal_font_size = 21
+text = "5/7 players ready"
+
+[connection signal="pressed" from="ReadyButton" to="." method="OnReadyButtonPressed"]
+[connection signal="pressed" from="BackButton" to="." method="OnBackButtonPressed"]
