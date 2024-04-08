@@ -1,4 +1,5 @@
 using Mediator;
+using MessageMediator;
 using Messages;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +18,7 @@ namespace GameComponents
         public PlayerInfo CurrentPlayer { get; set; } = null!;
         public IMediator MediatorComp { get; set; } = null!;
 
+        public IMessageMediator MessageMediatorComp { get; set; } = null!;
         public GameManager(IMediator MediatorComp){
             this.MediatorComp = MediatorComp;
         }
