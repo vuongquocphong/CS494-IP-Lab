@@ -1,6 +1,6 @@
 using Mediator;
 
-namespace Component
+namespace Components
 {
     public class WaitingComponent
     {

@@ -1,14 +1,13 @@
 using Mediator;
 
-namespace Component
+namespace Components
 {
-    public class IngameComponent
+    public class IngameComponent(IMediator MediatorComp) : IComponent
     {
-        public IngamePanel ComponentNode;
-        private IMediator MediatorComp;
-        public IngameComponent(IMediator MediatorComp){
-            ComponentNode = new IngamePanel();
-            this.MediatorComp = MediatorComp;
-        }
+        public IngamePanel ComponentNode = new();
+
+        private IMediator _EventPasser = MediatorComp;
+
+        public IMediator Mediator { get => _EventPasser; set => _EventPasser = value; }
     }
 }

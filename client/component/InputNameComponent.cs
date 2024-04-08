@@ -1,20 +1,23 @@
 using Mediator;
 
-namespace Component
+namespace Components
 {
-    public class InputNameComponent
+    public class InputNameComponent : IComponent
     {
-        public InputNamePanel ComponentNode{get; set;}
-        private IMediator MediatorComp;
+        public InputNamePanel ComponentNode { get; set; }
+        private IMediator _EventPasser;
+        public String PlayerName { get; set; } = "";
+        public IMediator Mediator { get => _EventPasser; set => _EventPasser = value; }
 
-        public String PlayerName{get; set;} = "";
-        public InputNameComponent(IMediator MediatorComp){
+        public InputNameComponent(IMediator MediatorComp)
+        {
             ComponentNode = new InputNamePanel();
-            this.MediatorComp = MediatorComp;
+            _EventPasser = MediatorComp;
         }
-        public void OnPlayButtonPressed(String Name){
+        public void OnPlayButtonPressed(string Name)
+        {
             PlayerName = Name;
-            MediatorComp.Notify(this, Event.REQUEST_CONNECT);
+            _EventPasser.Notify(this, Event.REQUEST_CONNECT);
         }
     }
 }

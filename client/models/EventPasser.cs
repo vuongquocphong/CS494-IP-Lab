@@ -1,7 +1,4 @@
-using System.Data;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
-using Component;
+using Components;
 using GameComponents;
 using Godot;
 
@@ -13,13 +10,13 @@ namespace Mediator{
         private static EventPasser _instance = null!;
 
         // Constant path name
-        public const String INPUT_NAME_PANEL = "res://scenes/InputNamePanel.tscn";
-        public const String WAITING_PANEL = "res://scenes/WaitingPanel.tscn";
-        public const String INGAME_PANEL = "res://scenes/IngamePanel.tscn";
-        public const String SCOREBOARD_PANEL = "res://scenes/ScoreboardPanel.tscn";
+        public const string INPUT_NAME_PANEL = "res://scenes/InputNamePanel.tscn";
+        public const string WAITING_PANEL = "res://scenes/WaitingPanel.tscn";
+        public const string INGAME_PANEL = "res://scenes/IngamePanel.tscn";
+        public const string SCOREBOARD_PANEL = "res://scenes/ScoreboardPanel.tscn";
         
         // scripting components
-        public InputNameComponent InputNameComp;
+        public IComponent InputNameComp;
         public WaitingComponent WaitingComp;
         public IngameComponent IngameComp;
         public ScoreboardComponent ScoreboardComp;
@@ -27,13 +24,14 @@ namespace Mediator{
         private SceneTree Tree; // Use this to navigate among scenes
         private EventPasser(SceneTree Tree)
         {
-            InputNameComp = new InputNameComponent(this);
             WaitingComp = new WaitingComponent(this);
             IngameComp = new IngameComponent(this);
             ScoreboardComp = new ScoreboardComponent(this);
             // GameManagerComp = new GameManager(this);
             this.Tree = Tree;
             Node FirstScene = ResourceLoader.Load<PackedScene>(INPUT_NAME_PANEL).Instantiate();
+            Script script = ResourceLoader.Load<Script>("res://scripts/InputNamePanel.cs");
+            FirstScene.SetScript(script);
             this.Tree.CallDeferred(Window.MethodName.AddChild, FirstScene);
         }
 
@@ -87,6 +85,7 @@ namespace Mediator{
 
         private void ReactOnInputNamePanel(Event ev)
         {
+            InputNameComp.GetName();
             switch(ev){
                 case Event.REQUEST_CONNECT:
                     TransitionTo(WAITING_PANEL);
@@ -104,7 +103,7 @@ namespace Mediator{
             }
         }
 
-        private void TransitionTo(String SceneName){
+        private void TransitionTo(string SceneName){
             Tree.ChangeSceneToFile(SceneName);
         }
     }
