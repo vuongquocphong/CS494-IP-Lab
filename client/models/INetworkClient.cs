@@ -1,10 +1,10 @@
-using Mediator;
+using MessageMediator;
 
 namespace NetworkClient
 {
     interface INetworkClient {
-        public IMediator Mediator { get; set; }
+        public IMessageMediator Mediator { get; set; }
         abstract void Send(byte[] message);
-        abstract void Receive();
+        abstract void Receive(byte[] message);
     }
 }
