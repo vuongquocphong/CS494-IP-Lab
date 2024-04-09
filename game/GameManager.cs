@@ -15,6 +15,8 @@ namespace GameComponents
         public delegate void ConnectionFailEventHandler(string error);
         [Signal]
         public delegate void BackToInputNameEventHandler();
+        [Signal]
+        public delegate void UpdateReadyPlayerListSignalEventHandler();
         static private GameManager instance = null!;
         public string LocalPlayerName { get; set; } = "";
         public string KeyWord { get; set; } = "";
@@ -24,7 +26,6 @@ namespace GameComponents
         public bool GameState { get; set; } = false;
         public PlayerInfo CurrentPlayer { get; set; } = null!;
         public IMediator MediatorComp { get; set; } = null!;
-
         public void RequestConnect(string name)
         {
             ClientConnectionMessage msg = new ClientConnectionMessage(name);
@@ -42,7 +43,6 @@ namespace GameComponents
         public void ConnectSuccess(Message msg) {
             // Get message content
             // and update game state
-
             CallDeferred("emit_signal", "ConnectionSuccess");
         }
 
@@ -63,7 +63,7 @@ namespace GameComponents
             CallDeferred("emit_signal", "ConnectionFail", ErrorContent);
         }
 
-        public void UpdatePlayerList(Message msg) {
+        public void UpdateReadyPlayerList(Message msg) {
             // Get message content
             // and update game state
         }
@@ -71,11 +71,12 @@ namespace GameComponents
             // Get Message type
             // and call appropriate function
         }
-        public void PlayerReady() {
+        public void PlayerReady(bool ready) {
             // Send message to server
             // to start game
             // Notify mediator
-            // this.Mediator.Notify(this, Event.READY);
+            var msg = new ReadyMessage(ready);
+            MediatorComp.Notify(this, msg);
         }
         public void Guess() {
             // Send message to server

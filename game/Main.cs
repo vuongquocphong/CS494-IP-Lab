@@ -17,6 +17,7 @@ public partial class Main : Node
 		GameManager.ConnectionSuccess += ConnectionSuccessHandler;
 		GameManager.ConnectionFail += ConnectionFailHandler;
 		GameManager.BackToInputName += BackToInputNameHandler;
+		GameManager.UpdateReadyPlayerListSignal += UpdateReadyPlayerListHandler;
 		// Get GameManager Node
 		NetworkClient = new TcpNetworkClient();
 		Mediator = new MessagePasser(GameManager, NetworkClient);
@@ -38,18 +39,20 @@ public partial class Main : Node
 		ErrorLabel.Show();
 	}
 
+<<<<<<< Updated upstream
 	private void BackToInputNameHandler() {
+=======
+	private void UpdateReadyPlayerListHandler() {
+		GetNode<WaitingPanel>("WaitingPanel").UpdateReadyPlayerList();
+	}
+	private void BackButtonPressedHandler() {
+>>>>>>> Stashed changes
 		// Show InputNamePanel
 		GetNode<Panel>("InputNamePanel").Show();
 		// Hide WaitingPanel
 		GetNode<Panel>("WaitingPanel").Hide();
 		// Close connection
 		NetworkClient.Close();
-	}
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
 	}
 
 	// Load Scenes

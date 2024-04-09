@@ -2,6 +2,7 @@ using GameComponents;
 using Messages;
 using NetworkClient;
 using Mediator;
+using Godot;
 
 namespace Mediator
 {
@@ -44,7 +45,7 @@ namespace Mediator
                     gameManager.ConnectSuccess(msg);
                     break;
                 case MessageType.PlayerList:
-                    gameManager.UpdatePlayerList((PlayerListMessage) msg);
+                    gameManager.UpdateReadyPlayerList((PlayerListMessage) msg);
                     break;
                 default:
                     break;
