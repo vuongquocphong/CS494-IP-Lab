@@ -15,8 +15,12 @@ public partial class Main : Node
 	{
 		GameManager = GameManager.GetInstance();
 		AddChild(GameManager);
+		
+		// Subscribe to GameManager events
 		GameManager.ConnectionSuccess += ConnectionSuccessHandler;
 		GameManager.ConnectionFail += ConnectionFailHandler;
+		GameManager.PlayerListUpdate += PlayerListUpdateHandler;
+
 		// Get GameManager Node
 		NetworkClient = new TcpNetworkClient();
 		Mediator = (IMediator) new MessagePasser(GameManager, NetworkClient);
@@ -35,7 +39,7 @@ public partial class Main : Node
 		Panel InputNamePanel = GetNode<Panel>("InputNamePanel");
 		RichTextLabel ErrorLabel = InputNamePanel.GetNode<RichTextLabel>("InvalidMessageLabel");
 		ErrorLabel.Text = error;
-		ErrorLabel.Show();
+		ErrorLabel.VisibleCharacters = error.Length;
 	}
 
 	private void BackButtonPressedHandler() {
@@ -45,6 +49,20 @@ public partial class Main : Node
 		GetNode<Panel>("WaitingPanel").Hide();
 		// Close connection
 		NetworkClient.Close();
+	}
+
+	private void PlayerListUpdateHandler() {
+		// Get ItemList for Name and Status
+		ItemList PlayerList = GetNode<ItemList>("WaitingPanel/GridContainer/VBoxContainerName/ItemList");
+		ItemList StatusList = GetNode<ItemList>("WaitingPanel/GridContainer/VBoxContainerStatus/ItemList");
+		// Clear PlayerList
+		PlayerList.Clear();
+		StatusList.Clear();
+		// Add players name to PlayerList
+		foreach (PlayerInfo player in GameManager.PlayersList) {
+			PlayerList.AddItem(player.Name);
+			StatusList.AddItem(player.ReadyStatus ? "Ready" : "Not Ready");
+		}
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
