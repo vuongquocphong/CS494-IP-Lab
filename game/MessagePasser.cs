@@ -44,7 +44,9 @@ namespace Mediator
                     gameManager.ConnectSuccess(msg);
                     break;
                 case MessageType.PlayerList:
-                    gameManager.UpdatePlayerList((PlayerListMessage) msg);
+                    // Retrieve players list
+                    List<Tuple<string, bool>> players = ((PlayerListMessage) msg).Players;
+                    gameManager.UpdatePlayerList(players);
                     break;
                 default:
                     break;

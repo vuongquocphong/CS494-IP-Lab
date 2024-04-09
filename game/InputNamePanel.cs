@@ -27,31 +27,10 @@ public partial class InputNamePanel : Panel
 		LineEdit lineEdit = GetNode<LineEdit>("NameLineEdit");
 		// Get the text
 		string text = lineEdit.Text;
-		if (CheckValidName(text))
-		{
-			EmitSignal(SignalName.PlayButtonPressed, text);
-		}
-		else
-		{
-			// Print an error message
-			GD.Print("Invalid name");
-		}
+		EmitSignal(SignalName.PlayButtonPressed, text);
 	}
 
 	static public void PlayButtonPressedHandler(string name) {
 		GameManager.GetInstance().RequestConnect(name);
-	}
-
-	private bool CheckValidName(string name)
-	{
-		// Check if the name is valid
-		if (name.Length > 2 && name.Length < 10)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
 	}
 }

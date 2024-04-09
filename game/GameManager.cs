@@ -14,6 +14,8 @@ namespace GameComponents
         [Signal]
         public delegate void ConnectionFailEventHandler(string error);
         [Signal]
+        public delegate void PlayerListUpdateEventHandler();
+        [Signal]
         public delegate void BackToInputNameEventHandler();
         static private GameManager instance = null!;
         public string LocalPlayerName { get; set; } = "";
@@ -40,9 +42,6 @@ namespace GameComponents
         }
 
         public void ConnectSuccess(Message msg) {
-            // Get message content
-            // and update game state
-
             CallDeferred("emit_signal", "ConnectionSuccess");
         }
 
@@ -53,19 +52,34 @@ namespace GameComponents
             string ErrorContent;
             ErrorContent = 
             msg.ErrorCode switch {
-                ErrorCode.InvalidName => "InvalidName",
-                ErrorCode.ServerIsFull => "ServerIsFull",
-                ErrorCode.GameInProgress => "GameInProgress",
-                ErrorCode.InternalServerError => "InternalServerError",
-                ErrorCode.NameAlreadyTaken => "NameAlreadyTaken",
-                _ => "Unknown"
+                ErrorCode.InvalidName => "Invalid Name",
+                ErrorCode.ServerIsFull => "Server Is Full",
+                ErrorCode.GameInProgress => "Game In Progress",
+                ErrorCode.InternalServerError => "Internal Server Error",
+                ErrorCode.NameAlreadyTaken => "Name Already Taken",
+                _ => "Unknown Error Code"
             };
             CallDeferred("emit_signal", "ConnectionFail", ErrorContent);
         }
 
-        public void UpdatePlayerList(Message msg) {
-            // Get message content
-            // and update game state
+        public void UpdatePlayerList(List<Tuple<string, bool>> players) {
+            foreach (Tuple<string, bool> player in players) {
+                if (PlayersList.Find(p => p.Name == player.Item1) == null) {
+                    PlayerInfo tmp = new(player.Item1)
+                    {
+                        ReadyStatus = player.Item2
+                    };
+                    PlayersList.Add(tmp);
+                }
+                else {
+                    PlayerInfo tmp = PlayersList.Find(p => p.Name == player.Item1)!;
+                    tmp.ReadyStatus = player.Item2;
+                }
+            }
+            // Sort players list by name
+            PlayersList.Sort((a, b) => a.Name.CompareTo(b.Name));
+            // Emit signal to update UI
+            CallDeferred("emit_signal", "PlayerListUpdate");
         }
         public void Receive(Message msg) {
             // Get Message type
