@@ -7,8 +7,10 @@ using System.Net;
 
 namespace GameComponents
 {
-    public partial class GameManager
-    {
+    public partial class GameManager: Node
+    {   
+        [Signal]
+        public delegate void ConnectionSuccessEventHandler();
         static private GameManager instance = null!;
         public string LocalPlayerName { get; set; } = "";
         public string KeyWord { get; set; } = "";
@@ -34,7 +36,7 @@ namespace GameComponents
         }
 
         public void ConnectSuccess() {
-            // MediatorComp.Notify(this, Mediator.Event.CONNECT_SUCCESS);
+            CallDeferred("emit_signal", "ConnectionSuccess");
         }
         public void ConnectFail(ServerConnectionFailureMessage msg) {
             string ErrorContent = "InvalidName";
@@ -47,9 +49,12 @@ namespace GameComponents
                 ErrorCode.NameAlreadyTaken => "NameAlreadyTaken",
                 _ => "Unknown"
             };
-            
         }
-        public void Ready() {
+        public void Receive(Message msg) {
+            // Get Message type
+            // and call appropriate function
+        }
+        public void PlayerReady() {
             // Send message to server
             // to start game
             // Notify mediator

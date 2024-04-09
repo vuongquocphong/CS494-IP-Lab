@@ -16,13 +16,16 @@ namespace Messages
 
         public GuessResult Result { get; set; }
 
+        public string PlayerName { get; set; }
+
         public string Guess { get; set; }
 
-        public GuessResultMessage(GuessResult result, GuessType guessType, string guess)
+        public GuessResultMessage(GuessResult result, GuessType guessType, string playerName, string guess)
         {
             MessageType = MessageType.GuessResult;
             Result = result;
             GuessType = guessType;
+            PlayerName = playerName;
             Guess = guess;
         }
 
@@ -31,16 +34,22 @@ namespace Messages
             MessageType = MessageType.GuessResult;
             Result = (GuessResult)message[1];
             GuessType = (GuessType)message[2];
-            Guess = Encoding.UTF8.GetString(message, 3, message.Length - 3);
+            byte length = message[3];
+            PlayerName = Encoding.UTF8.GetString(message, 4, length);
+            Guess = Encoding.UTF8.GetString(message, 4 + length, message.Length - 4 - length);
         }
 
         public override byte[] Serialize()
         {
-            byte[] message = new byte[3 + Guess.Length];
+            byte[] playerNameBytes = Encoding.UTF8.GetBytes(PlayerName);
+            byte[] guessBytes = Encoding.UTF8.GetBytes(Guess);
+            byte[] message = new byte[4 + playerNameBytes.Length + guessBytes.Length];
             message[0] = (byte)MessageType;
             message[1] = (byte)Result;
             message[2] = (byte)GuessType;
-            Encoding.UTF8.GetBytes(Guess).CopyTo(message, 3);
+            message[3] = (byte)playerNameBytes.Length;
+            playerNameBytes.CopyTo(message, 4);
+            guessBytes.CopyTo(message, 4 + playerNameBytes.Length);
             return message;
         }
     }

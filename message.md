@@ -20,9 +20,10 @@
 | 4                  | Server Connection Success |
 | 5                  | Server Connection Failure |
 | 6                  | Player List               |
-| 7                  | Game Status               |
-| 8                  | Guess Result              |
-| 9                  | Game Result               |
+| 7                  | Game Started              |
+| 8                  | Game Status               |
+| 9                  | Guess Result              |
+| 10                 | Game Result               |
 
 # Client Messages
 
@@ -95,9 +96,9 @@
 
 ## Game Started
 
-| Message type | Keyword  |
-| ------------ | -------- |
-| 1 byte       | 30 bytes |
+| Message type | Keyword Length | Keyword      | Hint Length | Hint |
+| ------------ | -------------- | ------------ | ----------- | ---- |
+| 1 byte       | 1 byte         | max 30 bytes | 2 bytes     |      |
 
 ## Game Status
 
@@ -126,9 +127,9 @@ Ranges from 0-9.
 
 ## Guess Result
 
-| Message type | Result | Guess Type | Guess    |
-| ------------ | ------ | ---------- | -------- |
-| 1 byte       | 1 byte | 1 byte     | 30 bytes |
+| Message type | Result | Guess Type | Player Name Length | Player Name  | Guess    |
+| ------------ | ------ | ---------- | ------------------ | ------------ | -------- |
+| 1 byte       | 1 byte | 1 byte     | 1 byte             | max 10 bytes | 30 bytes |
 
 | Result value | Meaning         |
 | ------------ | --------------- |

@@ -6,18 +6,26 @@ using NetworkClient;
 
 public partial class Main : Node
 {
-	GameManager GameManager;
-	INetworkClient NetworkClient;
+	GameManager GameManager = null!;
+	INetworkClient NetworkClient = null!;
 
-	IMediator Mediator {get; set;}
+	IMediator Mediator {get; set;} = null!;
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		GameManager = GameManager.GetInstance();
+		AddChild(GameManager);
+		GameManager.ConnectionSuccess += ConnectionSuccessHandler;
+		// Get GameManager Node
 		NetworkClient = new TcpNetworkClient();
 		Mediator = (IMediator) new MessagePasser(GameManager, NetworkClient);
+		// Subscribe to ConnectionSuccess event
 		LoadScenes();
+	}
+
+	private void ConnectionSuccessHandler() {
+		GD.Print("Connection Success");
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

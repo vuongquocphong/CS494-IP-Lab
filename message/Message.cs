@@ -9,9 +9,10 @@
         ServerConnectionSuccess = 4,
         ServerConnectionFailure = 5,
         PlayerList = 6,
-        GameStatus = 7,
-        GuessResult = 8,
-        GameResult = 9,
+        GameStarted = 7,
+        GameStatus = 8,
+        GuessResult = 9,
+        GameResult = 10,
     }
 
     public abstract class Message
@@ -35,6 +36,7 @@
                 (byte)MessageType.ServerConnectionSuccess => new ServerConnectionSuccessMessage(message),
                 (byte)MessageType.ServerConnectionFailure => new ServerConnectionFailureMessage(message),
                 (byte)MessageType.PlayerList => new PlayerListMessage(message),
+                (byte)MessageType.GameStarted => new GameStartedMessage(message),
                 (byte)MessageType.GameStatus => new GameStatusMessage(message),
                 (byte)MessageType.GuessResult => new GuessResultMessage(message),
                 (byte)MessageType.GameResult => new GameResultMessage(message),
