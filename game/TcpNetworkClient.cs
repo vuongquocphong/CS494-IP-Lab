@@ -10,20 +10,21 @@ namespace NetworkClient
     {
         public IMediator Mediator { get; set; } = null!;
 
-        public SocketClient SocketClient { get; private set; }
+        public SocketClient SocketClient { get; private set; } = null!;
 
         public TcpNetworkClient()
         {
-            SocketClient = new SocketClient(
-                10240,
-                new MessageHandler(MessageHandler),
-                new CloseHandler(CloseHandler),
-                new ErrorHandler(ErrorHandler)
-            );
             Connect();
         }
 
-        public void Connect() {
+        public void Connect()
+        {
+            SocketClient ??= new SocketClient(
+                    10240,
+                    new MessageHandler(MessageHandler),
+                    new CloseHandler(CloseHandler),
+                    new ErrorHandler(ErrorHandler)
+                );
             SocketClient.Connect(IPAddress.Parse("127.0.0.1"), 9000);
         }
 
@@ -57,6 +58,10 @@ namespace NetworkClient
 
         public void Send(byte[] message)
         {
+            if (SocketClient == null)
+            {
+                Connect();
+            }
             SocketClient.Send(message);
         }
 
@@ -68,7 +73,10 @@ namespace NetworkClient
 
         public void Close()
         {
+            SocketClient.Send(new ClientDisconnectMessage().Serialize());
             SocketClient.Disconnect();
+            SocketClient.Dispose();
+            SocketClient = null;
         }
     }
 }

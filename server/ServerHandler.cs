@@ -90,6 +90,11 @@ namespace GameServer
 
         public void Disconnect(string playerId)
         {
+            if (ServerState == ServerState.WaitingForPlayers)
+            {
+                m_Players = m_Players.Where(player => player.PlayerId != playerId).ToList();
+                return;
+            }
             for (int i = 0; i < m_Players.Count; i++)
             {
                 if (m_Players[i].PlayerId == playerId)
