@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://bgeyi5btktlmo"]
 
-[ext_resource type="Script" path="res://scripts/WaitingPanel.cs" id="1_cip1c"]
+[ext_resource type="Script" path="res://WaitingPanel.cs" id="1_y7wtu"]
 
 [sub_resource type="Theme" id="Theme_b44ji"]
 
@@ -28,7 +28,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_cip1c")
+script = ExtResource("1_y7wtu")
 
 [node name="WaitingText" type="RichTextLabel" parent="."]
 layout_mode = 0

@@ -1,3 +1,4 @@
+using Godot;
 using Mediator;
 using Messages;
 using System.Collections.Generic;
@@ -6,8 +7,9 @@ using System.Net;
 
 namespace GameComponents
 {
-    public class GameManager
+    public partial class GameManager
     {
+        static private GameManager instance = null!;
         public string LocalPlayerName { get; set; } = "";
         public string KeyWord { get; set; } = "";
         public int NumberOfPlayers { get; set; } = 0;
@@ -17,26 +19,26 @@ namespace GameComponents
         public PlayerInfo CurrentPlayer { get; set; } = null!;
         public IMediator MediatorComp { get; set; } = null!;
 
-        public GameManager(IMediator MediatorComp){
-            this.MediatorComp = MediatorComp;
-        }
-
-
         public void RequestConnect(string name)
         {
-            // Send message to server
-            // to connect player
-            // Notify mediator
-            // Mediator.Notify(this, Event.CONNECT);
-            // this.Mediator.Notify(this, new ClientConnectionMessage(name));
+            ClientConnectionMessage msg = new ClientConnectionMessage(name);
+            MediatorComp.Notify(this, msg);
+        }
+
+        private GameManager() {}
+
+        static public GameManager GetInstance()
+        {
+            instance ??= new GameManager();
+            return instance;
         }
 
         public void ConnectSuccess() {
-            MediatorComp.Notify(this, Mediator.Event.CONNECT_SUCCESS);
+            // MediatorComp.Notify(this, Mediator.Event.CONNECT_SUCCESS);
         }
         public void ConnectFail(ServerConnectionFailureMessage msg) {
-            string InvalidName = "InvalidName";
-            InvalidName = 
+            string ErrorContent = "InvalidName";
+            ErrorContent = 
             msg.ErrorCode switch {
                 ErrorCode.InvalidName => "InvalidName",
                 ErrorCode.ServerIsFull => "ServerIsFull",
@@ -69,6 +71,17 @@ namespace GameComponents
         internal void AddPlayer(string name)
         {
             PlayersList.Add(new PlayerInfo(name));
+        }
+
+        public void TransitionTo()
+        {
+        }
+
+        public void ProcessMessage(Message msg)
+        {
+            // Process message from server
+            // and update game state
+            
         }
     }
 }

@@ -2,13 +2,9 @@ using Mediator;
 
 namespace NetworkClient
 {
-    class TcpNetworkClient: INetworkClient
+    public class TcpNetworkClient: INetworkClient
     {
-        public IMediator Mediator { get; set; }
-        public TcpNetworkClient(Mediator.IMediator mediator)
-        {
-            this.Mediator = mediator;
-        }
+        public IMediator Mediator { get; set; } = null!;
         public void Send(string message)
         {
             // Send data to server

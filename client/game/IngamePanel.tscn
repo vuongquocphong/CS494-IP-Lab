@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://ds0gnfffdhbwx"]
 
-[ext_resource type="Script" path="res://scripts/IngamePanel.cs" id="1_46c6f"]
+[ext_resource type="Script" path="res://IngamePanel.cs" id="1_04ofp"]
 
 [sub_resource type="Theme" id="Theme_dipls"]
 
@@ -28,13 +28,13 @@ border_width_right = 3
 border_width_bottom = 3
 border_color = Color(1, 0.509804, 0.309804, 1)
 
-[node name="Panel" type="Panel"]
+[node name="IngamePanel" type="Panel"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_46c6f")
+script = ExtResource("1_04ofp")
 
 [node name="GridContainer" type="GridContainer" parent="."]
 layout_mode = 1
