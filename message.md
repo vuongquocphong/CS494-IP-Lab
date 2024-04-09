@@ -12,6 +12,7 @@
 | 1                  | Ready/Unready             |
 | 2                  | Guess                     |
 | 3                  | Timeout                   |
+| 11                 | Disconnect                |
 
 ## Server
 

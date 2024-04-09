@@ -13,6 +13,7 @@
         GameStatus = 8,
         GuessResult = 9,
         GameResult = 10,
+        ClientDisconnect = 11,
     }
 
     public abstract class Message
@@ -40,6 +41,7 @@
                 (byte)MessageType.GameStatus => new GameStatusMessage(message),
                 (byte)MessageType.GuessResult => new GuessResultMessage(message),
                 (byte)MessageType.GameResult => new GameResultMessage(message),
+                (byte)MessageType.ClientDisconnect => new ClientDisconnectMessage(message),
                 _ => throw new Exception("Invalid message type"),
             };
         }

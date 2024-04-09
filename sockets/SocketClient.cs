@@ -185,7 +185,7 @@ namespace Sockets
             }
             // Remove the socket from the list
             socketServer?.RemoveSocket(this);
-
+            GC.Collect();
             base.Dispose();
         }
 
@@ -300,9 +300,9 @@ namespace Sockets
 
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Console.WriteLine("Error:SocketClient: Got Exception while ReceiveComplete");
+                Console.WriteLine("Error:SocketClient: Got Exception while ReceiveComplete" + e.Message);
 
                 try
                 {
@@ -328,9 +328,9 @@ namespace Sockets
                 if (networkStream.CanWrite)
                     networkStream.EndWrite(ar);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Console.WriteLine("Error:SocketClient: Got Exception while SendComplete");
+                Console.WriteLine("Error:SocketClient: Got Exception while SendComplete" + e.Message);
             }
         }
 
@@ -393,10 +393,14 @@ namespace Sockets
         {
             if (m_Connected == true)
             {
-                // Close down the connection
+                tcpClient?.Client.Disconnect(false);
+                // tcpClient?.Client.Shutdown(SocketShutdown.Both);
+
                 networkStream?.Close();
                 tcpClient?.Close();
                 clientSocket?.Close();
+
+                // Close down the connection
 
                 // Clean up the connection state
                 networkStream = null!;

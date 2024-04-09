@@ -101,12 +101,13 @@ namespace Sockets
                     if (clientSocket.Connected)
                     {
                         IPAddress Addr = ((IPEndPoint)clientSocket.RemoteEndPoint!).Address;
+                        int port = ((IPEndPoint)clientSocket.RemoteEndPoint!).Port;
 
                         // Create a SocketClient object
                         SocketClient socket = AcceptedSocketClient(this,
                             clientSocket,                                           // The socket object for the connection
                             Addr,                                                   // The IpAddress of the client
-                            Port,                                                 // The port the client connected to
+                            port,                                                 // The port the client connected to
                             SizeOfRawBuffer,                                      // The size of the byte array for storing messages
                             new MessageHandler(messageHandler),    // Application developer Message Handler
                             new CloseHandler(closeHandler),        // Application developer Close Handler

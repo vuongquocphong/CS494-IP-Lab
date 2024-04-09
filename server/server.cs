@@ -36,8 +36,12 @@ namespace GameServer
         public static void CloseHandler(SocketBase socket)
         {
             Console.WriteLine("Close Handler");
-            Console.WriteLine("IpAddress: " + socket.IpAddress);
-            ServerHandler.Disconnect(socket.IpAddress.ToString());
+            Console.WriteLine("IpAddress: " + socket.IpAddress + ':' + socket.Port);
+            socketServer.RemoveSocket((SocketClient)socket);
+            ServerHandler.Disconnect(socket.IpAddress.ToString() + ':' + socket.Port);
+            socketServer.NotifyConnectedClients(
+                new PlayerListMessage(ServerHandler.GetPlayerReadyList()).Serialize()
+            );
         }
 
         public static void PrintByteArray(byte[] bytes)
@@ -83,6 +87,9 @@ namespace GameServer
                         break;
                     case MessageType.Timeout:
                         HandleTimeout(pSocket, (TimeoutMessage)msg);
+                        break;
+                    case MessageType.ClientDisconnect:
+                        CloseHandler(pSocket);
                         break;
                     default:
                         Console.WriteLine("Unknown message type");

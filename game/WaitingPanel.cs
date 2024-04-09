@@ -1,18 +1,18 @@
 using Godot;
-using System;
+using GameComponents;
 
 public partial class WaitingPanel : Panel
 {
-	[Signal]
-	public delegate void ReadyButtonPressedEventHandler();
-	[Signal]
-	public delegate void BackButtonPressedEventHandler();
+	// [Signal]
+	// public delegate void ReadyButtonPressedEventHandler();
+	// [Signal]
+	// public delegate void BackToInputNameEventHandler();
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		base._Ready();
-		ReadyButtonPressed += OnReadyButtonPressed;
-		BackButtonPressed += OnBackButtonPressed;
+		// ReadyButtonPressed += OnReadyButtonPressed;
+		// BackToInputName += OnBackButtonPressed;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -23,8 +23,8 @@ public partial class WaitingPanel : Panel
 	{
 		throw new NotImplementedException();
 	}
-	private void OnBackButtonPressed()
+	private static void OnBackButtonPressed()
 	{
-		CallDeferred("emit_signal", "BackButtonPressed");
+		GameManager.GetInstance().EmitSignal(GameManager.SignalName.BackToInputName);
 	}
 }
