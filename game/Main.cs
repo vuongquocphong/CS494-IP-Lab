@@ -1,7 +1,6 @@
 using GameComponents;
 using Godot;
 using Mediator;
-using System;
 using NetworkClient;
 
 public partial class Main : Node
@@ -17,9 +16,10 @@ public partial class Main : Node
 		AddChild(GameManager);
 		GameManager.ConnectionSuccess += ConnectionSuccessHandler;
 		GameManager.ConnectionFail += ConnectionFailHandler;
+		GameManager.BackToInputName += BackToInputNameHandler;
 		// Get GameManager Node
 		NetworkClient = new TcpNetworkClient();
-		Mediator = (IMediator) new MessagePasser(GameManager, NetworkClient);
+		Mediator = new MessagePasser(GameManager, NetworkClient);
 		// Subscribe to ConnectionSuccess event
 		LoadScenes();
 	}
@@ -38,7 +38,7 @@ public partial class Main : Node
 		ErrorLabel.Show();
 	}
 
-	private void BackButtonPressedHandler() {
+	private void BackToInputNameHandler() {
 		// Show InputNamePanel
 		GetNode<Panel>("InputNamePanel").Show();
 		// Hide WaitingPanel

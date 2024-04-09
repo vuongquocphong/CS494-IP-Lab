@@ -13,6 +13,8 @@ namespace GameComponents
         public delegate void ConnectionSuccessEventHandler();
         [Signal]
         public delegate void ConnectionFailEventHandler(string error);
+        [Signal]
+        public delegate void BackToInputNameEventHandler();
         static private GameManager instance = null!;
         public string LocalPlayerName { get; set; } = "";
         public string KeyWord { get; set; } = "";
