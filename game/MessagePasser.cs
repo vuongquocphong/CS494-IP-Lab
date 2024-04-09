@@ -41,7 +41,10 @@ namespace Mediator
                     gameManager.ConnectFail((ServerConnectionFailureMessage) msg);
                     break;
                 case MessageType.ServerConnectionSuccess:
-                    gameManager.ConnectSuccess();
+                    gameManager.ConnectSuccess(msg);
+                    break;
+                case MessageType.PlayerList:
+                    gameManager.UpdatePlayerList((PlayerListMessage) msg);
                     break;
                 default:
                     break;

@@ -20,6 +20,10 @@ namespace NetworkClient
                 new CloseHandler(CloseHandler),
                 new ErrorHandler(ErrorHandler)
             );
+            Connect();
+        }
+
+        public void Connect() {
             SocketClient.Connect(IPAddress.Parse("127.0.0.1"), 9000);
         }
 
@@ -60,6 +64,11 @@ namespace NetworkClient
         {
             Mediator.Notify(this, MessageFactory.CreateMessage(message));
             GD.Print("Received message");
+        }
+
+        public void Close()
+        {
+            SocketClient.Disconnect();
         }
     }
 }

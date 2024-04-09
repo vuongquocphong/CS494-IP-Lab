@@ -11,6 +11,8 @@ namespace GameComponents
     {   
         [Signal]
         public delegate void ConnectionSuccessEventHandler();
+        [Signal]
+        public delegate void ConnectionFailEventHandler(string error);
         static private GameManager instance = null!;
         public string LocalPlayerName { get; set; } = "";
         public string KeyWord { get; set; } = "";
@@ -35,11 +37,18 @@ namespace GameComponents
             return instance;
         }
 
-        public void ConnectSuccess() {
+        public void ConnectSuccess(Message msg) {
+            // Get message content
+            // and update game state
+
             CallDeferred("emit_signal", "ConnectionSuccess");
         }
+
+        public void ConnectFail(string error) {
+            CallDeferred("emit_signal", "ConnectionFail", error);
+        }
         public void ConnectFail(ServerConnectionFailureMessage msg) {
-            string ErrorContent = "InvalidName";
+            string ErrorContent;
             ErrorContent = 
             msg.ErrorCode switch {
                 ErrorCode.InvalidName => "InvalidName",
@@ -49,6 +58,12 @@ namespace GameComponents
                 ErrorCode.NameAlreadyTaken => "NameAlreadyTaken",
                 _ => "Unknown"
             };
+            CallDeferred("emit_signal", "ConnectionFail", ErrorContent);
+        }
+
+        public void UpdatePlayerList(Message msg) {
+            // Get message content
+            // and update game state
         }
         public void Receive(Message msg) {
             // Get Message type
