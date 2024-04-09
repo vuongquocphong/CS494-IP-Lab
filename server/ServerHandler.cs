@@ -182,7 +182,7 @@ namespace GameServer
                 return AddPlayerResult.GameInProgress;
             }
 
-            if (username.Length == 0 || username.Any(c => !char.IsLetterOrDigit(c)))
+            if (username.Length < 2 || username.Length > 10 || username.Any(c => !char.IsLetterOrDigit(c)))
             {
                 return AddPlayerResult.InvalidName;
             }
