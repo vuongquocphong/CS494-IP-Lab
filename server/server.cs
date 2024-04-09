@@ -39,6 +39,9 @@ namespace GameServer
             Console.WriteLine("IpAddress: " + socket.IpAddress + ':' + socket.Port);
             socketServer.RemoveSocket((SocketClient)socket);
             ServerHandler.Disconnect(socket.IpAddress.ToString() + ':' + socket.Port);
+            socketServer.NotifyConnectedClients(
+                new PlayerListMessage(ServerHandler.GetPlayerReadyList()).Serialize()
+            );
         }
 
         public static void PrintByteArray(byte[] bytes)
