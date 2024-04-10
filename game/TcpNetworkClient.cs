@@ -14,7 +14,12 @@ namespace NetworkClient
 
         public TcpNetworkClient()
         {
-            Connect();
+            SocketClient = new SocketClient(
+                    10240,
+                    new MessageHandler(MessageHandler),
+                    new CloseHandler(CloseHandler),
+                    new ErrorHandler(ErrorHandler)
+                );
         }
 
         public void Connect()
@@ -58,11 +63,13 @@ namespace NetworkClient
 
         public void Send(byte[] message)
         {
-            if (SocketClient == null)
+            if (SocketClient == null || SocketClient.ClientSocket == null || SocketClient.ClientSocket.Connected == false)
             {
                 Connect();
+                GD.Print("Connected to server");
             }
             SocketClient.Send(message);
+            GD.Print("Sent message");
         }
 
         public void Receive(byte[] message)

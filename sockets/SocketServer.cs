@@ -263,6 +263,8 @@ namespace Sockets
             int count = 0;
             ArrayList? ObjectsToRemove = null;
 
+            Console.WriteLine("SocketServer NotifyConnectedClients count: " + SocketClientList.Count);
+
             for (int x = 0; x < socketClientList.Count; x++)
             {
                 try
@@ -270,8 +272,11 @@ namespace Sockets
                     SocketClient socket = (SocketClient)socketClientList[x]!;
 
                     if (socket.ClientSocket.Connected == true &&
-                        socket.Send(data) == true)
-                        count++;
+                        socket.Send(data) == true) {
+                            Console.WriteLine("Socket: " + socket.Port +
+                                " Sent");
+                            count++;
+                        }
                     else
                     {
                         ObjectsToRemove ??= [];
