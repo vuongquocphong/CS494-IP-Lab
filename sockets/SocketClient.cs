@@ -86,7 +86,7 @@ namespace Sockets
             callbackReadMethod = new AsyncCallback(ReceiveComplete);
             callbackWriteMethod = new AsyncCallback(SendComplete);
 
-            // m_Connected = true;
+            m_Connected = true;
             // Init the dispose flag
             disposed = false;
         }
