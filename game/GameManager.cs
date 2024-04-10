@@ -18,23 +18,25 @@ namespace GameComponents
         [Signal]
         public delegate void PlayerListUpdateEventHandler();
         [Signal]
-        public delegate void BackToInputNameEventHandler();
+        public delegate void BackFromWaitingToInputNameEventHandler();
+        [Signal]
+        public delegate void BackFromIngameToInputNameEventHandler();
+        [Signal]
+        public delegate void BackFromScoreBoardToInputNameEventHandler();
+        [Signal]
+        public delegate void BackFromScoreBoardToWaitingEventHandler();
         [Signal]
         public delegate void ReadyButtonPressedEventHandler();
-        [Signal]
-        public delegate void FromScoreBoardToInputNameEventHandler();
-        [Signal]
-        public delegate void FromScoreBoardToWaitingEventHandler();
         static private GameManager instance = null!;
         public string LocalPlayerName { get; set; } = "";
         public string KeyWord { get; set; } = "";
+        public string Hint { get; set; } = "";
         public int NumberOfPlayers { get; set; } = 0;
         public List<PlayerInfo> PlayersList { get; set; } = [];
         public int NumberOfTurns { get; set; } = 0;
         public bool GameState { get; set; } = false;
         public PlayerInfo CurrentPlayer { get; set; } = null!;
         public IMediator MediatorComp { get; set; } = null!;
-
         public void RequestConnect(string name)
         {
             LocalPlayerName = name;
@@ -118,10 +120,8 @@ namespace GameComponents
             // Send message to server
             // to start game
             // Notify mediator
-            // this.Mediator.Notify(this, Event.READY);
         }
-        public void Guess()
-        {
+        public void Guess(bool guessMode, string guess) {
             // Send message to server
             // to check guess
             // Notify mediator
@@ -150,5 +150,6 @@ namespace GameComponents
             // and update game state
 
         }
+        
     }
 }

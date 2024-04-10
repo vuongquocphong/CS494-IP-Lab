@@ -19,12 +19,13 @@ public partial class Main : Node
 		GameManager.ConnectionSuccess += ConnectionSuccessHandler;
 		GameManager.ConnectionFail += ConnectionFailHandler;
 		GameManager.PlayerListUpdate += PlayerListUpdateHandler;
-		GameManager.BackToInputName += BackToInputNameHandler;
+		GameManager.BackFromWaitingToInputName += BackFromWaitingToInputNameHandler;
+		GameManager.BackFromIngameToInputName += BackFromIngameToInputNameHandler;
+		GameManager.BackFromScoreBoardToInputName += BackFromScoreBoardToInputNameHandler;
 		GameManager.PlayButtonPressed += PlayButtonPressedHandler;
 		GameManager.ReadyButtonPressed += ReadyButtonPressedHandler;
-		GameManager.FromScoreBoardToInputName += FromScoreBoardToInputNameHandler;
-		GameManager.FromScoreBoardToWaiting += FromScoreBoardToWaitingHandler;
 		
+
 		// Get GameManager Node
 		NetworkClient = new TcpNetworkClient();
 		Mediator = new MessagePasser(GameManager, NetworkClient);
@@ -51,7 +52,37 @@ public partial class Main : Node
 		
 	}
 
-	private void BackToInputNameHandler() {
+	private void BackFromWaitingToInputNameHandler() {
+		// Reset GameManager
+		GameManager.Reset();
+		// Show InputNamePanel
+		GetNode<Panel>("InputNamePanel").Show();
+		// Hide WaitingPanel
+		GetNode<Panel>("WaitingPanel").Hide();
+		// Close connection
+		NetworkClient.Close();
+	}
+	private void BackFromScoreBoardToInputNameHandler() {
+		// Reset GameManager
+		GameManager.Reset();
+		// Hide IngamePanel
+		GetNode<Panel>("IngamePanel").Hide();
+		// Show InputNamePanel
+		GetNode<Panel>("InputNamePanel").Show();
+		// Hide ScoreboardPanel
+		GetNode<Panel>("ScoreboardPanel").Hide();
+		// Close connection
+		NetworkClient.Close();
+	}
+	private void BackFromIngameToInputNameHandler(){
+		// Show InputNamePanel
+		GetNode<Panel>("InputNamePanel").Show();
+		// Hide IngamePanel
+		GetNode<Panel>("IngamePanel").Hide();
+		// Close connection
+		NetworkClient.Close();
+	}
+	private void BackButtonPressedHandler() {
 		// Reset GameManager
 		GameManager.Reset();
 		// Show InputNamePanel
@@ -100,19 +131,8 @@ public partial class Main : Node
 		}
 		GD.Print("Send Ready Message");
 	}
-	private void FromScoreBoardToInputNameHandler() {
-		// Reset GameManager
-		GameManager.Reset();
-		// Close connection
-		NetworkClient.Close();
-		// Show InputNamePanel
-		GetNode<Panel>("InputNamePanel").Show();
-		// Hide ScoreboardPanel
-		GetNode<Panel>("ScoreboardPanel").Hide();
-		// Hide IngamePanel
-		GetNode<Panel>("IngamePanel").Hide();
-	}
-	private void FromScoreBoardToWaitingHandler() {
+	
+	private void BackFromScoreBoardToWaitingHandler() {
 		// Show WaitingPanel
 		GetNode<Panel>("WaitingPanel").Show();
 		// Hide ScoreboardPanel

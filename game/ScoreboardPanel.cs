@@ -15,9 +15,9 @@ public partial class ScoreboardPanel : Panel
 	{
 	}
 	private void OnQuitButtonPressed() {
-		GameManager.GetInstance().EmitSignal(GameManager.SignalName.FromScoreBoardToInputName);
+		GameManager.GetInstance().EmitSignal(GameManager.SignalName.BackFromScoreBoardToInputName);
 	}
 	private void OnRestartButtonPressed() {
-		GameManager.GetInstance().EmitSignal(GameManager.SignalName.FromScoreBoardToWaiting);
+		GameManager.GetInstance().EmitSignal(GameManager.SignalName.BackFromScoreBoardToWaiting);
 	}
 }

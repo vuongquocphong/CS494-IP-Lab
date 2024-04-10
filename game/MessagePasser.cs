@@ -2,6 +2,7 @@ using GameComponents;
 using Messages;
 using NetworkClient;
 using Mediator;
+using Godot;
 
 namespace Mediator
 {
