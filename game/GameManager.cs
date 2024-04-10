@@ -159,7 +159,7 @@ namespace GameComponents
                     _ => throw new InvalidEnumArgumentException()
                 };
                 GD.Print(NewPlayer.Name.Length);
-                GD.Print(NewPlayer.Name.);
+                GD.Print(NewPlayer.Name);
                 GD.Print(LocalPlayerName.Length);
                 GD.Print(LocalPlayerName);
                 newPlayersList.Add(NewPlayer);
