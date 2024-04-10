@@ -52,7 +52,7 @@ namespace Messages
             {
 
                 int offset = ptr;
-                byte nameLength = message[0];
+                byte nameLength = message[offset];
                 string name = Encoding.UTF8.GetString(message, 1, nameLength);
                 offset += nameLength + 1;
                 byte[] byteScore = message[offset..(offset + 2)];
@@ -84,7 +84,12 @@ namespace Messages
             {
                 message.Add((byte)player.Name.Length);
                 message.AddRange(Encoding.UTF8.GetBytes(player.Name));
-                message.AddRange(BitConverter.GetBytes(player.Score));
+                byte[] score = BitConverter.GetBytes(player.Score);
+                if (BitConverter.IsLittleEndian)
+                {
+                    Array.Reverse(score);
+                }
+                message.AddRange(score);
                 message.Add((byte)player.State);
             }
             return [.. message];

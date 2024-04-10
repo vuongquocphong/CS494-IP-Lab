@@ -23,7 +23,7 @@
         public abstract byte[] Serialize();
     }
 
-    public class MessageFactory
+    public static class MessageFactory
     {
         public static Message CreateMessage(byte[] message)
         {

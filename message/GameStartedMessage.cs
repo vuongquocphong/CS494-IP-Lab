@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Messages
 {
     public class GameStartedMessage : Message
@@ -17,33 +19,29 @@ namespace Messages
         {
             MessageType = MessageType.GameStarted;
             byte keyWordLength = message[1];
-            KeyWord = System.Text.Encoding.UTF8.GetString(message, 2, keyWordLength);
-            byte[] hintLengthBytes = new byte[2];
-            hintLengthBytes[0] = message[2 + keyWordLength];
-            hintLengthBytes[1] = message[3 + keyWordLength];
+            byte[] kw = message[2..(2 + keyWordLength)];
+            KeyWord = Encoding.UTF8.GetString(kw);
+            byte[] hintLengthBytes = message[(2 + keyWordLength)..(4 + keyWordLength)];
             if (BitConverter.IsLittleEndian)
             {
                 Array.Reverse(hintLengthBytes);
             }
-            ushort hintLength = BitConverter.ToUInt16(message, 2 + keyWordLength);
-            Hint = System.Text.Encoding.UTF8.GetString(message, 4 + keyWordLength, hintLength);
+            ushort hintLength = BitConverter.ToUInt16(hintLengthBytes);
+            Hint = Encoding.UTF8.GetString(message, 4 + keyWordLength, hintLength);
         }
 
         public override byte[] Serialize()
         {
-            byte[] keyWordBytes = System.Text.Encoding.UTF8.GetBytes(KeyWord);
-            byte[] hintBytes = System.Text.Encoding.UTF8.GetBytes(Hint);
-            byte[] message = new byte[4 + keyWordBytes.Length + hintBytes.Length];
-            message[0] = (byte)MessageType.GameStarted;
-            message[1] = (byte)keyWordBytes.Length;
-            keyWordBytes.CopyTo(message, 2);
+            byte[] keyWordBytes = Encoding.UTF8.GetBytes(KeyWord);
+            byte[] hintBytes = Encoding.UTF8.GetBytes(Hint);
+            byte type = (byte)MessageType.GameStarted;
+            byte keyWordLength = (byte)keyWordBytes.Length;
             byte[] hintLength = BitConverter.GetBytes((ushort)hintBytes.Length);
             if (BitConverter.IsLittleEndian)
             {
                 Array.Reverse(hintLength);
             }
-            hintLength.CopyTo(message, 2 + keyWordBytes.Length);
-            hintBytes.CopyTo(message, 4 + keyWordBytes.Length);
+            byte[] message = [type, keyWordLength, ..keyWordBytes, ..hintLength, ..hintBytes];
             return message;
         }
     }
