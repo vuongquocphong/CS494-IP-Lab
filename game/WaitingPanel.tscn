@@ -41,17 +41,17 @@ text = "Waiting for other players ready to play..."
 
 [node name="ReadyButton" type="Button" parent="."]
 layout_mode = 0
-offset_left = 269.0
+offset_left = 202.0
 offset_top = 533.0
-offset_right = 435.0
+offset_right = 368.0
 offset_bottom = 585.0
 text = "READY"
 
 [node name="BackButton" type="Button" parent="."]
 layout_mode = 0
-offset_left = 713.0
+offset_left = 780.0
 offset_top = 533.0
-offset_right = 879.0
+offset_right = 946.0
 offset_bottom = 585.0
 text = "BACK"
 

@@ -22,6 +22,11 @@ namespace NetworkClient
                 );
         }
 
+        ~TcpNetworkClient()
+        {
+            Close();
+        }
+
         public void Connect()
         {
             SocketClient ??= new SocketClient(

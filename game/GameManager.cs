@@ -7,8 +7,10 @@ using System.Net;
 
 namespace GameComponents
 {
-    public partial class GameManager: Node
-    {   
+    public partial class GameManager : Node
+    {
+        [Signal]
+        public delegate void PlayButtonPressedEventHandler(string name);
         [Signal]
         public delegate void ConnectionSuccessEventHandler();
         [Signal]
@@ -17,6 +19,12 @@ namespace GameComponents
         public delegate void PlayerListUpdateEventHandler();
         [Signal]
         public delegate void BackToInputNameEventHandler();
+        [Signal]
+        public delegate void ReadyButtonPressedEventHandler();
+        [Signal]
+        public delegate void FromScoreBoardToInputNameEventHandler();
+        [Signal]
+        public delegate void FromScoreBoardToWaitingEventHandler();
         static private GameManager instance = null!;
         public string LocalPlayerName { get; set; } = "";
         public string KeyWord { get; set; } = "";
@@ -29,11 +37,12 @@ namespace GameComponents
 
         public void RequestConnect(string name)
         {
-            ClientConnectionMessage msg = new ClientConnectionMessage(name);
+            LocalPlayerName = name;
+            ClientConnectionMessage msg = new(name);
             MediatorComp.Notify(this, msg);
         }
 
-        private GameManager() {}
+        private GameManager() { }
 
         static public GameManager GetInstance()
         {
@@ -41,17 +50,32 @@ namespace GameComponents
             return instance;
         }
 
-        public void ConnectSuccess(Message msg) {
+        public void Reset()
+        {
+            LocalPlayerName = "";
+            KeyWord = "";
+            NumberOfPlayers = 0;
+            PlayersList.Clear();
+            NumberOfTurns = 0;
+            GameState = false;
+            CurrentPlayer = null!;
+        }
+
+        public void ConnectSuccess()
+        {
             CallDeferred("emit_signal", "ConnectionSuccess");
         }
 
-        public void ConnectFail(string error) {
+        public void ConnectFail(string error)
+        {
             CallDeferred("emit_signal", "ConnectionFail", error);
         }
-        public void ConnectFail(ServerConnectionFailureMessage msg) {
+        public void ConnectFail(ServerConnectionFailureMessage msg)
+        {
             string ErrorContent;
-            ErrorContent = 
-            msg.ErrorCode switch {
+            ErrorContent =
+            msg.ErrorCode switch
+            {
                 ErrorCode.InvalidName => "Invalid Name",
                 ErrorCode.ServerIsFull => "Server Is Full",
                 ErrorCode.GameInProgress => "Game In Progress",
@@ -62,42 +86,49 @@ namespace GameComponents
             CallDeferred("emit_signal", "ConnectionFail", ErrorContent);
         }
 
-        public void UpdatePlayerList(List<Tuple<string, bool>> players) {
-            foreach (Tuple<string, bool> player in players) {
-                if (PlayersList.Find(p => p.Name == player.Item1) == null) {
-                    PlayerInfo tmp = new(player.Item1)
-                    {
-                        ReadyStatus = player.Item2
-                    };
-                    PlayersList.Add(tmp);
-                }
-                else {
-                    PlayerInfo tmp = PlayersList.Find(p => p.Name == player.Item1)!;
-                    tmp.ReadyStatus = player.Item2;
-                }
+        public void UpdatePlayerList(List<Tuple<string, bool>> players)
+        {
+            List<PlayerInfo> newPlayersList = new();
+            foreach (Tuple<string, bool> player in players)
+            {
+                PlayerInfo playerInfo = new(player.Item1) {
+                    ReadyStatus = player.Item2
+                };
+                newPlayersList.Add(playerInfo);
             }
             // Sort players list by name
-            PlayersList.Sort((a, b) => a.Name.CompareTo(b.Name));
+            newPlayersList.Sort((a, b) => a.Name.CompareTo(b.Name));
+            PlayersList = newPlayersList;
             // Emit signal to update UI
             CallDeferred("emit_signal", "PlayerListUpdate");
         }
-        public void Receive(Message msg) {
+
+        public void SendReady(bool ready)
+        {
+            ReadyMessage msg = new(ready);
+            MediatorComp.Notify(this, msg);
+        }
+        public void Receive(Message msg)
+        {
             // Get Message type
             // and call appropriate function
         }
-        public void PlayerReady() {
+        public void PlayerReady()
+        {
             // Send message to server
             // to start game
             // Notify mediator
             // this.Mediator.Notify(this, Event.READY);
         }
-        public void Guess() {
+        public void Guess()
+        {
             // Send message to server
             // to check guess
             // Notify mediator
             // this.Mediator.Notify(this, Event.GUESS);
         }
-        public void TimeOut() {
+        public void TimeOut()
+        {
             // Send message to server
             // to skip turn
             // Notify mediator
@@ -117,7 +148,7 @@ namespace GameComponents
         {
             // Process message from server
             // and update game state
-            
+
         }
     }
 }

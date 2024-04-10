@@ -41,10 +41,9 @@ namespace Mediator
                     gameManager.ConnectFail((ServerConnectionFailureMessage) msg);
                     break;
                 case MessageType.ServerConnectionSuccess:
-                    gameManager.ConnectSuccess(msg);
+                    gameManager.ConnectSuccess();
                     break;
                 case MessageType.PlayerList:
-                    // Retrieve players list
                     List<Tuple<string, bool>> players = ((PlayerListMessage) msg).Players;
                     gameManager.UpdatePlayerList(players);
                     break;

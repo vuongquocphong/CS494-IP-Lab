@@ -19,13 +19,21 @@ public partial class Main : Node
 		GameManager.ConnectionSuccess += ConnectionSuccessHandler;
 		GameManager.ConnectionFail += ConnectionFailHandler;
 		GameManager.PlayerListUpdate += PlayerListUpdateHandler;
-
 		GameManager.BackToInputName += BackToInputNameHandler;
+		GameManager.PlayButtonPressed += PlayButtonPressedHandler;
+		GameManager.ReadyButtonPressed += ReadyButtonPressedHandler;
+		GameManager.FromScoreBoardToInputName += FromScoreBoardToInputNameHandler;
+		GameManager.FromScoreBoardToWaiting += FromScoreBoardToWaitingHandler;
+		
 		// Get GameManager Node
 		NetworkClient = new TcpNetworkClient();
 		Mediator = new MessagePasser(GameManager, NetworkClient);
 		// Subscribe to ConnectionSuccess event
 		LoadScenes();
+	}
+	public void PlayButtonPressedHandler(string name) {
+		GameManager.LocalPlayerName = name;
+		GameManager.GetInstance().RequestConnect(name);
 	}
 
 	private void ConnectionSuccessHandler() {
@@ -39,10 +47,13 @@ public partial class Main : Node
 		Panel InputNamePanel = GetNode<Panel>("InputNamePanel");
 		RichTextLabel ErrorLabel = InputNamePanel.GetNode<RichTextLabel>("InvalidMessageLabel");
 		ErrorLabel.Text = error;
-		ErrorLabel.VisibleCharacters = error.Length;
+		ErrorLabel.VisibleCharacters = -1;
+		
 	}
 
 	private void BackToInputNameHandler() {
+		// Reset GameManager
+		GameManager.Reset();
 		// Show InputNamePanel
 		GetNode<Panel>("InputNamePanel").Show();
 		// Hide WaitingPanel
@@ -60,9 +71,63 @@ public partial class Main : Node
 		StatusList.Clear();
 		// Add players name to PlayerList
 		foreach (PlayerInfo player in GameManager.PlayersList) {
+			GD.Print(player.Name);
 			PlayerList.AddItem(player.Name);
 			StatusList.AddItem(player.ReadyStatus ? "Ready" : "Not Ready");
 		}
+		// Update the number of ready players
+		RichTextLabel ReadyPlayersLabel = GetNode<RichTextLabel>("WaitingPanel/ReadyPlayersLabel");
+		ReadyPlayersLabel.Text = GameManager.PlayersList.FindAll(player => player.ReadyStatus).Count + " / " + GameManager.PlayersList.Count + " Players Ready";
+	}
+
+	private void ReadyButtonPressedHandler() {
+		// Get the current ready status of the player
+		bool readyStatus = GameManager.PlayersList.Find(player => player.Name == GameManager.LocalPlayerName).ReadyStatus;
+		// Set the ready status of the player
+		GameManager.PlayersList.Find(player => player.Name == GameManager.LocalPlayerName).ReadyStatus = !readyStatus;
+		// Send the ready status to the server
+		GameManager.GetInstance().SendReady(!readyStatus);
+		// Change the UI to match the ready status
+		Button ReadyButton = GetNode<Button>("WaitingPanel/ReadyButton");
+		RichTextLabel WaitingText = GetNode<RichTextLabel>("WaitingPanel/WaitingText");
+		if (readyStatus) {
+			WaitingText.Text = "Waiting for other players ready to play...";
+			ReadyButton.Text = "READY";
+		}
+		else {
+			WaitingText.Text = "Press the button to get ready for game...";
+			ReadyButton.Text = "UNREADY";
+		}
+		GD.Print("Send Ready Message");
+	}
+	private void FromScoreBoardToInputNameHandler() {
+		// Reset GameManager
+		GameManager.Reset();
+		// Close connection
+		NetworkClient.Close();
+		// Show InputNamePanel
+		GetNode<Panel>("InputNamePanel").Show();
+		// Hide ScoreboardPanel
+		GetNode<Panel>("ScoreboardPanel").Hide();
+		// Hide IngamePanel
+		GetNode<Panel>("IngamePanel").Hide();
+	}
+	private void FromScoreBoardToWaitingHandler() {
+		// Show WaitingPanel
+		GetNode<Panel>("WaitingPanel").Show();
+		// Hide ScoreboardPanel
+		GetNode<Panel>("ScoreboardPanel").Hide();
+		// Hide IngamePanel
+		GetNode<Panel>("IngamePanel").Hide();
+		// Set the ready status of the player to false
+		GameManager.PlayersList.Find(player => player.Name == GameManager.LocalPlayerName).ReadyStatus = false;
+		// Send the ready status to the server
+		GameManager.GetInstance().SendReady(false);
+		// Change the UI to match the ready status
+		Button ReadyButton = GetNode<Button>("WaitingPanel/ReadyButton");
+		RichTextLabel WaitingText = GetNode<RichTextLabel>("WaitingPanel/WaitingText");
+		WaitingText.Text = "Press the button to get ready for game...";
+		ReadyButton.Text = "READY";
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

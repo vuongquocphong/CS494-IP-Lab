@@ -21,7 +21,7 @@ public partial class WaitingPanel : Panel
 	}
 	private void OnReadyButtonPressed()
 	{
-		throw new NotImplementedException();
+		GameManager.GetInstance().EmitSignal(GameManager.SignalName.ReadyButtonPressed);
 	}
 	private static void OnBackButtonPressed()
 	{

@@ -8,11 +8,8 @@ hinting = 2
 
 [node name="ScoreboardPanel" type="Panel"]
 anchors_preset = -1
-anchor_left = 0.302
-anchor_right = 0.708
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -347.904
-offset_right = 336.384
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_rto3p")
@@ -108,4 +105,5 @@ theme_override_colors/icon_pressed_color = Color(0.545098, 0.545098, 0.545098, 1
 theme_override_colors/icon_hover_color = Color(0.184314, 0.184314, 0.184314, 1)
 text = "RESTART"
 
+[connection signal="pressed" from="QuitButton" to="." method="OnQuitButtonPressed"]
 [connection signal="pressed" from="RestartButton" to="." method="OnRestartButtonPressed"]
