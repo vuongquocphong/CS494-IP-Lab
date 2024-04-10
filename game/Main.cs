@@ -16,7 +16,9 @@ public partial class Main : Node
 		AddChild(GameManager);
 		GameManager.ConnectionSuccess += ConnectionSuccessHandler;
 		GameManager.ConnectionFail += ConnectionFailHandler;
-		GameManager.BackToInputName += BackToInputNameHandler;
+		GameManager.BackFromWaitingToInputName += BackFromWaitingToInputNameHandler;
+		GameManager.BackFromIngameToInputName += BackFromIngameToInputNameHandler;
+		GameManager.BackFromScoreboardToInputName += BackFromScoreboardToInputNameHandler;
 		GameManager.UpdateReadyPlayerListSignal += UpdateReadyPlayerListHandler;
 		// Get GameManager Node
 		NetworkClient = new TcpNetworkClient();
@@ -39,14 +41,34 @@ public partial class Main : Node
 		ErrorLabel.Show();
 	}
 
-<<<<<<< Updated upstream
-	private void BackToInputNameHandler() {
-=======
+	private void BackFromWaitingToInputNameHandler() {
+		// Show InputNamePanel
+		GetNode<Panel>("InputNamePanel").Show();
+		// Hide WaitingPanel
+		GetNode<Panel>("WaitingPanel").Hide();
+		// Close connection
+		NetworkClient.Close();
+	}
+	private void BackFromScoreboardToInputNameHandler() {
+		// Show InputNamePanel
+		GetNode<Panel>("InputNamePanel").Show();
+		// Hide ScoreboardPanel
+		GetNode<Panel>("ScoreboardPanel").Hide();
+		// Close connection
+		NetworkClient.Close();
+	}
+	private void BackFromIngameToInputNameHandler(){
+		// Show InputNamePanel
+		GetNode<Panel>("InputNamePanel").Show();
+		// Hide IngamePanel
+		GetNode<Panel>("IngamePanel").Hide();
+		// Close connection
+		NetworkClient.Close();
+	}
 	private void UpdateReadyPlayerListHandler() {
 		GetNode<WaitingPanel>("WaitingPanel").UpdateReadyPlayerList();
 	}
 	private void BackButtonPressedHandler() {
->>>>>>> Stashed changes
 		// Show InputNamePanel
 		GetNode<Panel>("InputNamePanel").Show();
 		// Hide WaitingPanel

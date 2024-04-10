@@ -14,12 +14,17 @@ namespace GameComponents
         [Signal]
         public delegate void ConnectionFailEventHandler(string error);
         [Signal]
-        public delegate void BackToInputNameEventHandler();
+        public delegate void BackFromWaitingToInputNameEventHandler();
+        [Signal]
+        public delegate void BackFromIngameToInputNameEventHandler();
+        [Signal]
+        public delegate void BackFromScoreboardToInputNameEventHandler();
         [Signal]
         public delegate void UpdateReadyPlayerListSignalEventHandler();
         static private GameManager instance = null!;
         public string LocalPlayerName { get; set; } = "";
         public string KeyWord { get; set; } = "";
+        public string Hint { get; set; } = "";
         public int NumberOfPlayers { get; set; } = 0;
         public List<PlayerInfo> PlayersList { get; set; } = [];
         public int NumberOfTurns { get; set; } = 0;
@@ -78,7 +83,7 @@ namespace GameComponents
             var msg = new ReadyMessage(ready);
             MediatorComp.Notify(this, msg);
         }
-        public void Guess() {
+        public void Guess(bool guessMode, string guess) {
             // Send message to server
             // to check guess
             // Notify mediator
@@ -104,6 +109,11 @@ namespace GameComponents
         {
             // Process message from server
             // and update game state
+            
+        }
+        public void CloseConnection()
+        {
+            // Disconnect from server
             
         }
     }

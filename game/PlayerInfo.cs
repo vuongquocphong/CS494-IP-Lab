@@ -13,9 +13,9 @@ namespace GameComponents
         Character,
         Word
     }
+    
     public class PlayerInfo(string name)
     {
-
         public string Name { get; set; } = name;
         public int Point { get; set; } = 0;
         public bool ReadyStatus { get; set; } = false;

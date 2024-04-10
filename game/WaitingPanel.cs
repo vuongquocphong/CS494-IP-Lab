@@ -24,7 +24,7 @@ public partial class WaitingPanel : Panel
 	}
 	private static void OnBackButtonPressed()
 	{
-		GameManager.GetInstance().EmitSignal(GameManager.SignalName.BackToInputName);
+		GameManager.GetInstance().EmitSignal(GameManager.SignalName.BackFromWaitingToInputName);
 	}
 
 	public void UpdateReadyPlayerList(){
