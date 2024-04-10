@@ -27,6 +27,10 @@ namespace GameComponents
         public delegate void BackFromScoreBoardToWaitingEventHandler();
         [Signal]
         public delegate void ReadyButtonPressedEventHandler();
+        [Signal]
+        public delegate void StartGameReceiveEventHandler();
+        [Signal]
+        public delegate void GameResultReceiveEventHandler();
         static private GameManager instance = null!;
         public string LocalPlayerName { get; set; } = "";
         public string KeyWord { get; set; } = "";
@@ -43,15 +47,12 @@ namespace GameComponents
             ClientConnectionMessage msg = new(name);
             MediatorComp.Notify(this, msg);
         }
-
         private GameManager() { }
-
         static public GameManager GetInstance()
         {
             instance ??= new GameManager();
             return instance;
         }
-
         public void Reset()
         {
             LocalPlayerName = "";
@@ -62,15 +63,9 @@ namespace GameComponents
             GameState = false;
             CurrentPlayer = null!;
         }
-
         public void ConnectSuccess()
         {
             CallDeferred("emit_signal", "ConnectionSuccess");
-        }
-
-        public void ConnectFail(string error)
-        {
-            CallDeferred("emit_signal", "ConnectionFail", error);
         }
         public void ConnectFail(ServerConnectionFailureMessage msg)
         {
@@ -87,7 +82,6 @@ namespace GameComponents
             };
             CallDeferred("emit_signal", "ConnectionFail", ErrorContent);
         }
-
         public void UpdatePlayerList(List<Tuple<string, bool>> players)
         {
             List<PlayerInfo> newPlayersList = new();
@@ -104,35 +98,40 @@ namespace GameComponents
             // Emit signal to update UI
             CallDeferred("emit_signal", "PlayerListUpdate");
         }
-
         public void SendReady(bool ready)
         {
             ReadyMessage msg = new(ready);
             MediatorComp.Notify(this, msg);
         }
-        public void Receive(Message msg)
+        public void StartGame(string keyWord, string hint)
         {
-            // Get Message type
-            // and call appropriate function
-        }
-        public void PlayerReady()
-        {
-            // Send message to server
-            // to start game
-            // Notify mediator
+            KeyWord = keyWord;
+            Hint = hint;
+            GameState = true;
+            CallDeferred("emit_signal", "StartGameReceive");
         }
         public void Guess(bool guessMode, string guess) {
             // Send message to server
             // to check guess
             // Notify mediator
-            // this.Mediator.Notify(this, Event.GUESS);
+            Messages.GuessType guessType = guessMode switch
+            {
+                true => Messages.GuessType.Character,
+                false => Messages.GuessType.Keyword
+            };
+            GuessMessage msg = new GuessMessage(guessType, guess);
+            MediatorComp.Notify(this, msg);
         }
         public void TimeOut()
         {
-            // Send message to server
-            // to skip turn
-            // Notify mediator
-            // this.Mediator.Notify(this, Event.TIMEOUT);
+            TimeoutMessage msg = new();
+            MediatorComp.Notify(this, msg);
+        }
+
+        public void UpdateGameResult()
+        {
+            
+            CallDeferred("emit_signal", "GameResultReceive");
         }
 
         internal void AddPlayer(string name)
@@ -140,16 +139,9 @@ namespace GameComponents
             PlayersList.Add(new PlayerInfo(name));
         }
 
-        public void TransitionTo()
+        public void UpdateKeyword()
         {
+            
         }
-
-        public void ProcessMessage(Message msg)
-        {
-            // Process message from server
-            // and update game state
-
-        }
-        
     }
 }

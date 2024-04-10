@@ -28,6 +28,9 @@ namespace Mediator
                 case INetworkClient:
                     ReactOnNetworkClient(msg);
                     break;
+                default:
+                    GD.Print(sender.GetType().ToString() + " is not a valid sender");
+                    break;
             }
         }
 
@@ -37,6 +40,7 @@ namespace Mediator
         }
         private void ReactOnNetworkClient(Message msg)
         {
+            GD.Print(msg.MessageType);
             switch (msg.MessageType) {
                 case MessageType.ServerConnectionFailure:
                     gameManager.ConnectFail((ServerConnectionFailureMessage) msg);
@@ -47,6 +51,18 @@ namespace Mediator
                 case MessageType.PlayerList:
                     List<Tuple<string, bool>> players = ((PlayerListMessage) msg).Players;
                     gameManager.UpdatePlayerList(players);
+                    break;
+                case MessageType.GameStarted:
+                    GD.Print("Game Started Received");
+                    string KeyWord = ((GameStartedMessage) msg).KeyWord;
+                    string Hint = ((GameStartedMessage) msg).Hint;
+                    gameManager.StartGame(KeyWord, Hint);
+                    break;
+                case MessageType.GameResult:
+                    gameManager.UpdateGameResult();
+                    break;
+                case MessageType.GuessResult:
+                    gameManager.UpdateKeyword();
                     break;
                 default:
                     break;

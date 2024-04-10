@@ -43,35 +43,8 @@ offset_top = 0.0609894
 offset_bottom = 0.256958
 columns = 2
 
-[node name="VBoxName" type="VBoxContainer" parent="GridContainer"]
+[node name="PlayerName" type="ItemList" parent="GridContainer"]
 layout_mode = 2
-
-[node name="Label" type="Label" parent="GridContainer/VBoxName"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Player1Label"
-
-[node name="Label2" type="Label" parent="GridContainer/VBoxName"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Player2Label"
-
-[node name="VBoxScore" type="VBoxContainer" parent="GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 10
-alignment = 2
-
-[node name="Label" type="Label" parent="GridContainer/VBoxScore"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "100"
-horizontal_alignment = 2
-
-[node name="Label2" type="Label" parent="GridContainer/VBoxScore"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "50"
-horizontal_alignment = 2
 
 [node name="QuitButton" type="Button" parent="."]
 layout_mode = 1

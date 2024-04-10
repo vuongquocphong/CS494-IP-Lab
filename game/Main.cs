@@ -24,7 +24,8 @@ public partial class Main : Node
 		GameManager.BackFromScoreBoardToInputName += BackFromScoreBoardToInputNameHandler;
 		GameManager.PlayButtonPressed += PlayButtonPressedHandler;
 		GameManager.ReadyButtonPressed += ReadyButtonPressedHandler;
-		
+		GameManager.StartGameReceive += StartGameReceiveHandler;
+		GameManager.GameResultReceive += GameResultReceiveHandler;
 
 		// Get GameManager Node
 		NetworkClient = new TcpNetworkClient();
@@ -150,6 +151,25 @@ public partial class Main : Node
 		ReadyButton.Text = "READY";
 	}
 
+	private void StartGameReceiveHandler() 
+	{
+		GD.Print("Start Game Receive Handler");
+		GetNode<IngamePanel>("IngamePanel").NewGame();
+		// Show IngamePanel
+		GetNode<Panel>("IngamePanel").Show();
+		// Hide WaitingPanel
+		GetNode<Panel>("WaitingPanel").Hide();
+	}
+
+	private void GameResultReceiveHandler() 
+	{
+		GD.Print("Game Result Receive Handler");
+		// Show ScoreboardPanel
+		GetNode<Panel>("ScoreboardPanel").Show();
+		// Hide IngamePanel
+		GetNode<Panel>("IngamePanel").Hide();
+		
+	}
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{

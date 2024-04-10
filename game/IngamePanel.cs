@@ -5,9 +5,7 @@ public partial class IngamePanel : Panel
 {
 	
 	bool GuessCharMode = true;
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
-	{
+	public void NewGame(){
 		var gameManager = GameManager.GetInstance();
 		var HintLabel = GetNode<RichTextLabel>("TextPanel/HintPanel/HintLabel");
 		var NameList = GetNode<ItemList>("GridContainer/VBoxNameContainer/ItemList");
@@ -29,12 +27,7 @@ public partial class IngamePanel : Panel
 			GuessList.AddItem(" ");
 		}
 		GuessTimerButton.SetProcess(false);
-	}
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-		
+		NotifyNewTurn();
 	}
 	public void SetInvalidMessage(string invalidMessage)
 	{

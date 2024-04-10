@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Collections;
+using System.Text;
 
 namespace Sockets
 {
@@ -254,7 +255,17 @@ namespace Sockets
                 return socketClientList.Count;
             }
         }
-
+        public static void PrintByteArray(byte[] bytes)
+        {
+            var sb = new StringBuilder("new byte[] { ");
+            foreach (var b in bytes)
+            {
+                sb.Append(b + ", ");
+            }
+            sb.Append('}');
+            Console.WriteLine(sb.ToString());
+        }
+        
         /// <summary>
         /// Notifies connected clients of new alert from system
         /// </summary>
@@ -264,7 +275,8 @@ namespace Sockets
             int count = 0;
             ArrayList? ObjectsToRemove = null;
 
-            Console.WriteLine("SocketServer NotifyConnectedClients count: " + SocketClientList.Count);
+            Console.WriteLine("SocketServer NotifyConnectedClients count: " + SocketClientList.Count + "; Message type: " + data[0]);
+            PrintByteArray(data);
 
             for (int x = 0; x < socketClientList.Count; x++)
             {

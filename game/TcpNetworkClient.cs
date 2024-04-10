@@ -45,9 +45,12 @@ namespace NetworkClient
                 SocketClient pSocket = (SocketClient)socket;
                 byte[] message = pSocket.RawBuffer[0..iNumberOfBytes];
 
-                // Message msg = MessageFactory.CreateMessage(message);
+                GD.Print("Received message: " + message[0]);
+                Message msg = MessageFactory.CreateMessage(message);
 
-                Receive(message);
+                GD.Print("Received message: " + msg);
+
+                Receive(msg);
             }
             catch (Exception pException)
             {
@@ -77,10 +80,9 @@ namespace NetworkClient
             GD.Print("Sent message");
         }
 
-        public void Receive(byte[] message)
+        public void Receive(Message message)
         {
-            Mediator.Notify(this, MessageFactory.CreateMessage(message));
-            GD.Print("Received message");
+            Mediator.Notify(this, message);
         }
 
         public void Close()

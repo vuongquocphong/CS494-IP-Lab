@@ -15,9 +15,16 @@ namespace Messages
 
         public GameStartedMessage(byte[] message)
         {
-            MessageType = (MessageType)message[0];
+            MessageType = MessageType.GameStarted;
             byte keyWordLength = message[1];
             KeyWord = System.Text.Encoding.UTF8.GetString(message, 2, keyWordLength);
+            byte[] hintLengthBytes = new byte[2];
+            hintLengthBytes[0] = message[2 + keyWordLength];
+            hintLengthBytes[1] = message[3 + keyWordLength];
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(hintLengthBytes);
+            }
             ushort hintLength = BitConverter.ToUInt16(message, 2 + keyWordLength);
             Hint = System.Text.Encoding.UTF8.GetString(message, 4 + keyWordLength, hintLength);
         }

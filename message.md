@@ -97,9 +97,9 @@
 
 ## Game Started
 
-| Message type | Keyword Length | Keyword      | Hint Length | Hint |
-| ------------ | -------------- | ------------ | ----------- | ---- |
-| 1 byte       | 1 byte         | max 30 bytes | 2 bytes     |      |
+| Message type | Keyword Length | Hint Length | Keyword      | Hint |
+| ------------ | -------------- | ----------- | ------------ | ---- |
+| 1 byte       | 1 byte         | 2 bytes     | max 30 bytes |      |
 
 ## Game Status
 
