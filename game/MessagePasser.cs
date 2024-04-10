@@ -53,16 +53,18 @@ namespace Mediator
                     gameManager.UpdatePlayerList(players);
                     break;
                 case MessageType.GameStarted:
-                    GD.Print("Game Started Received");
                     string KeyWord = ((GameStartedMessage) msg).KeyWord;
                     string Hint = ((GameStartedMessage) msg).Hint;
                     gameManager.StartGame(KeyWord, Hint);
+                    break;
+                case MessageType.GameStatus:
+                    gameManager.UpdateGameStatus((GameStatusMessage) msg);
                     break;
                 case MessageType.GameResult:
                     gameManager.UpdateGameResult();
                     break;
                 case MessageType.GuessResult:
-                    gameManager.UpdateKeyword();
+                    // gameManager.UpdateKeyword();
                     break;
                 default:
                     break;

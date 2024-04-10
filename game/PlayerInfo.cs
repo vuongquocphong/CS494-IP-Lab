@@ -20,5 +20,6 @@ namespace GameComponents
         public int Point { get; set; } = 0;
         public bool ReadyStatus { get; set; } = false;
         public PlayerState State { get; set; } = PlayerState.Playing;
+        
     }
 }

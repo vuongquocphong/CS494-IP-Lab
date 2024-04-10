@@ -92,8 +92,7 @@ namespace GameComponents
                 };
                 newPlayersList.Add(playerInfo);
             }
-            // Sort players list by name
-            newPlayersList.Sort((a, b) => a.Name.CompareTo(b.Name));
+
             PlayersList = newPlayersList;
             // Emit signal to update UI
             CallDeferred("emit_signal", "PlayerListUpdate");
@@ -103,6 +102,8 @@ namespace GameComponents
             ReadyMessage msg = new(ready);
             MediatorComp.Notify(this, msg);
         }
+
+
         public void StartGame(string keyWord, string hint)
         {
             KeyWord = keyWord;
@@ -139,9 +140,36 @@ namespace GameComponents
             PlayersList.Add(new PlayerInfo(name));
         }
 
-        public void UpdateKeyword()
+        public void UpdateGameStatus(GameStatusMessage msg)
         {
-            
+            NumberOfPlayers = msg.PlayerCount;
+            NumberOfTurns = msg.GameTurn;
+            List<PlayerInfo> newPlayersList = new List<PlayerInfo>();
+            int index = 0;
+            foreach (Messages.PlayerInfo player in msg.PlayersList)
+            {
+                PlayerInfo NewPlayer = new PlayerInfo(player.Name);
+                NewPlayer.Point = player.Score;
+                NewPlayer.State = player.State switch
+                {
+                    Messages.PlayerState.Playing => PlayerState.Playing,
+                    Messages.PlayerState.Lost => PlayerState.Lost,
+                    Messages.PlayerState.Disconnected => PlayerState.Disconnected,
+                    Messages.PlayerState.Won => PlayerState.Win,
+                    _ => throw new InvalidEnumArgumentException()
+                };
+                GD.Print(NewPlayer.Name.Length);
+                GD.Print(NewPlayer.Name.);
+                GD.Print(LocalPlayerName.Length);
+                GD.Print(LocalPlayerName);
+                newPlayersList.Add(NewPlayer);
+                if (index == msg.CurrentTurn){
+                    CurrentPlayer = NewPlayer;
+                }
+                index++;
+            }
+
+            PlayersList = newPlayersList;
         }
     }
 }
