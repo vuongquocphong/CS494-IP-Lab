@@ -11,7 +11,7 @@ public partial class GuessTimerButton : Button
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		int TimeLeft = (int)GetNode<Godot.Timer>("Timer").TimeLeft;
+		int TimeLeft = (int)GetNode<Godot.Timer>("GuessTimer").TimeLeft;
 		Text = "00:" + TimeLeft.ToString("00");
 	}
 }

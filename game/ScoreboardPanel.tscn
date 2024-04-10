@@ -7,7 +7,7 @@ font_weight = 700
 hinting = 2
 
 [node name="ScoreboardPanel" type="Panel"]
-anchors_preset = -1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2

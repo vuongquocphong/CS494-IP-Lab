@@ -9,11 +9,11 @@ public partial class IngamePanel : Panel
 	public override void _Ready()
 	{
 		var gameManager = GameManager.GetInstance();
-		var HintLabel = GetNode<RichTextLabel>("HintPanel/HintLabel");
+		var HintLabel = GetNode<RichTextLabel>("TextPanel/HintPanel/HintLabel");
 		var NameList = GetNode<ItemList>("GridContainer/VBoxNameContainer/ItemList");
 		var PointList = GetNode<ItemList>("GridContainer/VBoxPointContainer/ItemList");
 		var GuessList = GetNode<ItemList>("GridContainer/VBoxGuessContainer/ItemList");
-		var KeywordLabel = GetNode<Label>("KeywordLabel");
+		var KeywordLabel = GetNode<Label>("TextPanel/KeywordPanel/KeywordLabel");
 		var GuessTimerButton = GetNode<Button>("GuessTimerButton");
 		var PlayerList = gameManager.PlayersList;
 		
