@@ -133,7 +133,7 @@ namespace Sockets
                 SocketOptionName.NoDelay, 1);
 
             // Wait for a message
-            Receive();
+            // Receive();
         }
 
         /// <summary> 

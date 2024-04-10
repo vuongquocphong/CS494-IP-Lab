@@ -116,6 +116,7 @@ namespace Sockets
                         socketClientList.Add(socket);
                         // Call the Accept Handler
                         acceptHandler(socket);
+                        socket.Receive();
                     }
                 }
             }
