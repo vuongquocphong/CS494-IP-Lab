@@ -153,7 +153,6 @@ public partial class Main : Node
 
 	private void StartGameReceiveHandler() 
 	{
-		GD.Print("Start Game Receive Handler");
 		GetNode<IngamePanel>("IngamePanel").NewGame();
 		// Show IngamePanel
 		GetNode<Panel>("IngamePanel").Show();

@@ -128,9 +128,15 @@ namespace GameComponents
             MediatorComp.Notify(this, msg);
         }
 
-        public void UpdateGameResult()
+        public void UpdateGameResult(List<PlayerResult> results)
         {
-            
+            PlayersList.Clear();
+            foreach (PlayerResult result in results)
+            {
+                PlayersList.Add(new PlayerInfo(result.PlayerName) {
+                    Point = result.Score,
+                });
+            }
             CallDeferred("emit_signal", "GameResultReceive");
         }
 

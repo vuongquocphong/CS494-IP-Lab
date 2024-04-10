@@ -39,22 +39,43 @@ anchor_left = 0.162
 anchor_top = 0.211
 anchor_right = 0.838
 anchor_bottom = 0.807
-offset_top = 0.0609894
-offset_bottom = 0.256958
+offset_left = 0.376007
+offset_top = 0.272003
+offset_right = -0.375977
+offset_bottom = 0.0640259
 columns = 2
 
-[node name="PlayerName" type="ItemList" parent="GridContainer"]
+[node name="PlayerNames" type="ItemList" parent="GridContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+item_count = 2
+item_0/text = "Player1"
+item_1/text = "Player2"
+
+[node name="PlayerScores" type="ItemList" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+item_count = 2
+item_0/text = "100"
+item_1/text = "75"
 
 [node name="QuitButton" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.162
+anchor_left = 0.186
 anchor_top = 0.835
-anchor_right = 0.468
+anchor_right = 0.491
 anchor_bottom = 0.883
-offset_top = 0.0848999
-offset_bottom = -0.0670166
+offset_left = -0.272003
+offset_top = -0.0800171
+offset_right = 0.879944
+offset_bottom = -0.184021
 theme_override_colors/font_color = Color(0.956863, 0.403922, 0, 1)
 theme_override_colors/icon_normal_color = Color(0, 0, 0, 1)
 theme_override_colors/icon_pressed_color = Color(0.545098, 0.545098, 0.545098, 1)
@@ -65,14 +86,14 @@ text = "QUIT"
 [node name="RestartButton" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.536
+anchor_left = 0.519
 anchor_top = 0.835
-anchor_right = 0.838
+anchor_right = 0.822
 anchor_bottom = 0.883
-offset_left = 0.151993
+offset_left = -0.888062
 offset_top = -0.0800171
-offset_right = 1.81598
-offset_bottom = -0.184021
+offset_right = -0.376099
+offset_bottom = -0.18396
 theme_override_colors/font_color = Color(0.956863, 0.403922, 0, 1)
 theme_override_colors/icon_pressed_color = Color(0.545098, 0.545098, 0.545098, 1)
 theme_override_colors/icon_hover_color = Color(0.184314, 0.184314, 0.184314, 1)
