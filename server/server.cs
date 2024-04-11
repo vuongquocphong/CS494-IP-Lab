@@ -254,11 +254,11 @@ namespace GameServer
 
         public static void HandleTimeout(SocketClient pSocket, TimeoutMessage _)
         {
-            // string address = pSocket.IpAddress.ToString() + ":" + pSocket.Port;
-            // if (ServerHandler.GetPlayer(address).PlayerId != ServerHandler.CurrentPlayerTurn)
-            // {
-            //     return;
-            // }
+            // string address = pSocket.IpAddress.ToString() + ':' + pSocket.Port;
+            if (ServerHandler.ServerState == ServerState.GameOver || ServerHandler.ServerState == ServerState.WaitingForPlayers)
+            {
+                return;
+            }
             ServerHandler.NextTurn();
             if (ServerHandler.ServerState == ServerState.GameOver)
             {
