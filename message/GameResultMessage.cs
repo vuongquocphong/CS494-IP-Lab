@@ -59,6 +59,7 @@ namespace Messages
                 ];
                 byteResults = [.. byteResults, .. playerResult];
             }
+            message = [.. message, .. byteResults];
             return message;
         }
     }
