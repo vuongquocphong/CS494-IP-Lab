@@ -41,7 +41,6 @@ namespace GameComponents
         public string Hint { get; set; } = "";
         public int NumberOfPlayers { get; set; } = 0;
         public List<PlayerInfo> PlayersList { get; set; } = [];
-        public int NumberOfTurns { get; set; } = 0;
         public bool GameState { get; set; } = false;
         public PlayerInfo CurrentPlayer { get; set; } = null!;
         public IMediator MediatorComp { get; set; } = null!;
@@ -66,7 +65,6 @@ namespace GameComponents
             KeyWord = "";
             NumberOfPlayers = 0;
             PlayersList.Clear();
-            NumberOfTurns = 0;
             GameState = false;
             CurrentPlayer = null!;
         }
@@ -156,7 +154,6 @@ namespace GameComponents
         public void UpdateGameStatus(GameStatusMessage msg)
         {
             NumberOfPlayers = msg.PlayerCount;
-            NumberOfTurns = msg.GameTurn;
             List<PlayerInfo> newPlayersList = new List<PlayerInfo>();
             int index = 0;
             KeyWord = msg.Keyword;

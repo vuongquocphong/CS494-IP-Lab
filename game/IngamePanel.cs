@@ -25,10 +25,6 @@ public partial class IngamePanel : Panel
 	}
 	public void OnModeButtonPressed()
 	{
-		if (GameManager.GetInstance().NumberOfTurns <= 2){
-			SetInvalidMessage("Cannot guess keyword!");
-			return;
-		}
 		var GuessModeButton = GetNode<Button>("GuessModeButton");
 		var GuessEditText = GetNode<LineEdit>("GuessEditText");
 		if (GuessCharMode){
