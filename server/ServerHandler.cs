@@ -65,7 +65,7 @@ namespace GameServer
 
         public List<ServerPlayerInfo> Players => m_Players;
 
-        public string KeyWord => m_KeyWord;
+        public string KeyWord => Revealed;
 
         public string Hint => m_Hint;
 
