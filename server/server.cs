@@ -171,7 +171,6 @@ namespace GameServer
                 socketServer.NotifyConnectedClients(
                     new GameStatusMessage(
                         ServerHandler.Players.Count,
-                        (int)ServerHandler.CurrentGameTurn,
                         (int)ServerHandler.CurrentPlayerTurn,
                         ServerHandler.KeyWord,
                         ServerHandler.GetPlayerInfoList()
@@ -223,7 +222,6 @@ namespace GameServer
                 socketServer.NotifyConnectedClients(
                     new GameStatusMessage(
                         ServerHandler.Players.Count,
-                        (int)ServerHandler.CurrentGameTurn,
                         (int)ServerHandler.CurrentPlayerTurn,
                         ServerHandler.KeyWord,
                         ServerHandler.GetPlayerInfoList()
@@ -252,7 +250,6 @@ namespace GameServer
                 socketServer.NotifyConnectedClients(
                     new GameStatusMessage(
                         ServerHandler.Players.Count,
-                        (int)ServerHandler.CurrentGameTurn,
                         (int)ServerHandler.CurrentPlayerTurn,
                         ServerHandler.KeyWord,
                         ServerHandler.GetPlayerInfoList()
