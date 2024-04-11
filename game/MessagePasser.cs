@@ -65,7 +65,7 @@ namespace Mediator
                     gameManager.UpdateGameResult(playerResults);
                     break;
                 case MessageType.GuessResult:
-                    // gameManager.UpdateKeyword();
+                    gameManager.NotifyResult((GuessResultMessage)msg);
                     break;
                 default:
                     break;
