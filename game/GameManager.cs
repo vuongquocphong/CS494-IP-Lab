@@ -31,6 +31,8 @@ namespace GameComponents
         public delegate void StartGameReceiveEventHandler();
         [Signal]
         public delegate void GameResultReceiveEventHandler();
+        [Signal]
+        public delegate void GuessResultReceiveEventHandler(string name, string PlayerName);
         static private GameManager instance = null!;
         public string LocalPlayerName { get; set; } = "";
         public string KeyWord { get; set; } = "";
@@ -41,6 +43,7 @@ namespace GameComponents
         public bool GameState { get; set; } = false;
         public PlayerInfo CurrentPlayer { get; set; } = null!;
         public IMediator MediatorComp { get; set; } = null!;
+        public Messages.GuessResult guessResult { get; set; } = new GuessResult();
         public void RequestConnect(string name)
         {
             GD.Print("RequestConnect");
@@ -154,6 +157,7 @@ namespace GameComponents
             NumberOfTurns = msg.GameTurn;
             List<PlayerInfo> newPlayersList = new List<PlayerInfo>();
             int index = 0;
+            KeyWord = msg.Keyword;
             foreach (Messages.PlayerInfo player in msg.PlayersList)
             {
                 PlayerInfo NewPlayer = new(player.Name);
@@ -167,17 +171,23 @@ namespace GameComponents
                     _ => throw new InvalidEnumArgumentException()
                 };
                 GD.Print(NewPlayer.Name.Length);
-                GD.Print(NewPlayer.Name);
-                GD.Print(LocalPlayerName.Length);
-                GD.Print(LocalPlayerName);
+                GD.Print("New player name: " + NewPlayer.Name);
                 newPlayersList.Add(NewPlayer);
                 if (index == msg.CurrentTurn){
                     CurrentPlayer = NewPlayer;
                 }
+                GD.Print(CurrentPlayer.Name.Length);
+                GD.Print("Current player name: " + CurrentPlayer.Name);
                 index++;
             }
 
             PlayersList = newPlayersList;
+        }
+
+        public void NotifyResult(GuessResultMessage msg)
+        {
+            guessResult = msg.Result;
+            CallDeferred(MethodName.EmitSignal, "GuessResultReceive", msg.Guess, msg.PlayerName);
         }
     }
 }

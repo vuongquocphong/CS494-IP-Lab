@@ -27,7 +27,6 @@ namespace Messages
         public int CurrentTurn { get; set; }
         public int KeywordLength { get; set; }
         public string Keyword { get; set; }
-
         public List<PlayerInfo> PlayersList { get; set; } = [];
 
         public GameStatusMessage(int playerCount, int gameTurn, int currentTurn, string keyword, List<PlayerInfo> playersList)

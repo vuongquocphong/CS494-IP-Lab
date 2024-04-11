@@ -1,6 +1,7 @@
 using GameComponents;
 using Godot;
 using Mediator;
+using Messages;
 using NetworkClient;
 
 public partial class Main : Node
@@ -26,7 +27,7 @@ public partial class Main : Node
 		GameManager.ReadyButtonPressed += ReadyButtonPressedHandler;
 		GameManager.StartGameReceive += StartGameReceiveHandler;
 		GameManager.GameResultReceive += GameResultReceiveHandler;
-
+		GameManager.GuessResultReceive += GuessResultReceiveHandler;
 		// Get GameManager Node
 		NetworkClient = new TcpNetworkClient();
 		Mediator = new MessagePasser(GameManager, NetworkClient);
@@ -102,7 +103,7 @@ public partial class Main : Node
 		PlayerList.Clear();
 		StatusList.Clear();
 		// Add players name to PlayerList
-		foreach (PlayerInfo player in GameManager.PlayersList) {
+		foreach (GameComponents.PlayerInfo player in GameManager.PlayersList) {
 			GD.Print(player.Name);
 			PlayerList.AddItem(player.Name);
 			StatusList.AddItem(player.ReadyStatus ? "Ready" : "Not Ready");
@@ -169,11 +170,11 @@ public partial class Main : Node
 		// Hide IngamePanel
 		GetNode<Panel>("IngamePanel").Hide();
 	}
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
+	private void GuessResultReceiveHandler(string Guess, string PlayerName)
 	{
-	}
 
+		GetNode<IngamePanel>("IngamePanel").NotifyGuessResults(Guess, PlayerName);
+	}
 	// Load Scenes
 	private void LoadScenes() {
 		PackedScene InputNameScene = GD.Load<PackedScene>("res://InputNamePanel.tscn");
