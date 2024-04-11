@@ -116,6 +116,7 @@ public partial class IngamePanel : Panel
 			NameList.SetItemCustomFgColor(index, Color.FromHtml("#ffffff"));
 			PointList.SetItemCustomFgColor(index, Color.FromHtml("#ffffff"));
 			GuessList.SetItemCustomFgColor(index, Color.FromHtml("#ffffff"));
+			
 			if (player.Name == gameManager.CurrentPlayer.Name){
 				NameList.SetItemCustomFgColor(index, Color.FromHtml("#ebb663"));
 				PointList.SetItemCustomFgColor(index, Color.FromHtml("#ebb663"));

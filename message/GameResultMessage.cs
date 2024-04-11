@@ -31,7 +31,12 @@ namespace Messages
             {
                 byte playerNameLength = message[offset++];
                 string playerName = Encoding.UTF8.GetString(message, offset, playerNameLength);
-                ushort score = BitConverter.ToUInt16(message, offset + playerNameLength);
+                byte[] scoreBytes = message[(offset + playerNameLength)..(offset + playerNameLength + 2)];
+                if (BitConverter.IsLittleEndian)
+                {
+                    Array.Reverse(scoreBytes);
+                }
+                ushort score = BitConverter.ToUInt16(scoreBytes);
                 byte rank = message[offset + playerNameLength + 2];
                 Results.Add(new PlayerResult(playerName, score, rank));
                 offset += playerNameLength + 3;
