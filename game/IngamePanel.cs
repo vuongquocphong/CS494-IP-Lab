@@ -5,6 +5,10 @@ public partial class IngamePanel : Panel
 {
 	bool GuessCharMode;
 	bool NotifyNewTurnInUpdateGameStatus;
+
+	public void Reset(){
+		
+	}
     public override void _Ready()
     {
         base._Ready();
@@ -24,6 +28,8 @@ public partial class IngamePanel : Panel
 
 	public void OnExitButtonPressed()
 	{
+		GetNode<Button>("GuessTimerButton").SetProcess(false);
+		GetNode<Godot.Timer>("GuessTimerButton/GuessTimer").Stop();
 		GameManager.GetInstance().EmitSignal(GameManager.SignalName.BackFromIngameToInputName);
 	}
 	public void OnModeButtonPressed()

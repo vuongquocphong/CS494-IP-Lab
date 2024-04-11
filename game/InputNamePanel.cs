@@ -6,7 +6,9 @@ using Messages;
 
 public partial class InputNamePanel : Panel
 {
-
+	public void Reset(){
+		
+	}
 	private void OnPlayButtonPressed()
 	{
 		// Get the line edit

@@ -4,7 +4,11 @@ using System;
 using System.Data;
 
 public partial class WaitingPanel : Panel
-{	private void OnReadyButtonPressed()
+{	
+	public void Reset(){
+		
+	}
+	private void OnReadyButtonPressed()
 	{
 		GameManager.GetInstance().EmitSignal(GameManager.SignalName.ReadyButtonPressed);
 	}

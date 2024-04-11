@@ -29,6 +29,7 @@ public partial class Main : Node
 		GameManager.GameResultReceive += GameResultReceiveHandler;
 		GameManager.GuessResultReceive += GuessResultReceiveHandler;
 		GameManager.GameStatusReceive += GameStatusReceiveHandler;
+		GameManager.GameReset += GameResetHandler;
 		// Get GameManager Node
 		NetworkClient = new TcpNetworkClient();
 		Mediator = new MessagePasser(GameManager, NetworkClient);
@@ -95,7 +96,12 @@ public partial class Main : Node
 		// Close connection
 		NetworkClient.Close();
 	}
-
+	private void GameResetHandler() {
+		GetNode<InputNamePanel>("InputNamePanel").Reset();
+		GetNode<WaitingPanel>("WaitingPanel").Reset();
+		GetNode<IngamePanel>("IngamePanel").Reset();
+		GetNode<ScoreboardPanel>("ScoreboardPanel").Reset();
+	}
 	private void PlayerListUpdateHandler() {
 		// Get ItemList for Name and Status
 		ItemList PlayerList = GetNode<ItemList>("WaitingPanel/GridContainer/VBoxContainerName/ItemList");
@@ -196,7 +202,6 @@ public partial class Main : Node
 		GetNode<Panel>("ScoreboardPanel").Hide();
 		GetNode<Panel>("IngamePanel").Hide();
 	}
-
 	private void AddSceneToTree(PackedScene scene) {
 		if (scene != null) {
 			Node panel = scene.Instantiate();
