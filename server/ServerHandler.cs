@@ -236,8 +236,7 @@ namespace GameServer
             {
                 if (guess == m_KeyWord)
                 {
-                    ServerState = ServerState.WaitingForPlayers;
-                    // TODO: Finish game
+                    FinishGame();
                     return GuessResult.Correct;
                 }
                 for (int i = 0; i < m_Players.Count; i++)
@@ -245,6 +244,12 @@ namespace GameServer
                     if (m_Players[i].PlayerId == playerId)
                     {
                         m_Players[i].State = ServerPlayerState.GameOver;
+                        int playersLeft = m_Players.Count(player => player.State != ServerPlayerState.GameOver && player.State != ServerPlayerState.Disconnected);
+                        if (playersLeft == 0)
+                        {
+                            FinishGame();
+                            return GuessResult.Incorrect;
+                        }
                         break;
                     }
                 }
