@@ -68,8 +68,6 @@ public partial class Main : Node
 	private void BackFromScoreBoardToInputNameHandler() {
 		// Reset GameManager
 		GameManager.Reset();
-		// Hide IngamePanel
-		GetNode<Panel>("IngamePanel").Hide();
 		// Show InputNamePanel
 		GetNode<Panel>("InputNamePanel").Show();
 		// Hide ScoreboardPanel
@@ -78,6 +76,8 @@ public partial class Main : Node
 		NetworkClient.Close();
 	}
 	private void BackFromIngameToInputNameHandler(){
+		// Reset GameManager
+		GameManager.Reset();
 		// Show InputNamePanel
 		GetNode<Panel>("InputNamePanel").Show();
 		// Hide IngamePanel
