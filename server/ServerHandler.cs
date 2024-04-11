@@ -222,12 +222,12 @@ namespace GameServer
                         return GuessResult.Duplicate;
                     }
                     Revealed = new string(m_KeyWord.Select((c, i) => c == guess[0] ? c : Revealed[i]).ToArray());
+                    GetPlayer(playerId)!.Score++;
                     if (Revealed == m_KeyWord)
                     {
                         FinishGame();
                         return GuessResult.Correct;
                     }
-                    GetPlayer(playerId)!.Score++;
                     return GuessResult.Correct;
                 }
                 return GuessResult.Incorrect;
@@ -237,6 +237,8 @@ namespace GameServer
                 if (guess == m_KeyWord)
                 {
                     FinishGame();
+
+                    GetPlayer(playerId)!.Score += 5;
                     return GuessResult.Correct;
                 }
                 for (int i = 0; i < m_Players.Count; i++)
