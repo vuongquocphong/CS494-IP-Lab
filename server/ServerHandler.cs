@@ -124,14 +124,15 @@ namespace GameServer
 
         public void NextTurn()
         {
-            while (m_Players[(int)CurrentPlayerTurn].State
+
+            do
+            {
+                CurrentPlayerTurn = (uint)((CurrentPlayerTurn + 1) % m_Players.Count);
+            } while (m_Players[(int)CurrentPlayerTurn].State
                 == ServerPlayerState.GameOver
                 || m_Players[(int)CurrentPlayerTurn].State
                 == ServerPlayerState.Disconnected
-            )
-            {
-                CurrentPlayerTurn = (uint)((CurrentPlayerTurn + 1) % m_Players.Count);
-            }
+            );
         }
 
         public void FinishGame()
