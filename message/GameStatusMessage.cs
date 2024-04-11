@@ -6,10 +6,9 @@ namespace Messages
 {
     public enum PlayerState
     {
-        Playing = 0,
-        Lost = 1,
-        Disconnected = 2,
-        Won = 3,
+        Playing = 2,
+        Lost = 3,
+        Disconnected = 4,
     }
 
     public class PlayerInfo(string name, ushort score, PlayerState state)

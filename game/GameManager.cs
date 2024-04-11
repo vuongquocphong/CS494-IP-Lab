@@ -166,7 +166,6 @@ namespace GameComponents
                     Messages.PlayerState.Playing => PlayerState.Playing,
                     Messages.PlayerState.Lost => PlayerState.Lost,
                     Messages.PlayerState.Disconnected => PlayerState.Disconnected,
-                    Messages.PlayerState.Won => PlayerState.Win,
                     _ => throw new InvalidEnumArgumentException()
                 };
                 GD.Print(NewPlayer.Name.Length);
