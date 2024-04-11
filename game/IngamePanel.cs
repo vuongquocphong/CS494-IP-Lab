@@ -3,11 +3,13 @@ using System;
 using GameComponents;
 public partial class IngamePanel : Panel
 {
-	
-	bool GuessCharMode = true;
+	bool GuessCharMode;
+	bool NotifyNewTurnInUpdateGameStatus;
     public override void _Ready()
     {
         base._Ready();
+		GuessCharMode = true;
+		NotifyNewTurnInUpdateGameStatus = true;
 		GetNode<Button>("GuessTimerButton").SetProcess(false);
     }
 
@@ -83,8 +85,9 @@ public partial class IngamePanel : Panel
 				GuessList.SetItemText(index, " ");
 			}
 		}
+		NotifyNewTurnInUpdateGameStatus = false;
 		GetNode<Label>("GuessResultLabel").Text = Message;
-		GetNode<AnimationPlayer>("AnimationLabel").Play("NotifyGuessResult");
+		GetNode<AnimationPlayer>("AnimationPlayer").Play("NotifyGuessResult");
 	}
 	public void UpdateGameStatus(){
 		var gameManager = GameManager.GetInstance();
@@ -129,7 +132,7 @@ public partial class IngamePanel : Panel
 			}
 			index++;
 		}
-		NotifyNewTurn();
+		if (NotifyNewTurnInUpdateGameStatus) NotifyNewTurn();
 	}
 	public void NotifyNewTurn(){
 		var gameManager = GameManager.GetInstance();
