@@ -5,14 +5,18 @@ public partial class IngamePanel : Panel
 {
 	
 	bool GuessCharMode = true;
-	public void NewGame(){
+    public override void _Ready()
+    {
+        base._Ready();
+		GetNode<Button>("GuessTimerButton").SetProcess(false);
+    }
+    public void NewGame(){
 		var gameManager = GameManager.GetInstance();
 		var HintLabel = GetNode<RichTextLabel>("TextPanel/HintPanel/HintLabel");
 		var NameList = GetNode<ItemList>("GridContainer/VBoxNameContainer/ItemList");
 		var PointList = GetNode<ItemList>("GridContainer/VBoxPointContainer/ItemList");
 		var GuessList = GetNode<ItemList>("GridContainer/VBoxGuessContainer/ItemList");
 		var KeywordLabel = GetNode<Label>("TextPanel/KeywordPanel/KeywordLabel");
-		var GuessTimerButton = GetNode<Button>("GuessTimerButton");
 		var PlayerList = gameManager.PlayersList;
 		
 		String NewKeyword = " ";
@@ -22,11 +26,10 @@ public partial class IngamePanel : Panel
 		KeywordLabel.Text = NewKeyword;
 		HintLabel.Text = gameManager.Hint;
 		foreach (PlayerInfo player in PlayerList){
-			NameList.AddItem(player.Name);
-			PointList.AddItem(player.Point.ToString());
-			GuessList.AddItem(" ");
+			NameList.AddItem(player.Name, null, false);
+			PointList.AddItem(player.Point.ToString(), null, false);
+			GuessList.AddItem(" ", null, false);
 		}
-		GuessTimerButton.SetProcess(false);
 		NotifyNewTurn();
 	}
 	public void SetInvalidMessage(string invalidMessage)
@@ -87,19 +90,25 @@ public partial class IngamePanel : Panel
 	}
 	public void NotifyNewTurn(){
 		var gameManager = GameManager.GetInstance();
-		String NotificationMessage = "NEXT TURN!!";
-		if (gameManager.LocalPlayerName == gameManager.CurrentPlayer.Name){
-			NotificationMessage = "YOUR TURN!!";
-		}
+		String NotificationMessage = "NEW TURN!!";
+		// if (gameManager.LocalPlayerName == gameManager.CurrentPlayer.Name){
+		// 	NotificationMessage = "YOUR TURN!!";
+		// }
+		// GD.Print("New turn!!");
+		// GD.Print(gameManager.LocalPlayerName);
+		// GD.Print(gameManager.CurrentPlayer.Name);
 		var TurnAlertLabel = GetNode<RichTextLabel>("TurnAlertLabel");
 		TurnAlertLabel.Text = NotificationMessage;
 		var AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
 		AnimationPlayer.Play("notifyNewTurn");
 	}
 
-	public void OnAnimationPlayerAnimationFinished() {
-		GetNode<Godot.Timer>("GuessTimerButton/GuessTimer").Start(20);
-		GetNode<Button>("GuessTimerButton").SetProcess(true);
+	public void OnAnimationPlayerAnimationFinished(string AnimationName) {
+		if (AnimationName == "notifyNewTurn"){
+			GetNode<Godot.Timer>("GuessTimerButton/GuessTimer").Start(20);
+			GetNode<Button>("GuessTimerButton").SetProcess(true);
+		}
+		
 	}
 	public void OnGuessTimerTimeout(){
 		GetNode<Button>("GuessTimerButton").SetProcess(false);
