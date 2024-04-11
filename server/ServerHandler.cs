@@ -25,7 +25,6 @@ namespace GameServer
         NotReady,
         Ready,
         InGame,
-        Guessing,
         GameOver,
         Disconnected
     }
@@ -112,6 +111,10 @@ namespace GameServer
             if (m_Players.Count < 2)
             {
                 throw new InvalidOperationException("Not enough players");
+            }
+            for (int i = 0; i < m_Players.Count; i++)
+            {
+                m_Players[i].State = ServerPlayerState.InGame;
             }
             ServerState = ServerState.GameInProgress;
             KeywordDescription kw = database.GetRandomKeyword();
