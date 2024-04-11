@@ -22,11 +22,11 @@ namespace GameServer
 
     public enum ServerPlayerState
     {
-        NotReady,
-        Ready,
-        InGame,
-        GameOver,
-        Disconnected
+        NotReady = 0,
+        Ready = 1,
+        InGame = 2,
+        GameOver = 3,
+        Disconnected = 4
     }
 
     public class ServerPlayerInfo(string address, string username, int score, ServerPlayerState state)
