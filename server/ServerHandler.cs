@@ -103,6 +103,8 @@ namespace GameServer
                     break;
                 }
             }
+            int playersLeft = m_Players.Count(player => player.State != ServerPlayerState.Disconnected);
+            if (playersLeft == 0) ResetGame();
         }
 
         public void StartGame()

@@ -175,7 +175,6 @@ public partial class IngamePanel : Panel
 		}
 		var TurnAlertLabel = GetNode<RichTextLabel>("TurnAlertLabel");
 		TurnAlertLabel.Text = NotificationMessage;
-		
 	}
 
 	public void OnAnimationPlayerAnimationFinished(string AnimationName) {
@@ -184,7 +183,7 @@ public partial class IngamePanel : Panel
 			GetNode<Button>("GuessTimerButton").SetProcess(true);
 		}
 		else if (AnimationName == "NotifyGuessResult"){
-
+			NotifyNewTurn();
 		}
 	}
 	public void OnGuessTimerTimeout(){
