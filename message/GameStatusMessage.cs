@@ -55,7 +55,7 @@ namespace Messages
 
                 int offset = ptr;
                 byte nameLength = message[offset];
-                string name = Encoding.UTF8.GetString(message, 1, nameLength);
+                string name = Encoding.UTF8.GetString(message, offset + 1, nameLength);
                 offset += nameLength + 1;
                 byte[] byteScore = message[offset..(offset + 2)];
                 if (BitConverter.IsLittleEndian)
@@ -73,7 +73,7 @@ namespace Messages
 
         public override byte[] Serialize()
         {
-            List<byte> message =
+            byte[] message =
             [
                 (byte)MessageType,
                 (byte)PlayerCount,
@@ -82,18 +82,23 @@ namespace Messages
                 (byte)KeywordLength,
                 .. Encoding.UTF8.GetBytes(Keyword),
             ];
+            byte[] playerListByte = [];
             foreach (var player in PlayersList)
             {
-                message.Add((byte)player.Name.Length);
-                message.AddRange(Encoding.UTF8.GetBytes(player.Name));
-                byte[] score = BitConverter.GetBytes(player.Score);
+                byte[] byteScore = BitConverter.GetBytes(player.Score);
                 if (BitConverter.IsLittleEndian)
                 {
-                    Array.Reverse(score);
+                    Array.Reverse(byteScore);
                 }
-                message.AddRange(score);
-                message.Add((byte)player.State);
+                byte[] playerByte = [
+                    (byte)player.Name.Length,
+                    .. Encoding.UTF8.GetBytes(player.Name),
+                    .. byteScore,
+                    (byte)player.State,
+                ];
+                playerListByte = [.. playerListByte, .. playerByte];
             }
+            message = [.. message, .. playerListByte];
             return [.. message];
         }
     }
