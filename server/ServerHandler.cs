@@ -115,7 +115,7 @@ namespace GameServer
             }
             ServerState = ServerState.GameInProgress;
             KeywordDescription kw = database.GetRandomKeyword();
-            m_KeyWord = kw.Keyword;
+            m_KeyWord = kw.Keyword.ToUpper();
             m_Hint = kw.Description;
             CurrentPlayerTurn = 0;
             CurrentGameTurn = 1;
@@ -215,6 +215,7 @@ namespace GameServer
             {
                 throw new InvalidOperationException("Game is not in progress");
             }
+            guess = guess.ToUpper();
             if (type == GuessType.Character)
             {
                 if (guess.Length != 1 || !char.IsLetter(guess[0]))
