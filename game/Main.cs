@@ -162,12 +162,12 @@ public partial class Main : Node
 
 	private void GameResultReceiveHandler() 
 	{
-		GD.Print("Game Result Receive Handler");
+		// Call update function in ScoreboardPanel
+		GetNode<ScoreboardPanel>("ScoreboardPanel").SetGameResult();
 		// Show ScoreboardPanel
 		GetNode<Panel>("ScoreboardPanel").Show();
 		// Hide IngamePanel
 		GetNode<Panel>("IngamePanel").Hide();
-		
 	}
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)

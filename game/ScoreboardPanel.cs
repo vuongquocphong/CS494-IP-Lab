@@ -4,7 +4,7 @@ using System;
 
 public partial class ScoreboardPanel : Panel
 {
-	private void SetGameResult(){
+	public void SetGameResult(){
 		var PlayersList = GameManager.GetInstance().PlayersList;
 		var NameList = GetNode<ItemList>("GridContainer/PlayerNames");
 		var PointList = GetNode<ItemList>("GridContainer/PlayerScores");

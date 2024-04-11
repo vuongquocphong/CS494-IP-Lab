@@ -82,6 +82,7 @@ theme_override_colors/icon_pressed_color = Color(0.545098, 0.545098, 0.545098, 1
 theme_override_colors/icon_hover_color = Color(0.184314, 0.184314, 0.184314, 1)
 action_mode = 0
 text = "QUIT"
+metadata/_edit_use_anchors_ = true
 
 [node name="RestartButton" type="Button" parent="."]
 layout_mode = 1

@@ -43,7 +43,9 @@ namespace GameComponents
         public IMediator MediatorComp { get; set; } = null!;
         public void RequestConnect(string name)
         {
+            GD.Print("RequestConnect");
             LocalPlayerName = name;
+            GD.Print(LocalPlayerName);
             ClientConnectionMessage msg = new(name);
             MediatorComp.Notify(this, msg);
         }
@@ -154,7 +156,7 @@ namespace GameComponents
             int index = 0;
             foreach (Messages.PlayerInfo player in msg.PlayersList)
             {
-                PlayerInfo NewPlayer = new PlayerInfo(player.Name);
+                PlayerInfo NewPlayer = new(player.Name);
                 NewPlayer.Point = player.Score;
                 NewPlayer.State = player.State switch
                 {
