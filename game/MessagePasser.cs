@@ -61,7 +61,8 @@ namespace Mediator
                     gameManager.UpdateGameStatus((GameStatusMessage) msg);
                     break;
                 case MessageType.GameResult:
-                    gameManager.UpdateGameResult();
+                    List<PlayerResult> playerResults = ((GameResultMessage) msg).Results;
+                    gameManager.UpdateGameResult(playerResults);
                     break;
                 case MessageType.GuessResult:
                     // gameManager.UpdateKeyword();
