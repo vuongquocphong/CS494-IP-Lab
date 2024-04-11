@@ -28,6 +28,7 @@ public partial class Main : Node
 		GameManager.StartGameReceive += StartGameReceiveHandler;
 		GameManager.GameResultReceive += GameResultReceiveHandler;
 		GameManager.GuessResultReceive += GuessResultReceiveHandler;
+		GameManager.GameStatusReceive += GameStatusReceiveHandler;
 		// Get GameManager Node
 		NetworkClient = new TcpNetworkClient();
 		Mediator = new MessagePasser(GameManager, NetworkClient);
@@ -154,7 +155,6 @@ public partial class Main : Node
 
 	private void StartGameReceiveHandler() 
 	{
-		GetNode<IngamePanel>("IngamePanel").NewGame();
 		// Show IngamePanel
 		GetNode<Panel>("IngamePanel").Show();
 		// Hide WaitingPanel
@@ -174,6 +174,9 @@ public partial class Main : Node
 	{
 
 		GetNode<IngamePanel>("IngamePanel").NotifyGuessResults(Guess, PlayerName);
+	}
+	private void GameStatusReceiveHandler(){
+		GetNode<IngamePanel>("IngamePanel").UpdateGameStatus();
 	}
 	// Load Scenes
 	private void LoadScenes() {

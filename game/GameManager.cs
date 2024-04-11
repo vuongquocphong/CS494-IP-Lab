@@ -33,6 +33,8 @@ namespace GameComponents
         public delegate void GameResultReceiveEventHandler();
         [Signal]
         public delegate void GuessResultReceiveEventHandler(string name, string PlayerName);
+        [Signal]
+        public delegate void GameStatusReceiveEventHandler();
         static private GameManager instance = null!;
         public string LocalPlayerName { get; set; } = "";
         public string KeyWord { get; set; } = "";
@@ -180,8 +182,8 @@ namespace GameComponents
                 GD.Print("Current player name: " + CurrentPlayer.Name);
                 index++;
             }
-
             PlayersList = newPlayersList;
+            CallDeferred(MethodName.EmitSignal, "GameStatusReceive");
         }
 
         public void NotifyResult(GuessResultMessage msg)

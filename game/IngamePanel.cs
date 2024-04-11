@@ -10,37 +10,7 @@ public partial class IngamePanel : Panel
         base._Ready();
 		GetNode<Button>("GuessTimerButton").SetProcess(false);
     }
-    public void NewGame(){
-		var gameManager = GameManager.GetInstance();
-		var HintLabel = GetNode<RichTextLabel>("TextPanel/HintPanel/HintLabel");
-		var NameList = GetNode<ItemList>("GridContainer/VBoxNameContainer/ItemList");
-		var PointList = GetNode<ItemList>("GridContainer/VBoxPointContainer/ItemList");
-		var GuessList = GetNode<ItemList>("GridContainer/VBoxGuessContainer/ItemList");
-		var KeywordLabel = GetNode<Label>("TextPanel/KeywordPanel/KeywordLabel");
-		var PlayerList = gameManager.PlayersList;
-		
-		String NewKeyword = " ";
-		for (int i = 0; i < gameManager.KeyWord.Length; i ++){
-			NewKeyword += gameManager.KeyWord[i].ToString() + " ";
-		}
-		KeywordLabel.Text = NewKeyword;
-		HintLabel.Text = gameManager.Hint;
-		GD.Print("Get current player name in ingame panel: ");
-		GD.Print("Get current player name in ingame panel: " + gameManager.CurrentPlayer.Name);
-		int index = 0;
-		foreach (PlayerInfo player in PlayerList){
-			NameList.AddItem(player.Name, null, false);
-			PointList.AddItem(player.Point.ToString(), null, false);
-			GuessList.AddItem(" ", null, false);
-			if (player.Name == gameManager.CurrentPlayer.Name){
-				NameList.SetItemCustomFgColor(index, Color.FromHtml("#ebb663"));
-				PointList.SetItemCustomFgColor(index, Color.FromHtml("#ebb663"));
-				GuessList.SetItemCustomFgColor(index, Color.FromHtml("#ebb663"));
-			}
-			index++;
-		}
-		NotifyNewTurn();
-	}
+
 	public void SetInvalidMessage(string invalidMessage)
 	{
 		var WarningMessageLabel = GetNode<RichTextLabel>("WarningMessageLabel");
@@ -120,7 +90,7 @@ public partial class IngamePanel : Panel
 		GetNode<Label>("GuessResultLabel").Text = Message;
 		GetNode<AnimationPlayer>("AnimationLabel").Play("NotifyGuessResult");
 	}
-	public void UpdatePlayerList(){
+	public void UpdateGameStatus(){
 		var gameManager = GameManager.GetInstance();
 		var HintLabel = GetNode<RichTextLabel>("TextPanel/HintPanel/HintLabel");
 		var NameList = GetNode<ItemList>("GridContainer/VBoxNameContainer/ItemList");
@@ -170,17 +140,20 @@ public partial class IngamePanel : Panel
 		String NotificationMessage = "NEW TURN!!";
 		if (gameManager.LocalPlayerName == gameManager.CurrentPlayer.Name){
 			NotificationMessage = "YOUR TURN!!";
-			var AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
-			AnimationPlayer.Play("notifyNewTurn");
 		}
 		var TurnAlertLabel = GetNode<RichTextLabel>("TurnAlertLabel");
 		TurnAlertLabel.Text = NotificationMessage;
+		var AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
+		AnimationPlayer.Play("notifyNewTurn");
 	}
 
 	public void OnAnimationPlayerAnimationFinished(string AnimationName) {
 		if (AnimationName == "notifyNewTurn"){
-			GetNode<Godot.Timer>("GuessTimerButton/GuessTimer").Start(20);
-			GetNode<Button>("GuessTimerButton").SetProcess(true);
+			var gameManager = GameManager.GetInstance();
+			if (gameManager.LocalPlayerName == gameManager.CurrentPlayer.Name){
+				GetNode<Godot.Timer>("GuessTimerButton/GuessTimer").Start(20);
+				GetNode<Button>("GuessTimerButton").SetProcess(true);
+			}
 		}
 		else if (AnimationName == "NotifyGuessResult"){
 			NotifyNewTurn();
@@ -205,5 +178,5 @@ public partial class IngamePanel : Panel
 		ItemList.AddItem(Guess);
 		GameManager.GetInstance().Guess(GuessCharMode, Guess);
 	}
-	
+
 }
