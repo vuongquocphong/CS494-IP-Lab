@@ -39,9 +39,30 @@ namespace GameServer
             Console.WriteLine("IpAddress: " + socket.IpAddress + ':' + socket.Port);
             socketServer.RemoveSocket((SocketClient)socket);
             ServerHandler.Disconnect(socket.IpAddress.ToString() + ':' + socket.Port);
-            socketServer.NotifyConnectedClients(
-                new PlayerListMessage(ServerHandler.GetPlayerReadyList()).Serialize()
-            );
+            switch (ServerHandler.ServerState)
+            {
+                case ServerState.WaitingForPlayers:
+                    socketServer.NotifyConnectedClients(
+                        new PlayerListMessage(ServerHandler.GetPlayerReadyList()).Serialize()
+                    );
+                    break;
+                case ServerState.GameInProgress:
+                    ServerHandler.NextTurn();
+                    socketServer.NotifyConnectedClients(
+                        new GameStatusMessage(
+                            ServerHandler.Players.Count,
+                            (int)ServerHandler.CurrentPlayerTurn,
+                            ServerHandler.KeyWord,
+                            ServerHandler.GetPlayerInfoList()
+                        ).Serialize()
+                    );
+                    break;
+                case ServerState.GameOver:
+                    socketServer.NotifyConnectedClients(
+                        new GameResultMessage(ServerHandler.GetResults()).Serialize()
+                    );
+                    break;
+            }
         }
 
         public static void PrintByteArray(byte[] bytes)
@@ -171,7 +192,6 @@ namespace GameServer
                 socketServer.NotifyConnectedClients(
                     new GameStatusMessage(
                         ServerHandler.Players.Count,
-                        (int)ServerHandler.CurrentGameTurn,
                         (int)ServerHandler.CurrentPlayerTurn,
                         ServerHandler.KeyWord,
                         ServerHandler.GetPlayerInfoList()
@@ -220,23 +240,22 @@ namespace GameServer
             }
             else
             {
+                ServerHandler.NextTurn();
                 socketServer.NotifyConnectedClients(
                     new GameStatusMessage(
                         ServerHandler.Players.Count,
-                        (int)ServerHandler.CurrentGameTurn,
                         (int)ServerHandler.CurrentPlayerTurn,
                         ServerHandler.KeyWord,
                         ServerHandler.GetPlayerInfoList()
                     ).Serialize()
                 );
-                ServerHandler.NextTurn();
             }
         }
 
         public static void HandleTimeout(SocketClient pSocket, TimeoutMessage _)
         {
-            string address = pSocket.IpAddress.ToString() + ":" + pSocket.Port;
-            if (ServerHandler.Players[(int)ServerHandler.CurrentPlayerTurn].PlayerId != address)
+            // string address = pSocket.IpAddress.ToString() + ':' + pSocket.Port;
+            if (ServerHandler.ServerState == ServerState.GameOver || ServerHandler.ServerState == ServerState.WaitingForPlayers)
             {
                 return;
             }
@@ -252,7 +271,6 @@ namespace GameServer
                 socketServer.NotifyConnectedClients(
                     new GameStatusMessage(
                         ServerHandler.Players.Count,
-                        (int)ServerHandler.CurrentGameTurn,
                         (int)ServerHandler.CurrentPlayerTurn,
                         ServerHandler.KeyWord,
                         ServerHandler.GetPlayerInfoList()

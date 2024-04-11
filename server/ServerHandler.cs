@@ -22,11 +22,11 @@ namespace GameServer
 
     public enum ServerPlayerState
     {
-        NotReady,
-        Ready,
-        InGame,
-        GameOver,
-        Disconnected
+        NotReady = 0,
+        Ready = 1,
+        InGame = 2,
+        GameOver = 3,
+        Disconnected = 4
     }
 
     public class ServerPlayerInfo(string address, string username, int score, ServerPlayerState state)
@@ -53,8 +53,6 @@ namespace GameServer
         private List<ServerPlayerInfo> m_Players = [];
 
         public uint CurrentPlayerTurn { get; private set; } = 0;
-
-        public uint CurrentGameTurn { get; private set; } = 0;
 
         internal string m_KeyWord = null!;
 
@@ -121,28 +119,20 @@ namespace GameServer
             m_KeyWord = kw.Keyword.ToUpper();
             m_Hint = kw.Description;
             CurrentPlayerTurn = 0;
-            CurrentGameTurn = 1;
             Revealed = new string(m_KeyWord.Select(c => '_').ToArray());
         }
 
         public void NextTurn()
         {
-            while (m_Players[(int)CurrentPlayerTurn].State
+
+            do
+            {
+                CurrentPlayerTurn = (uint)((CurrentPlayerTurn + 1) % m_Players.Count);
+            } while (m_Players[(int)CurrentPlayerTurn].State
                 == ServerPlayerState.GameOver
                 || m_Players[(int)CurrentPlayerTurn].State
                 == ServerPlayerState.Disconnected
-            )
-            {
-                CurrentPlayerTurn = (uint)((CurrentPlayerTurn + 1) % m_Players.Count);
-            }
-            if (CurrentPlayerTurn == 0)
-            {
-                CurrentGameTurn++;
-                if (CurrentGameTurn > 5)
-                {
-                    FinishGame();
-                }
-            }
+            );
         }
 
         public void FinishGame()
@@ -232,12 +222,12 @@ namespace GameServer
                         return GuessResult.Duplicate;
                     }
                     Revealed = new string(m_KeyWord.Select((c, i) => c == guess[0] ? c : Revealed[i]).ToArray());
+                    GetPlayer(playerId)!.Score++;
                     if (Revealed == m_KeyWord)
                     {
                         FinishGame();
                         return GuessResult.Correct;
                     }
-                    GetPlayer(playerId)!.Score++;
                     return GuessResult.Correct;
                 }
                 return GuessResult.Incorrect;
@@ -246,8 +236,8 @@ namespace GameServer
             {
                 if (guess == m_KeyWord)
                 {
-                    ServerState = ServerState.WaitingForPlayers;
-                    // TODO: Finish game
+                    FinishGame();
+                    GetPlayer(playerId)!.Score += 5;
                     return GuessResult.Correct;
                 }
                 for (int i = 0; i < m_Players.Count; i++)
@@ -255,6 +245,12 @@ namespace GameServer
                     if (m_Players[i].PlayerId == playerId)
                     {
                         m_Players[i].State = ServerPlayerState.GameOver;
+                        int playersLeft = m_Players.Count(player => player.State != ServerPlayerState.GameOver && player.State != ServerPlayerState.Disconnected);
+                        if (playersLeft == 0)
+                        {
+                            FinishGame();
+                            return GuessResult.Incorrect;
+                        }
                         break;
                     }
                 }

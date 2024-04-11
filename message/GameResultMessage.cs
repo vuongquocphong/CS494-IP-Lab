@@ -31,7 +31,12 @@ namespace Messages
             {
                 byte playerNameLength = message[offset++];
                 string playerName = Encoding.UTF8.GetString(message, offset, playerNameLength);
-                ushort score = BitConverter.ToUInt16(message, offset + playerNameLength);
+                byte[] scoreBytes = message[(offset + playerNameLength)..(offset + playerNameLength + 2)];
+                if (BitConverter.IsLittleEndian)
+                {
+                    Array.Reverse(scoreBytes);
+                }
+                ushort score = BitConverter.ToUInt16(scoreBytes);
                 byte rank = message[offset + playerNameLength + 2];
                 Results.Add(new PlayerResult(playerName, score, rank));
                 offset += playerNameLength + 3;
@@ -41,6 +46,7 @@ namespace Messages
         public override byte[] Serialize()
         {
             byte[] message = [(byte)MessageType, (byte)Results.Count];
+            byte[] byteResults = [];
             foreach (PlayerResult result in Results)
             {
                 byte[] playerNameBytes = Encoding.UTF8.GetBytes(result.PlayerName);
@@ -49,14 +55,16 @@ namespace Messages
                 {
                     Array.Reverse(scoreBytes);
                 }
-                byte[] rankBytes = [result.Rank];
-                byte[] playerResult = new byte[3 + playerNameBytes.Length];
-                playerResult[0] = (byte)playerNameBytes.Length;
-                playerNameBytes.CopyTo(playerResult, 1);
-                scoreBytes.CopyTo(playerResult, 1 + playerNameBytes.Length);
-                rankBytes.CopyTo(playerResult, 3 + playerNameBytes.Length);
-                message = [.. message, .. playerResult];
+                byte rankBytes = result.Rank;
+                byte[] playerResult = [
+                    (byte)playerNameBytes.Length,
+                    .. playerNameBytes,
+                    .. scoreBytes,
+                    rankBytes
+                ];
+                byteResults = [.. byteResults, .. playerResult];
             }
+            message = [.. message, .. byteResults];
             return message;
         }
     }
