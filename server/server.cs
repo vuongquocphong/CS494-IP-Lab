@@ -219,6 +219,7 @@ namespace GameServer
             }
             else
             {
+                ServerHandler.NextTurn();
                 socketServer.NotifyConnectedClients(
                     new GameStatusMessage(
                         ServerHandler.Players.Count,
@@ -227,7 +228,6 @@ namespace GameServer
                         ServerHandler.GetPlayerInfoList()
                     ).Serialize()
                 );
-                ServerHandler.NextTurn();
             }
         }
 
