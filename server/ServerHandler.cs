@@ -54,8 +54,6 @@ namespace GameServer
 
         public uint CurrentPlayerTurn { get; private set; } = 0;
 
-        public uint CurrentGameTurn { get; private set; } = 0;
-
         internal string m_KeyWord = null!;
 
         public string m_Hint = null!;
@@ -121,7 +119,6 @@ namespace GameServer
             m_KeyWord = kw.Keyword.ToUpper();
             m_Hint = kw.Description;
             CurrentPlayerTurn = 0;
-            CurrentGameTurn = 1;
             Revealed = new string(m_KeyWord.Select(c => '_').ToArray());
         }
 
@@ -134,14 +131,6 @@ namespace GameServer
             )
             {
                 CurrentPlayerTurn = (uint)((CurrentPlayerTurn + 1) % m_Players.Count);
-            }
-            if (CurrentPlayerTurn == 0)
-            {
-                CurrentGameTurn++;
-                if (CurrentGameTurn > 5)
-                {
-                    FinishGame();
-                }
             }
         }
 

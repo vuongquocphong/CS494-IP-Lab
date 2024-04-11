@@ -103,9 +103,9 @@
 
 ## Game Status
 
-| Message type | Player Count | Game Turn | Current Turn | Keyword Length | Keyword  | Player Info 1 | Player Info 2 | ... |
-| ------------ | ------------ | --------- | ------------ | -------------- | -------- | ------------- | ------------- | --- |
-| 1 byte       | 1 byte       | 1 byte    | 1 byte       | 1 byte         | 30 bytes | max 15 bytes  | max 15 bytes  | ... |
+| Message type | Player Count | Current Turn | Keyword Length | Keyword  | Player Info 1 | Player Info 2 | ... |
+| ------------ | ------------ | ------------ | -------------- | -------- | ------------- | ------------- | --- |
+| 1 byte       | 1 byte       | 1 byte       | 1 byte         | 30 bytes | max 15 bytes  | max 15 bytes  | ... |
 
 ### Player Info
 

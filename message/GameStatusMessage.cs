@@ -23,17 +23,15 @@ namespace Messages
     public class GameStatusMessage : Message
     {
         public int PlayerCount { get; set; }
-        public int GameTurn { get; set; }
         public int CurrentTurn { get; set; }
         public int KeywordLength { get; set; }
         public string Keyword { get; set; }
         public List<PlayerInfo> PlayersList { get; set; } = [];
 
-        public GameStatusMessage(int playerCount, int gameTurn, int currentTurn, string keyword, List<PlayerInfo> playersList)
+        public GameStatusMessage(int playerCount, int currentTurn, string keyword, List<PlayerInfo> playersList)
         {
             MessageType = MessageType.GameStatus;
             PlayerCount = playerCount;
-            GameTurn = gameTurn;
             CurrentTurn = currentTurn;
             KeywordLength = keyword.Length;
             Keyword = keyword;
@@ -44,11 +42,10 @@ namespace Messages
         {
             MessageType = MessageType.GameStatus;
             PlayerCount = message[1];
-            GameTurn = message[2];
-            CurrentTurn = message[3];
-            KeywordLength = message[4];
-            Keyword = Encoding.UTF8.GetString(message, 5, KeywordLength);
-            int ptr = 5 + KeywordLength;
+            CurrentTurn = message[2];
+            KeywordLength = message[3];
+            Keyword = Encoding.UTF8.GetString(message, 4, KeywordLength);
+            int ptr = 4 + KeywordLength;
             while (ptr < message.Length)
             {
 
@@ -76,7 +73,6 @@ namespace Messages
             [
                 (byte)MessageType,
                 (byte)PlayerCount,
-                (byte)GameTurn,
                 (byte)CurrentTurn,
                 (byte)KeywordLength,
                 .. Encoding.UTF8.GetBytes(Keyword),
