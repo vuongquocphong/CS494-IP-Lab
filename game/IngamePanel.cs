@@ -9,6 +9,7 @@ public partial class IngamePanel : Panel
     {
         base._Ready();
 		GuessCharMode = true;
+		GetNode<LineEdit>("GuessEditText").MaxLength = 1;
 		NotifyNewTurnInUpdateGameStatus = true;
 		GetNode<Button>("GuessTimerButton").SetProcess(false);
     }

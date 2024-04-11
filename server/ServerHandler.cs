@@ -237,7 +237,6 @@ namespace GameServer
                 if (guess == m_KeyWord)
                 {
                     FinishGame();
-
                     GetPlayer(playerId)!.Score += 5;
                     return GuessResult.Correct;
                 }

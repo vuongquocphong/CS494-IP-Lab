@@ -41,6 +41,7 @@ namespace Messages
         public override byte[] Serialize()
         {
             byte[] message = [(byte)MessageType, (byte)Results.Count];
+            byte[] byteResults = [];
             foreach (PlayerResult result in Results)
             {
                 byte[] playerNameBytes = Encoding.UTF8.GetBytes(result.PlayerName);
@@ -49,13 +50,14 @@ namespace Messages
                 {
                     Array.Reverse(scoreBytes);
                 }
-                byte[] rankBytes = [result.Rank];
-                byte[] playerResult = new byte[3 + playerNameBytes.Length];
-                playerResult[0] = (byte)playerNameBytes.Length;
-                playerNameBytes.CopyTo(playerResult, 1);
-                scoreBytes.CopyTo(playerResult, 1 + playerNameBytes.Length);
-                rankBytes.CopyTo(playerResult, 3 + playerNameBytes.Length);
-                message = [.. message, .. playerResult];
+                byte rankBytes = result.Rank;
+                byte[] playerResult = [
+                    (byte)playerNameBytes.Length,
+                    .. playerNameBytes,
+                    .. scoreBytes,
+                    rankBytes
+                ];
+                byteResults = [.. byteResults, .. playerResult];
             }
             return message;
         }
