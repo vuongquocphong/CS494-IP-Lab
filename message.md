@@ -109,9 +109,9 @@
 
 ### Player Info
 
-| Name Length | Player Name | Player Score | Player State | Turn order |
-| ----------- | ----------- | ------------ | ------------ | ---------- |
-| 1 byte      | 10 bytes    | 2 bytes      | 1 bytes      | 1 bytes    |
+| Name Length | Player Name | Player Score | Player State |
+| ----------- | ----------- | ------------ | ------------ |
+| 1 byte      | 10 bytes    | 2 bytes      | 1 bytes      |
 
 #### Player State
 
