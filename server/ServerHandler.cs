@@ -25,7 +25,6 @@ namespace GameServer
         NotReady,
         Ready,
         InGame,
-        Guessing,
         GameOver,
         Disconnected
     }
@@ -65,7 +64,7 @@ namespace GameServer
 
         public List<ServerPlayerInfo> Players => m_Players;
 
-        public string KeyWord => m_KeyWord;
+        public string KeyWord => Revealed;
 
         public string Hint => m_Hint;
 
@@ -113,9 +112,13 @@ namespace GameServer
             {
                 throw new InvalidOperationException("Not enough players");
             }
+            for (int i = 0; i < m_Players.Count; i++)
+            {
+                m_Players[i].State = ServerPlayerState.InGame;
+            }
             ServerState = ServerState.GameInProgress;
             KeywordDescription kw = database.GetRandomKeyword();
-            m_KeyWord = kw.Keyword;
+            m_KeyWord = kw.Keyword.ToUpper();
             m_Hint = kw.Description;
             CurrentPlayerTurn = 0;
             CurrentGameTurn = 1;
@@ -215,6 +218,7 @@ namespace GameServer
             {
                 throw new InvalidOperationException("Game is not in progress");
             }
+            guess = guess.ToUpper();
             if (type == GuessType.Character)
             {
                 if (guess.Length != 1 || !char.IsLetter(guess[0]))
