@@ -200,6 +200,18 @@ namespace Sockets
 
             return;
         }
+
+        public static void PrintByteArray(byte[] bytes)
+        {
+            var sb = new StringBuilder("new byte[] { ");
+            foreach (var b in bytes)
+            {
+                sb.Append(b + ", ");
+            }
+            sb.Append('}');
+            Console.WriteLine(sb.ToString());
+        }
+        
         private void ParseMessage(int TotalLength)
         {
             int ptr = 0;
@@ -433,8 +445,7 @@ namespace Sockets
             byte[] ushortBytes = BitConverter.GetBytes((ushort)message.Length);
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(ushortBytes);
-            string len = Encoding.UTF8.GetString(ushortBytes);
-            byte[] rawBuffer = Encoding.UTF8.GetBytes(len + Encoding.UTF8.GetString(message));
+            byte[] rawBuffer = [..ushortBytes, ..message];
             if ((networkStream != null) && networkStream.CanWrite)
             //&& 
             //(clientSocket != null) && (this.clientSocket.Connected == true))
