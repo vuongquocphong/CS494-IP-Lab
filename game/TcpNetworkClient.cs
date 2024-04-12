@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text;
 using Godot;
 using Mediator;
 using Messages;
@@ -38,6 +39,17 @@ namespace NetworkClient
             SocketClient.Connect(IPAddress.Parse("127.0.0.1"), 9000);
         }
 
+        public static void PrintByteArray(byte[] bytes)
+        {
+            var sb = new StringBuilder("new byte[] { ");
+            foreach (var b in bytes)
+            {
+                sb.Append(b + ", ");
+            }
+            sb.Append('}');
+            GD.Print(sb.ToString());
+        }
+
         public void MessageHandler(SocketBase socket, int iNumberOfBytes)
         {
             try
@@ -46,6 +58,7 @@ namespace NetworkClient
                 byte[] message = pSocket.RawBuffer[0..iNumberOfBytes];
 
                 GD.Print("Received message: " + message[0]);
+                PrintByteArray(message);
                 Message msg = MessageFactory.CreateMessage(message);
 
                 GD.Print("Received message: " + msg);
@@ -54,19 +67,19 @@ namespace NetworkClient
             }
             catch (Exception pException)
             {
-                Console.WriteLine(pException.Message);
+                GD.Print(pException);
             }
         }
 
         public static void CloseHandler(SocketBase pSocket)
         {
-            Console.WriteLine("Close Handler");
-            Console.WriteLine("IpAddress: " + pSocket.IpAddress);
+            GD.Print("Close Handler");
+            GD.Print("IpAddress: " + pSocket.IpAddress);
         }
 
         public static void ErrorHandler(SocketBase pSocket, Exception pException)
         {
-            Console.WriteLine(pException.Message);
+            GD.Print(pException);
         }
 
         public void Send(byte[] message)
