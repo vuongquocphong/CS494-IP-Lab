@@ -119,7 +119,7 @@ namespace GameServer
                 if (ServerHandler.ServerState == ServerState.GameOver)
                 {
                     ServerHandler.ResetGame();
-                    socketServer.DisconnectAll();
+                    // socketServer.DisconnectAll();
                 }
             }
             catch (Exception pException)
