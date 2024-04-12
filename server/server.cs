@@ -143,6 +143,13 @@ namespace GameServer
             AddPlayerResult result = ServerHandler.AddPlayer(address, message.Username);
             switch (result)
             {
+                case AddPlayerResult.InvalidName:
+                    pSocket.Send(
+                        new ServerConnectionFailureMessage(
+                            ErrorCode.InvalidName, "Invalid name"
+                        ).Serialize()
+                    );
+                    break;
                 case AddPlayerResult.ServerIsFull:
                     pSocket.Send(
                         new ServerConnectionFailureMessage(
