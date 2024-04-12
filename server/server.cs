@@ -119,7 +119,7 @@ namespace GameServer
             }
             catch (Exception pException)
             {
-                Console.WriteLine(pException.Message);
+                Console.WriteLine(pException);
             }
         }
 

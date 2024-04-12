@@ -3,11 +3,18 @@ using System;
 using GameComponents;
 public partial class IngamePanel : Panel
 {
-	
-	bool GuessCharMode = true;
+	bool GuessCharMode;
+	bool NotifyNewTurnInUpdateGameStatus;
+
+	public void Reset(){
+		
+	}
     public override void _Ready()
     {
         base._Ready();
+		GuessCharMode = true;
+		GetNode<LineEdit>("GuessEditText").MaxLength = 1;
+		NotifyNewTurnInUpdateGameStatus = true;
 		GetNode<Button>("GuessTimerButton").SetProcess(false);
     }
 
@@ -21,14 +28,12 @@ public partial class IngamePanel : Panel
 
 	public void OnExitButtonPressed()
 	{
+		GetNode<Button>("GuessTimerButton").SetProcess(false);
+		GetNode<Godot.Timer>("GuessTimerButton/GuessTimer").Stop();
 		GameManager.GetInstance().EmitSignal(GameManager.SignalName.BackFromIngameToInputName);
 	}
 	public void OnModeButtonPressed()
 	{
-		if (GameManager.GetInstance().NumberOfTurns <= 2){
-			SetInvalidMessage("Cannot guess keyword!");
-			return;
-		}
 		var GuessModeButton = GetNode<Button>("GuessModeButton");
 		var GuessEditText = GetNode<LineEdit>("GuessEditText");
 		if (GuessCharMode){
@@ -87,8 +92,9 @@ public partial class IngamePanel : Panel
 				GuessList.SetItemText(index, " ");
 			}
 		}
+		NotifyNewTurnInUpdateGameStatus = false;
 		GetNode<Label>("GuessResultLabel").Text = Message;
-		GetNode<AnimationPlayer>("AnimationLabel").Play("NotifyGuessResult");
+		GetNode<AnimationPlayer>("AnimationPlayer").Play("NotifyGuessResult");
 	}
 	public void UpdateGameStatus(){
 		var gameManager = GameManager.GetInstance();
@@ -116,6 +122,7 @@ public partial class IngamePanel : Panel
 			NameList.SetItemCustomFgColor(index, Color.FromHtml("#ffffff"));
 			PointList.SetItemCustomFgColor(index, Color.FromHtml("#ffffff"));
 			GuessList.SetItemCustomFgColor(index, Color.FromHtml("#ffffff"));
+			
 			if (player.Name == gameManager.CurrentPlayer.Name){
 				NameList.SetItemCustomFgColor(index, Color.FromHtml("#ebb663"));
 				PointList.SetItemCustomFgColor(index, Color.FromHtml("#ebb663"));
@@ -133,7 +140,7 @@ public partial class IngamePanel : Panel
 			}
 			index++;
 		}
-		NotifyNewTurn();
+		if (NotifyNewTurnInUpdateGameStatus) NotifyNewTurn();
 	}
 	public void NotifyNewTurn(){
 		var gameManager = GameManager.GetInstance();

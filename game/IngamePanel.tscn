@@ -499,7 +499,7 @@ text = "WRONG!!"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[connection signal="pressed" from="GuessModeButton" to="." method="_on_guess_mode_button_pressed"]
+[connection signal="pressed" from="GuessModeButton" to="." method="OnModeButtonPressed"]
 [connection signal="pressed" from="SubmitButton" to="." method="OnSubmitButtonPressed"]
 [connection signal="pressed" from="GuessTimerButton" to="." method="OnSubmitButtonPressed"]
 [connection signal="timeout" from="GuessTimerButton/GuessTimer" to="." method="OnGuessTimerTimeout"]

@@ -35,13 +35,14 @@ namespace GameComponents
         public delegate void GuessResultReceiveEventHandler(string name, string PlayerName);
         [Signal]
         public delegate void GameStatusReceiveEventHandler();
+        [Signal]
+        public delegate void GameResetEventHandler();
         static private GameManager instance = null!;
         public string LocalPlayerName { get; set; } = "";
         public string KeyWord { get; set; } = "";
         public string Hint { get; set; } = "";
         public int NumberOfPlayers { get; set; } = 0;
         public List<PlayerInfo> PlayersList { get; set; } = [];
-        public int NumberOfTurns { get; set; } = 0;
         public bool GameState { get; set; } = false;
         public PlayerInfo CurrentPlayer { get; set; } = null!;
         public IMediator MediatorComp { get; set; } = null!;
@@ -66,7 +67,6 @@ namespace GameComponents
             KeyWord = "";
             NumberOfPlayers = 0;
             PlayersList.Clear();
-            NumberOfTurns = 0;
             GameState = false;
             CurrentPlayer = null!;
         }
@@ -156,7 +156,6 @@ namespace GameComponents
         public void UpdateGameStatus(GameStatusMessage msg)
         {
             NumberOfPlayers = msg.PlayerCount;
-            NumberOfTurns = msg.GameTurn;
             List<PlayerInfo> newPlayersList = new List<PlayerInfo>();
             int index = 0;
             KeyWord = msg.Keyword;
@@ -169,7 +168,6 @@ namespace GameComponents
                     Messages.PlayerState.Playing => PlayerState.Playing,
                     Messages.PlayerState.Lost => PlayerState.Lost,
                     Messages.PlayerState.Disconnected => PlayerState.Disconnected,
-                    Messages.PlayerState.Won => PlayerState.Win,
                     _ => throw new InvalidEnumArgumentException()
                 };
                 GD.Print(NewPlayer.Name.Length);
