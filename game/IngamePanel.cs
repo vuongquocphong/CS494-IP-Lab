@@ -7,7 +7,34 @@ public partial class IngamePanel : Panel
 	bool NotifyNewTurnInUpdateGameStatus;
 
 	public void Reset(){
-		
+		// reset the player list
+		ItemList NameList = GetNode<ItemList>("GridContainer/VBoxNameContainer/ItemList");
+		ItemList PointList = GetNode<ItemList>("GridContainer/VBoxPointContainer/ItemList");
+		ItemList GuessList = GetNode<ItemList>("GridContainer/VBoxGuessContainer/ItemList");
+		NameList.Clear();
+		PointList.Clear();
+		GuessList.Clear();
+		// reset the hint
+		GetNode<RichTextLabel>("TextPanel/HintPanel/HintLabel").Text = " ";
+		// reset the keyword
+		GetNode<Label>("TextPanel/KeywordPanel/KeywordLabel").Text = " ";
+		// reset the guess result
+		GetNode<Label>("GuessResultLabel").Text = " ";
+		// reset the warning message
+		GetNode<RichTextLabel>("WarningMessageLabel").Text = " ";
+		// reset the guess edit text
+		GetNode<LineEdit>("GuessEditText").Text = " ";
+		// reset the guess mode
+		GetNode<Button>("GuessModeButton").Text = "Guess Mode: Character";
+		// reset the guess timer
+		GetNode<Button>("GuessTimerButton").SetProcess(false);
+		GetNode<Godot.Timer>("GuessTimerButton/GuessTimer").Stop();
+		// reset the turn alert
+		GetNode<RichTextLabel>("TurnAlertLabel").Text = " ";
+		// reset the animation player
+		GetNode<AnimationPlayer>("AnimationPlayer").Stop();
+		// reset the notify new turn in update game status
+		NotifyNewTurnInUpdateGameStatus = true;
 	}
     public override void _Ready()
     {

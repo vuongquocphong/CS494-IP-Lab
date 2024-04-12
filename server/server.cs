@@ -116,6 +116,9 @@ namespace GameServer
                         Console.WriteLine("Unknown message type");
                         break;
                 }
+                if (ServerHandler.ServerState == ServerState.GameOver) {
+                    ServerHandler.ResetGame();
+                }
             }
             catch (Exception pException)
             {
@@ -204,6 +207,7 @@ namespace GameServer
         {
             string address = pSocket.IpAddress.ToString() + ":" + pSocket.Port;
             string playerName = ServerHandler.GetPlayer(address)!.Username;
+            Console.WriteLine(playerName + "guessing");
             GuessResult result = ServerHandler.Guess(address, message.GuessType, message.Guess);
             switch (result)
             {
