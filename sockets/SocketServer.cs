@@ -210,6 +210,8 @@ namespace Sockets
             foreach (SocketClient socket in socketClientList)
             {
                 socket.Disconnect();
+                socketClientList.Remove(socket);
+                socket.Dispose();
             }
         }
 

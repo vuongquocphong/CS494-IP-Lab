@@ -77,7 +77,7 @@ public partial class Main : Node
 		// Reset Game UI
 		GameUIReset();
 		// Close connection
-		// NetworkClient.Close();
+		NetworkClient.Close();
 	}
 	private void BackFromIngameToInputNameHandler(){
 		// Reset GameManager
