@@ -116,6 +116,11 @@ namespace GameServer
                         Console.WriteLine("Unknown message type");
                         break;
                 }
+                if (ServerHandler.ServerState == ServerState.GameOver)
+                {
+                    ServerHandler.ResetGame();
+                    // socketServer.DisconnectAll();
+                }
             }
             catch (Exception pException)
             {
@@ -204,6 +209,7 @@ namespace GameServer
         {
             string address = pSocket.IpAddress.ToString() + ":" + pSocket.Port;
             string playerName = ServerHandler.GetPlayer(address)!.Username;
+            Console.WriteLine(playerName + "guessing");
             GuessResult result = ServerHandler.Guess(address, message.GuessType, message.Guess);
             switch (result)
             {
@@ -254,30 +260,31 @@ namespace GameServer
 
         public static void HandleTimeout(SocketClient pSocket, TimeoutMessage _)
         {
-            // string address = pSocket.IpAddress.ToString() + ':' + pSocket.Port;
-            if (ServerHandler.ServerState == ServerState.GameOver || ServerHandler.ServerState == ServerState.WaitingForPlayers)
+            string address = pSocket.IpAddress.ToString() + ':' + pSocket.Port;
+            if (ServerHandler.ServerState == ServerState.GameOver 
+                || ServerHandler.ServerState == ServerState.WaitingForPlayers 
+                || ServerHandler.Players[ServerHandler.CurrentPlayerTurn].PlayerId != address)
             {
                 return;
             }
             ServerHandler.NextTurn();
-            if (ServerHandler.ServerState == ServerState.GameOver)
-            {
-                socketServer.NotifyConnectedClients(
-                    new GameResultMessage(ServerHandler.GetResults()).Serialize()
-                );
-            }
-            else
-            {
-                socketServer.NotifyConnectedClients(
-                    new GameStatusMessage(
-                        ServerHandler.Players.Count,
-                        (int)ServerHandler.CurrentPlayerTurn,
-                        ServerHandler.KeyWord,
-                        ServerHandler.GetPlayerInfoList()
-                    ).Serialize()
-                );
-                ServerHandler.NextTurn();
-            }
+            // if (ServerHandler.ServerState == ServerState.GameOver)
+            // {
+            //     socketServer.NotifyConnectedClients(
+            //         new GameResultMessage(ServerHandler.GetResults()).Serialize()
+            //     );
+            // }
+            // else
+            // {
+            socketServer.NotifyConnectedClients(
+                new GameStatusMessage(
+                    ServerHandler.Players.Count,
+                    (int)ServerHandler.CurrentPlayerTurn,
+                    ServerHandler.KeyWord,
+                    ServerHandler.GetPlayerInfoList()
+                ).Serialize()
+            );
+            // }
         }
     }
 }

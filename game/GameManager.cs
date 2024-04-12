@@ -35,8 +35,6 @@ namespace GameComponents
         public delegate void GuessResultReceiveEventHandler(string name, string PlayerName);
         [Signal]
         public delegate void GameStatusReceiveEventHandler();
-        [Signal]
-        public delegate void GameResetEventHandler();
         static private GameManager instance = null!;
         public string LocalPlayerName { get; set; } = "";
         public string KeyWord { get; set; } = "";

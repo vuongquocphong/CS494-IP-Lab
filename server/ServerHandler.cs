@@ -52,7 +52,7 @@ namespace GameServer
 
         private List<ServerPlayerInfo> m_Players = [];
 
-        public uint CurrentPlayerTurn { get; private set; } = 0;
+        public int CurrentPlayerTurn { get; private set; } = 0;
 
         internal string m_KeyWord = null!;
 
@@ -127,10 +127,11 @@ namespace GameServer
 
             do
             {
-                CurrentPlayerTurn = (uint)((CurrentPlayerTurn + 1) % m_Players.Count);
-            } while (m_Players[(int)CurrentPlayerTurn].State
+                CurrentPlayerTurn = (CurrentPlayerTurn + 1) % m_Players.Count;
+                Console.WriteLine(CurrentPlayerTurn + " mod " + m_Players.Count);
+            } while (m_Players[CurrentPlayerTurn].State
                 == ServerPlayerState.GameOver
-                || m_Players[(int)CurrentPlayerTurn].State
+                || m_Players[CurrentPlayerTurn].State
                 == ServerPlayerState.Disconnected
             );
         }

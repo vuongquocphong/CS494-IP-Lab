@@ -7,7 +7,9 @@ using Messages;
 public partial class InputNamePanel : Panel
 {
 	public void Reset(){
-		
+		// reset the line edit
+		LineEdit lineEdit = GetNode<LineEdit>("NameLineEdit");
+		lineEdit.Text = "";
 	}
 	private void OnPlayButtonPressed()
 	{

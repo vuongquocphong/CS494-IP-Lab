@@ -29,7 +29,7 @@ public partial class Main : Node
 		GameManager.GameResultReceive += GameResultReceiveHandler;
 		GameManager.GuessResultReceive += GuessResultReceiveHandler;
 		GameManager.GameStatusReceive += GameStatusReceiveHandler;
-		GameManager.GameReset += GameResetHandler;
+		GameManager.BackFromScoreBoardToWaiting += BackFromScoreBoardToWaitingHandler;
 		// Get GameManager Node
 		NetworkClient = new TcpNetworkClient();
 		Mediator = new MessagePasser(GameManager, NetworkClient);
@@ -53,7 +53,6 @@ public partial class Main : Node
 		RichTextLabel ErrorLabel = InputNamePanel.GetNode<RichTextLabel>("InvalidMessageLabel");
 		ErrorLabel.Text = error;
 		ErrorLabel.VisibleCharacters = -1;
-		
 	}
 
 	private void BackFromWaitingToInputNameHandler() {
@@ -63,6 +62,8 @@ public partial class Main : Node
 		GetNode<Panel>("InputNamePanel").Show();
 		// Hide WaitingPanel
 		GetNode<Panel>("WaitingPanel").Hide();
+		// Reset Game UI
+		GameUIReset();
 		// Close connection
 		NetworkClient.Close();
 	}
@@ -73,6 +74,8 @@ public partial class Main : Node
 		GetNode<Panel>("InputNamePanel").Show();
 		// Hide ScoreboardPanel
 		GetNode<Panel>("ScoreboardPanel").Hide();
+		// Reset Game UI
+		GameUIReset();
 		// Close connection
 		NetworkClient.Close();
 	}
@@ -83,6 +86,8 @@ public partial class Main : Node
 		GetNode<Panel>("InputNamePanel").Show();
 		// Hide IngamePanel
 		GetNode<Panel>("IngamePanel").Hide();
+		// Reset Game UI
+		GameUIReset();
 		// Close connection
 		NetworkClient.Close();
 	}
@@ -93,10 +98,12 @@ public partial class Main : Node
 		GetNode<Panel>("InputNamePanel").Show();
 		// Hide WaitingPanel
 		GetNode<Panel>("WaitingPanel").Hide();
+		// Reset Game UI
+		GameUIReset();
 		// Close connection
 		NetworkClient.Close();
 	}
-	private void GameResetHandler() {
+	private void GameUIReset() {
 		GetNode<InputNamePanel>("InputNamePanel").Reset();
 		GetNode<WaitingPanel>("WaitingPanel").Reset();
 		GetNode<IngamePanel>("IngamePanel").Reset();
@@ -142,21 +149,19 @@ public partial class Main : Node
 	}
 	
 	private void BackFromScoreBoardToWaitingHandler() {
+		// Send the ready status to the server
+		GameManager.GetInstance().RequestConnect(GameManager.LocalPlayerName);
+		// Change the UI to match the ready status
+		Button ReadyButton = GetNode<Button>("WaitingPanel/ReadyButton");
+		RichTextLabel WaitingText = GetNode<RichTextLabel>("WaitingPanel/WaitingText");
+		WaitingText.Text = "Press the button to get ready for game...";
+		ReadyButton.Text = "READY";
 		// Show WaitingPanel
 		GetNode<Panel>("WaitingPanel").Show();
 		// Hide ScoreboardPanel
 		GetNode<Panel>("ScoreboardPanel").Hide();
 		// Hide IngamePanel
 		GetNode<Panel>("IngamePanel").Hide();
-		// Set the ready status of the player to false
-		GameManager.PlayersList.Find(player => player.Name == GameManager.LocalPlayerName).ReadyStatus = false;
-		// Send the ready status to the server
-		GameManager.GetInstance().SendReady(false);
-		// Change the UI to match the ready status
-		Button ReadyButton = GetNode<Button>("WaitingPanel/ReadyButton");
-		RichTextLabel WaitingText = GetNode<RichTextLabel>("WaitingPanel/WaitingText");
-		WaitingText.Text = "Press the button to get ready for game...";
-		ReadyButton.Text = "READY";
 	}
 
 	private void StartGameReceiveHandler() 
@@ -169,12 +174,15 @@ public partial class Main : Node
 
 	private void GameResultReceiveHandler() 
 	{
+		// Stop ingame process
+		GetNode<IngamePanel>("IngamePanel").Reset();
 		// Call update function in ScoreboardPanel
 		GetNode<ScoreboardPanel>("ScoreboardPanel").SetGameResult();
 		// Show ScoreboardPanel
 		GetNode<Panel>("ScoreboardPanel").Show();
 		// Hide IngamePanel
 		GetNode<Panel>("IngamePanel").Hide();
+		// NetworkClient.Close();
 	}
 	private void GuessResultReceiveHandler(string Guess, string PlayerName)
 	{

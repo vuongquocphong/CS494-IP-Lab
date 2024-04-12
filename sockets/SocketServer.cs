@@ -206,6 +206,15 @@ namespace Sockets
             }
         }
 
+        public void DisconnectAll() {
+            foreach (SocketClient socket in socketClientList)
+            {
+                socket.Disconnect();
+                socketClientList.Remove(socket);
+                socket.Dispose();
+            }
+        }
+
         /// <summary> 
         /// Function to stop the SocketServer.  It can be restarted with Start 
         /// </summary>
