@@ -12,6 +12,7 @@
 | 1                  | Ready/Unready             |
 | 2                  | Guess                     |
 | 3                  | Timeout                   |
+| 11                 | Disconnect                |
 
 ## Server
 
@@ -85,9 +86,9 @@
 
 ## PlayerList
 
-| Message type | Player Count | Player Name 1 | Player 1 Ready Status | Player Name 2 | Player 2 Ready Status | ... |
-| ------------ | ------------ | ------------- | --------------------- | ------------- | --------------------- | --- |
-| 1 byte       | 1 byte       | 10 bytes      | 1 byte                | 10 bytes      | 1 byte                | ... |
+| Message type | Player Count | Name Length 1 | Player Name 1 | Player 1 Ready Status | Name Length 2 | Player Name 2 | Player 2 Ready Status | ... |
+| ------------ | ------------ | ------------- | ------------- | --------------------- | ------------- | ------------- | --------------------- | --- |
+| 1 byte       | 1 byte       | 1 byte        | 10 bytes      | 1 byte                | 1 byte        | 10 bytes      | 1 byte                | ... |
 
 | Player Ready value | Meaning |
 | ------------------ | ------- |
@@ -96,21 +97,21 @@
 
 ## Game Started
 
-| Message type | Keyword  |
-| ------------ | -------- |
-| 1 byte       | 30 bytes |
+| Message type | Keyword Length | Hint Length | Keyword      | Hint |
+| ------------ | -------------- | ----------- | ------------ | ---- |
+| 1 byte       | 1 byte         | 2 bytes     | max 30 bytes |      |
 
 ## Game Status
 
-| Message type | Player Count | Game Turn | Current Turn | Keyword Length | Keyword  | Player Info 1 | Player Info 2 | ... |
-| ------------ | ------------ | --------- | ------------ | -------------- | -------- | ------------- | ------------- | --- |
-| 1 byte       | 1 byte       | 1 byte    | 1 byte       | 1 byte         | 30 bytes | max 15 bytes  | max 15 bytes  | ... |
+| Message type | Player Count | Current Turn | Keyword Length | Keyword  | Player Info 1 | Player Info 2 | ... |
+| ------------ | ------------ | ------------ | -------------- | -------- | ------------- | ------------- | --- |
+| 1 byte       | 1 byte       | 1 byte       | 1 byte         | 30 bytes | max 15 bytes  | max 15 bytes  | ... |
 
 ### Player Info
 
-| Name Length | Player Name | Player Score | Player State | Turn order |
-| ----------- | ----------- | ------------ | ------------ | ---------- |
-| 1 byte      | 10 bytes    | 2 bytes      | 1 bytes      | 1 bytes    |
+| Name Length | Player Name | Player Score | Player State |
+| ----------- | ----------- | ------------ | ------------ |
+| 1 byte      | 10 bytes    | 2 bytes      | 1 bytes      |
 
 #### Player State
 
@@ -127,9 +128,9 @@ Ranges from 0-9.
 
 ## Guess Result
 
-| Message type | Result |
-| ------------ | ------ |
-| 1 byte       | 1 byte |
+| Message type | Result | Guess Type | Player Name Length | Player Name  | Guess    |
+| ------------ | ------ | ---------- | ------------------ | ------------ | -------- |
+| 1 byte       | 1 byte | 1 byte     | 1 byte             | max 10 bytes | 30 bytes |
 
 | Result value | Meaning         |
 | ------------ | --------------- |
@@ -140,15 +141,15 @@ Ranges from 0-9.
 
 ## Game Result
 
-| Message type | Player Result 1 | Player Result 2 | ... |
-| ------------ | --------------- | --------------- | --- |
-| 1 byte       | max 14 byte     | max 14 byte     | ... |
+| Message type | Player Count | Player Result 1 | Player Result 2 | ... |
+| ------------ | ------------ | --------------- | --------------- | --- |
+| 1 byte       | 1 byte       | max 14 bytes    | max 14 bytes    | ... |
 
 ### Player Result
 
-| Name Length | Player Name | Player Score | Player Rank |
-| ----------- | ----------- | ------------ | ----------- |
-| 1 byte      | 10 bytes    | 2 bytes      | 1 byte      |
+| Name Length | Player Name  | Player Score | Player Rank |
+| ----------- | ------------ | ------------ | ----------- |
+| 1 byte      | max 10 bytes | 2 bytes      | 1 byte      |
 
 #### Player Rank
 

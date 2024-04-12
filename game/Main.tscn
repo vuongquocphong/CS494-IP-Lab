@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://ps043xndppan"]
+
+[ext_resource type="Script" path="res://Main.cs" id="1_iedis"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_iedis")
+
+[connection signal="ready" from="." to="." method="OnReady"]

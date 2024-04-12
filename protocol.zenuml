@@ -12,7 +12,7 @@ while (UserIsNotConnected) {
     cl->sv.requestConnect(name) {
         isGood = sv.checkName(name)
         if (isGood) {
-            return Name_ACK
+            return PlayerList
         }
         else {
             return Error + Error_Code
@@ -35,7 +35,7 @@ loop(gameIsNotOver) {
     forEach(Turn) {
         sv->cl: gameStatus
         if (yourTurn) {
-            cl.startTimer(30)
+            cl.startTimer(20)
         }
         else {
             cl.wait()
@@ -49,7 +49,7 @@ loop(gameIsNotOver) {
                 return guessResult
                 if (guessIsKeyWord){
                     if (guessResult = True){
-                        return GameIsOver
+                        break
                     }
                     else{
                         return PlayerLost

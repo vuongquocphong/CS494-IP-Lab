@@ -1,0 +1,507 @@
+[gd_scene load_steps=13 format=3 uid="uid://ds0gnfffdhbwx"]
+
+[ext_resource type="Script" path="res://IngamePanel.cs" id="1_04ofp"]
+[ext_resource type="Script" path="res://GuessTimerButton.cs" id="2_h2hxk"]
+
+[sub_resource type="Theme" id="Theme_dipls"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cw0pc"]
+bg_color = Color(0.129412, 0.129412, 0.129412, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 0.509804, 0.309804, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5n75x"]
+bg_color = Color(0.129412, 0.129412, 0.129412, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 0.509804, 0.309804, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o87om"]
+bg_color = Color(0.129412, 0.129412, 0.129412, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 0.509804, 0.309804, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tbyw3"]
+bg_color = Color(0, 0, 0, 0.380392)
+
+[sub_resource type="Animation" id="Animation_rlceo"]
+resource_name = "NotifyGuessResult"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RichTextLabel:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("GuessResultLabel:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("GuessResultLabel:visible_ratio")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+
+[sub_resource type="Animation" id="Animation_r8vb7"]
+resource_name = "NotifyWarningSubmission"
+length = 5.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("WarningMessageLabel:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="Animation" id="Animation_y2mqp"]
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TurnAlertLabel:visible_ratio")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("RichTextLabel:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("TurnAlertLabel:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("GuessResultLabel:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("GuessResultLabel:visible_ratio")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("WarningMessageLabel:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_jkqp4"]
+resource_name = "notifyNewTurn"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TurnAlertLabel:visible_ratio")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("RichTextLabel:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("TurnAlertLabel:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_n0nfl"]
+_data = {
+"NotifyGuessResult": SubResource("Animation_rlceo"),
+"NotifyWarningSubmission": SubResource("Animation_r8vb7"),
+"RESET": SubResource("Animation_y2mqp"),
+"notifyNewTurn": SubResource("Animation_jkqp4")
+}
+
+[node name="IngamePanel" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_04ofp")
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.056
+anchor_top = 0.062
+anchor_right = 0.461
+anchor_bottom = 0.93
+offset_left = 0.487999
+offset_top = -0.175999
+offset_right = -0.0720215
+offset_bottom = -91.64
+theme = SubResource("Theme_dipls")
+columns = 3
+
+[node name="VBoxNameContainer" type="VBoxContainer" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="GridContainer/VBoxNameContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.509804, 0.309804, 1)
+theme_override_font_sizes/font_size = 25
+text = "Name"
+uppercase = true
+
+[node name="ItemList" type="ItemList" parent="GridContainer/VBoxNameContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+
+[node name="VBoxPointContainer" type="VBoxContainer" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="GridContainer/VBoxPointContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.509804, 0.309804, 1)
+theme_override_font_sizes/font_size = 25
+text = "Points"
+uppercase = true
+
+[node name="ItemList" type="ItemList" parent="GridContainer/VBoxPointContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+
+[node name="VBoxGuessContainer" type="VBoxContainer" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="GridContainer/VBoxGuessContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(1, 0.509804, 0.309804, 1)
+theme_override_font_sizes/font_size = 25
+text = "Guess"
+uppercase = true
+
+[node name="ItemList" type="ItemList" parent="GridContainer/VBoxGuessContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+
+[node name="GuessEditText" type="LineEdit" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.246
+anchor_right = 0.812
+anchor_bottom = 0.313
+offset_left = -8.0
+offset_top = -32.0
+offset_right = -8.0
+offset_bottom = -32.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/caret_color = Color(0.396078, 0.396078, 0.396078, 1)
+theme_override_font_sizes/font_size = 25
+placeholder_text = "Enter your guess"
+
+[node name="GuessModeButton" type="Button" parent="."]
+layout_mode = 2
+anchor_left = 0.5
+anchor_top = 0.116
+anchor_right = 0.805
+anchor_bottom = 0.182
+offset_left = -8.0
+offset_top = -0.167999
+offset_right = -0.360107
+offset_bottom = 0.0639954
+theme_override_colors/font_color = Color(1, 0.509804, 0.309804, 1)
+theme_override_font_sizes/font_size = 25
+text = "Guess Mode: Character"
+alignment = 0
+
+[node name="SubmitButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.846
+anchor_top = 0.246
+anchor_right = 0.954
+anchor_bottom = 0.313
+offset_left = -7.59204
+offset_top = -32.408
+offset_right = -8.00806
+offset_bottom = -32.824
+theme_override_colors/font_color = Color(1, 0.509804, 0.309804, 1)
+theme_override_font_sizes/font_size = 25
+text = "SUBMIT"
+
+[node name="GuessTimerButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.846
+anchor_top = 0.246
+anchor_right = 0.954
+anchor_bottom = 0.313
+offset_left = -7.59204
+offset_top = -84.408
+offset_right = -8.00806
+offset_bottom = -84.824
+theme_override_colors/font_disabled_color = Color(0.270588, 0.862745, 0.196078, 1)
+theme_override_font_sizes/font_size = 25
+disabled = true
+text = "00:20"
+script = ExtResource("2_h2hxk")
+
+[node name="GuessTimer" type="Timer" parent="GuessTimerButton"]
+
+[node name="TextPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.393
+anchor_right = 0.954
+anchor_bottom = 0.93
+offset_left = -8.0
+offset_top = 17.336
+offset_right = -8.0
+offset_bottom = 17.336
+theme_override_styles/panel = SubResource("StyleBoxFlat_cw0pc")
+
+[node name="KeywordPanel" type="Panel" parent="TextPanel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.076
+anchor_top = 0.098
+anchor_right = 0.931
+anchor_bottom = 0.215
+offset_left = 1.25138
+offset_top = -0.10165
+offset_right = 0.0794678
+offset_bottom = -0.814842
+theme_override_styles/panel = SubResource("StyleBoxFlat_5n75x")
+
+[node name="KeywordLabel" type="Label" parent="TextPanel/KeywordPanel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.003
+anchor_right = 1.0
+anchor_bottom = 1.008
+offset_left = 1.335
+offset_top = 0.335999
+offset_bottom = 0.0159988
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.509804, 0.309804, 1)
+theme_override_font_sizes/font_size = 25
+text = "P Y T H O N"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HintPanel" type="Panel" parent="TextPanel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.076
+anchor_top = 0.25
+anchor_right = 0.929
+anchor_bottom = 0.887
+theme_override_styles/panel = SubResource("StyleBoxFlat_o87om")
+
+[node name="HintLabel" type="RichTextLabel" parent="TextPanel/HintPanel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 14.7222
+offset_top = 14.0
+offset_right = -14.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/normal_font_size = 22
+text = "( ) is a high-level, general-purpose programming language. Its design philosophy emphasizes code readability with the use of significant indentation."
+
+[node name="ExitButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.056
+anchor_top = 0.847
+anchor_right = 0.164
+anchor_bottom = 0.914
+offset_left = 0.487999
+offset_top = 0.143982
+offset_right = 0.071991
+offset_bottom = -0.272034
+theme_override_colors/font_color = Color(1, 0.509804, 0.309804, 1)
+theme_override_font_sizes/font_size = 25
+text = "EXIT"
+
+[node name="WarningMessageLabel" type="RichTextLabel" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 570.0
+offset_top = 184.0
+offset_right = 1088.0
+offset_bottom = 224.0
+theme_override_colors/default_color = Color(1, 0.894118, 0, 1)
+theme_override_font_sizes/normal_font_size = 20
+text = "Cannot guess keyword!!"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0.960784, 0.882353, 0.270588, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/shadow_offset_x = 20
+theme_override_constants/shadow_offset_y = 20
+theme_override_constants/shadow_outline_size = 20
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/normal_font_size = 120
+theme_override_styles/normal = SubResource("StyleBoxFlat_tbyw3")
+visible_characters_behavior = 3
+
+[node name="TurnAlertLabel" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 185.0
+offset_top = 236.0
+offset_right = 1021.0
+offset_bottom = 405.0
+theme_override_colors/default_color = Color(0.960784, 0.882353, 0.270588, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.152941)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/shadow_offset_x = 20
+theme_override_constants/shadow_offset_y = 20
+theme_override_constants/shadow_outline_size = 20
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/normal_font_size = 120
+text = "YOUR TURN !!"
+visible_characters = 0
+visible_characters_behavior = 3
+visible_ratio = 0.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_n0nfl")
+}
+
+[node name="GuessResultLabel" type="Label" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 185.0
+offset_top = 236.0
+offset_right = 1021.0
+offset_bottom = 405.0
+theme_override_font_sizes/font_size = 120
+text = "WRONG!!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="GuessModeButton" to="." method="OnModeButtonPressed"]
+[connection signal="pressed" from="SubmitButton" to="." method="OnSubmitButtonPressed"]
+[connection signal="pressed" from="GuessTimerButton" to="." method="OnSubmitButtonPressed"]
+[connection signal="timeout" from="GuessTimerButton/GuessTimer" to="." method="OnGuessTimerTimeout"]
+[connection signal="pressed" from="ExitButton" to="." method="OnExitButtonPressed"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="OnAnimationPlayerAnimationFinished"]

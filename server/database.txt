@@ -1,0 +1,111 @@
+55
+python
+A high-level, interpreted programming language known for its simplicity, readability, and versatility, used in web development, data analysis, artificial intelligence, and more.
+ruby
+A dynamic, object-oriented programming language known for its simplicity, flexibility, and elegant syntax, used in web development, automation, and software prototyping.
+java
+A widely-used, object-oriented programming language known for its portability, performance, and scalability, used in enterprise applications, mobile development, and game programming.
+Everest
+The world's tallest mountain, located in the Himalayas, known for its extreme weather conditions and challenging ascent.
+Pacific
+The largest and deepest ocean on Earth, covering more than a third of the planet's surface area and home to diverse marine life.
+Nebula
+A vast cloud of dust and gas in space, often illuminated by nearby stars and serving as the birthplace of new stars and planetary systems.
+Renaissance
+A period of cultural, artistic, and intellectual rebirth in Europe, marked by a revival of classical learning and exploration in various fields.
+Impressionism
+An artistic movement characterized by the use of small brushstrokes and an emphasis on capturing the impression of light and atmosphere in paintings.
+Shakespeare
+Widely regarded as one of the greatest writers in the English language, known for his plays, sonnets, and profound insights into human nature.
+Jazz
+A genre of music that originated in the African-American communities of New Orleans, characterized by improvisation, syncopation, and swing rhythms.
+Evolution
+The process by which species of organisms arise and develop through natural selection and adaptation to their environment, as proposed by Charles Darwin.
+ArtificialIntelligence
+The simulation of human intelligence processes by machines, including learning, reasoning, and problem-solving, used in various applications such as robotics and data analysis.
+Vaccination
+The administration of a vaccine to stimulate the immune system and provide immunity against a specific disease, playing a crucial role in preventing infectious diseases.
+Deforestation
+The clearing of forests on a large scale, primarily for agriculture, logging, and urbanization, leading to habitat loss, biodiversity decline, and climate change.
+Democracy
+A system of government in which power is vested in the people, who rule either directly or through elected representatives, with principles of equality and freedom.
+Inflation
+A sustained increase in the general price level of goods and services in an economy, leading to a decrease in the purchasing power of money over time.
+Existentialism
+A philosophical movement that emphasizes individual existence, freedom, and choice, often exploring themes of anxiety, alienation, and the absurdity of life.
+CognitiveDissonance
+The discomfort experienced when holding conflicting beliefs or attitudes, leading to a psychological tension that motivates efforts to resolve the inconsistency.
+SocialStratification
+The hierarchical arrangement of individuals or groups in a society based on factors such as social class, wealth, race, or gender, influencing access to resources and opportunities.
+Buddhism
+A major world religion founded by Siddhartha Gautama, emphasizing the Four Noble Truths and the Eightfold Path as a means to achieve enlightenment and liberation from suffering.
+PlateTectonics
+The theory that Earth's lithosphere is divided into large, rigid plates that move relative to each other over the asthenosphere, leading to geological phenomena such as earthquakes and mountain formation.
+CulturalRelativism
+The principle that an individual's beliefs, values, and practices should be understood based on that individual's own culture, rather than being judged against the criteria of another culture.
+Excavation
+The systematic process of uncovering and studying archaeological remains, such as artifacts, structures, and human remains, to understand past cultures and civilizations.
+Supernova
+The catastrophic explosion of a star, resulting in a sudden increase in brightness and the release of an immense amount of energy, producing heavy elements and enriching the interstellar medium.
+PeriodicTable
+A tabular arrangement of the chemical elements, organized by their atomic number, electron configuration, and recurring chemical properties, providing a framework for understanding the structure of matter.
+QuantumMechanics
+The branch of physics that describes the behavior of particles at the atomic and subatomic levels, characterized by principles such as wave-particle duality, superposition, and uncertainty.
+Fractal
+A complex geometric shape that can be split into parts, each of which is a reduced-scale copy of the whole, exhibiting self-similarity at different scales and found in natural phenomena such as coastlines and snowflakes.
+RenewableEnergy
+Energy derived from natural sources that are replenished on a human timescale, such as sunlight, wind, and water, offering sustainable alternatives to fossil fuels and reducing environmental impact.
+LifelongLearning
+The ongoing, voluntary pursuit of knowledge and personal development throughout one's life, fostering adaptability, curiosity, and innovation in an ever-changing world.
+MentalHealth
+A state of well-being in which an individual realizes their own abilities, copes with the normal stresses of life, works productively, and contributes to their community, encompassing emotional, psychological, and social aspects.
+Sustainability
+Practices and processes that aim to meet the needs of the present without compromising the ability of future generations to meet their own needs, ensuring environmental, social, and economic balance in food production and consumption.
+HauteCouture
+High-end fashion design and creation, characterized by custom-made garments, meticulous craftsmanship, and innovative design techniques, often showcased in exclusive runway shows and worn by celebrities and royalty.
+Wanderlust
+A strong desire to travel and explore the world, driven by curiosity, adventure, and a longing for new experiences and cultural encounters.
+Olympics
+The world's foremost international multi-sport event, featuring summer and winter sports competitions held every four years, promoting unity, friendship, and fair play among nations.
+Blockbuster
+A highly successful and popular movie, book, or other form of entertainment that achieves widespread recognition and financial success, often characterized by high production values and mass appeal.
+Biodiversity
+The variety of life forms on Earth, including species diversity, genetic diversity, and ecosystem diversity, essential for ecosystem stability, resilience, and the provision of ecosystem services.
+Endangered
+Species at risk of extinction due to factors such as habitat loss, pollution, poaching, and climate change, requiring conservation efforts to prevent their disappearance from the wild.
+Photosynthesis
+The process by which green plants and some other organisms convert light energy into chemical energy, using carbon dioxide and water to produce glucose and oxygen, essential for the survival of plants and the oxygenation of Earth's atmosphere.
+Polyglot
+A person who speaks or understands multiple languages, often proficient in several languages due to cultural heritage, education, or immersion experiences.
+Interpersonal
+Communication and interaction between individuals, involving verbal and nonverbal exchanges of information, emotions, and social cues, influencing relationships and social dynamics.
+Entrepreneurship
+The process of identifying, creating, and pursuing opportunities to develop and commercialize innovative products, services, or business ventures, often involving risk-taking and resource management.
+Cryptocurrency
+Digital or virtual currencies that use cryptography for secure financial transactions and decentralized control, offering alternatives to traditional fiat currencies and enabling peer-to-peer transactions without intermediaries.
+Branding
+The process of creating a unique identity and image for a product, service, or company, through distinctive visual elements, messaging, and experiences, to differentiate it from competitors and attract customers.
+Constitution
+A fundamental document or set of principles that establishes the framework of government, outlines the rights and duties of citizens, and defines the powers and limitations of governing bodies, serving as the supreme law of the land.
+Strategy
+The art and science of planning and directing military operations, campaigns, and battles to achieve specific objectives and gain strategic advantage over adversaries, involving analysis, decision-making, and coordination of forces.
+Gothic
+An architectural style characterized by pointed arches, ribbed vaults, and flying buttresses, originating in medieval Europe and prevalent in cathedrals, churches, and other religious structures.
+Cinematography
+The art and technique of capturing and recording moving images on film or digital media, including camera work, lighting, composition, and visual storytelling, to convey emotion, atmosphere, and narrative depth.
+Streaming
+The delivery of audiovisual content over the internet in real-time or on-demand, allowing viewers to access a wide range of movies, TV shows, and other media on various devices, without traditional broadcast or cable subscriptions.
+Viral
+Content, such as videos, memes, or articles, that spreads rapidly and widely across social media platforms, driven by sharing, engagement, and amplification by users, often reaching millions of people within a short period.
+SustainableFashion
+An approach to fashion design, production, and consumption that emphasizes environmental and social responsibility, promoting ethical practices, resource efficiency, and waste reduction throughout the supply chain.
+Fusion
+A culinary style or technique that combines elements from different cuisines, cultures, or culinary traditions to create innovative and eclectic dishes, blending flavors, ingredients, and cooking methods in unexpected ways.
+Permaculture
+An approach to sustainable agriculture and gardening that mimics natural ecosystems, emphasizing biodiversity, soil health, and ecosystem resilience, to create productive and self-sustaining food-producing landscapes.
+CrossFit
+A high-intensity fitness program that combines elements of weightlifting, aerobic exercise, and gymnastics, focusing on functional movements, varied workouts, and community support to improve overall fitness and performance.
+Adventure
+Travel experiences that involve exploration, excitement, and a sense of risk or challenge, often seeking immersive cultural encounters, outdoor activities, and off-the-beaten-path destinations for personal growth and enrichment.
+QuantumPhysics
+The branch of physics that describes the behavior of matter and energy at the smallest scales, including phenomena such as superposition, entanglement, and wave-particle duality, challenging our understanding of reality and the nature of the universe.

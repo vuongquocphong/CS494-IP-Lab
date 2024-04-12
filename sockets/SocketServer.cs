@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Collections;
+using System.Text;
 
 namespace Sockets
 {
@@ -101,12 +102,13 @@ namespace Sockets
                     if (clientSocket.Connected)
                     {
                         IPAddress Addr = ((IPEndPoint)clientSocket.RemoteEndPoint!).Address;
+                        int port = ((IPEndPoint)clientSocket.RemoteEndPoint!).Port;
 
                         // Create a SocketClient object
                         SocketClient socket = AcceptedSocketClient(this,
                             clientSocket,                                           // The socket object for the connection
                             Addr,                                                   // The IpAddress of the client
-                            Port,                                                 // The port the client connected to
+                            port,                                                 // The port the client connected to
                             SizeOfRawBuffer,                                      // The size of the byte array for storing messages
                             new MessageHandler(messageHandler),    // Application developer Message Handler
                             new CloseHandler(closeHandler),        // Application developer Close Handler
@@ -115,6 +117,7 @@ namespace Sockets
                         socketClientList.Add(socket);
                         // Call the Accept Handler
                         acceptHandler(socket);
+                        socket.Receive();
                     }
                 }
             }
@@ -203,6 +206,13 @@ namespace Sockets
             }
         }
 
+        public void DisconnectAll() {
+            foreach (SocketClient socket in socketClientList)
+            {
+                socket.Disconnect();
+            }
+        }
+
         /// <summary> 
         /// Function to stop the SocketServer.  It can be restarted with Start 
         /// </summary>
@@ -252,15 +262,28 @@ namespace Sockets
                 return socketClientList.Count;
             }
         }
-
+        public static void PrintByteArray(byte[] bytes)
+        {
+            var sb = new StringBuilder("new byte[] { ");
+            foreach (var b in bytes)
+            {
+                sb.Append(b + ", ");
+            }
+            sb.Append('}');
+            Console.WriteLine(sb.ToString());
+        }
+        
         /// <summary>
         /// Notifies connected clients of new alert from system
         /// </summary>
         /// <param name="data"></param>
-        public int NotifyConnectedClients(string data)
+        public int NotifyConnectedClients(byte[] data)
         {
             int count = 0;
             ArrayList? ObjectsToRemove = null;
+
+            Console.WriteLine("SocketServer NotifyConnectedClients count: " + SocketClientList.Count + "; Message type: " + data[0]);
+            PrintByteArray(data);
 
             for (int x = 0; x < socketClientList.Count; x++)
             {
@@ -269,8 +292,11 @@ namespace Sockets
                     SocketClient socket = (SocketClient)socketClientList[x]!;
 
                     if (socket.ClientSocket.Connected == true &&
-                        socket.SendNotification(data) == true)
-                        count++;
+                        socket.Send(data) == true) {
+                            Console.WriteLine("Socket: " + socket.Port +
+                                " Sent");
+                            count++;
+                        }
                     else
                     {
                         ObjectsToRemove ??= [];

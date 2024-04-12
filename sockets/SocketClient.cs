@@ -133,7 +133,7 @@ namespace Sockets
                 SocketOptionName.NoDelay, 1);
 
             // Wait for a message
-            Receive();
+            // Receive();
         }
 
         /// <summary> 
@@ -185,7 +185,7 @@ namespace Sockets
             }
             // Remove the socket from the list
             socketServer?.RemoveSocket(this);
-
+            GC.Collect();
             base.Dispose();
         }
 
@@ -200,6 +200,18 @@ namespace Sockets
 
             return;
         }
+
+        public static void PrintByteArray(byte[] bytes)
+        {
+            var sb = new StringBuilder("new byte[] { ");
+            foreach (var b in bytes)
+            {
+                sb.Append(b + ", ");
+            }
+            sb.Append('}');
+            Console.WriteLine(sb.ToString());
+        }
+        
         private void ParseMessage(int TotalLength)
         {
             int ptr = 0;
@@ -300,9 +312,9 @@ namespace Sockets
 
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Console.WriteLine("Error:SocketClient: Got Exception while ReceiveComplete");
+                Console.WriteLine("Error:SocketClient: Got Exception while ReceiveComplete" + e.Message);
 
                 try
                 {
@@ -328,9 +340,9 @@ namespace Sockets
                 if (networkStream.CanWrite)
                     networkStream.EndWrite(ar);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Console.WriteLine("Error:SocketClient: Got Exception while SendComplete");
+                Console.WriteLine("Error:SocketClient: Got Exception while SendComplete" + e.Message);
             }
         }
 
@@ -393,10 +405,14 @@ namespace Sockets
         {
             if (m_Connected == true)
             {
-                // Close down the connection
+                tcpClient?.Client.Disconnect(false);
+                // tcpClient?.Client.Shutdown(SocketShutdown.Both);
+
                 networkStream?.Close();
                 tcpClient?.Close();
                 clientSocket?.Close();
+
+                // Close down the connection
 
                 // Clean up the connection state
                 networkStream = null!;
@@ -411,31 +427,25 @@ namespace Sockets
         ///  Function to send a string to the server 
         ///  </summary>
         /// <param name="message"> A string to send </param>
-        public bool Send(string message)
-        {
-            byte[] ushortBytes = BitConverter.GetBytes((ushort)message.Length);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(ushortBytes);
-            string len = Encoding.UTF8.GetString(ushortBytes);
-            byte[] rawBuffer = Encoding.UTF8.GetBytes(len + message);
-            return Send(rawBuffer);
-        }
-
-        /// <summary>
-        ///  Function to send a string to the server 
-        ///  </summary>
-        /// <param name="message"> A string to send </param>
-        virtual public bool SendNotification(string message)
-        {
-            return Send(message);
-        }
-
+        // public bool Send(string message)
+        // {
+        //     byte[] ushortBytes = BitConverter.GetBytes((ushort)message.Length);
+        //     if (BitConverter.IsLittleEndian)
+        //         Array.Reverse(ushortBytes);
+        //     string len = Encoding.UTF8.GetString(ushortBytes);
+        //     byte[] rawBuffer = Encoding.UTF8.GetBytes(len + message);
+        //     return Send(rawBuffer);
+        // }
         /// <summary> 
         /// Function to send a raw buffer to the server 
         /// </summary>
         /// <param name="rawBuffer"> A Raw buffer of bytes to send </param>
-        public bool Send(byte[] rawBuffer)
+        public bool Send(byte[] message)
         {
+            byte[] ushortBytes = BitConverter.GetBytes((ushort)message.Length);
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(ushortBytes);
+            byte[] rawBuffer = [..ushortBytes, ..message];
             if ((networkStream != null) && networkStream.CanWrite)
             //&& 
             //(clientSocket != null) && (this.clientSocket.Connected == true))
