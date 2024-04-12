@@ -77,7 +77,7 @@ public partial class Main : Node
 		// Reset Game UI
 		GameUIReset();
 		// Close connection
-		NetworkClient.Close();
+		// NetworkClient.Close();
 	}
 	private void BackFromIngameToInputNameHandler(){
 		// Reset GameManager
@@ -149,14 +149,6 @@ public partial class Main : Node
 	}
 	
 	private void BackFromScoreBoardToWaitingHandler() {
-		// Show WaitingPanel
-		GetNode<Panel>("WaitingPanel").Show();
-		// Hide ScoreboardPanel
-		GetNode<Panel>("ScoreboardPanel").Hide();
-		// Hide IngamePanel
-		GetNode<Panel>("IngamePanel").Hide();
-		// Set the ready status of the player to false
-		GameManager.PlayersList.Find(player => player.Name == GameManager.LocalPlayerName).ReadyStatus = false;
 		// Send the ready status to the server
 		GameManager.GetInstance().RequestConnect(GameManager.LocalPlayerName);
 		// Change the UI to match the ready status
@@ -164,6 +156,12 @@ public partial class Main : Node
 		RichTextLabel WaitingText = GetNode<RichTextLabel>("WaitingPanel/WaitingText");
 		WaitingText.Text = "Press the button to get ready for game...";
 		ReadyButton.Text = "READY";
+		// Show WaitingPanel
+		GetNode<Panel>("WaitingPanel").Show();
+		// Hide ScoreboardPanel
+		GetNode<Panel>("ScoreboardPanel").Hide();
+		// Hide IngamePanel
+		GetNode<Panel>("IngamePanel").Hide();
 	}
 
 	private void StartGameReceiveHandler() 
@@ -176,12 +174,15 @@ public partial class Main : Node
 
 	private void GameResultReceiveHandler() 
 	{
+		// Stop ingame process
+		GetNode<IngamePanel>("IngamePanel").Reset();
 		// Call update function in ScoreboardPanel
 		GetNode<ScoreboardPanel>("ScoreboardPanel").SetGameResult();
 		// Show ScoreboardPanel
 		GetNode<Panel>("ScoreboardPanel").Show();
 		// Hide IngamePanel
 		GetNode<Panel>("IngamePanel").Hide();
+		// NetworkClient.Close();
 	}
 	private void GuessResultReceiveHandler(string Guess, string PlayerName)
 	{

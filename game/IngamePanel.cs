@@ -14,23 +14,25 @@ public partial class IngamePanel : Panel
 		NameList.Clear();
 		PointList.Clear();
 		GuessList.Clear();
+		GuessCharMode = true;
 		// reset the hint
-		GetNode<RichTextLabel>("TextPanel/HintPanel/HintLabel").Text = " ";
+		GetNode<RichTextLabel>("TextPanel/HintPanel/HintLabel").Text = "";
 		// reset the keyword
-		GetNode<Label>("TextPanel/KeywordPanel/KeywordLabel").Text = " ";
+		GetNode<Label>("TextPanel/KeywordPanel/KeywordLabel").Text = "";
 		// reset the guess result
-		GetNode<Label>("GuessResultLabel").Text = " ";
+		GetNode<Label>("GuessResultLabel").Text = "";
 		// reset the warning message
-		GetNode<RichTextLabel>("WarningMessageLabel").Text = " ";
+		GetNode<RichTextLabel>("WarningMessageLabel").Text = "";
 		// reset the guess edit text
-		GetNode<LineEdit>("GuessEditText").Text = " ";
+		GetNode<LineEdit>("GuessEditText").Text = "";
+		GetNode<LineEdit>("GuessEditText").MaxLength = 1;
 		// reset the guess mode
 		GetNode<Button>("GuessModeButton").Text = "Guess Mode: Character";
 		// reset the guess timer
 		GetNode<Button>("GuessTimerButton").SetProcess(false);
 		GetNode<Godot.Timer>("GuessTimerButton/GuessTimer").Stop();
 		// reset the turn alert
-		GetNode<RichTextLabel>("TurnAlertLabel").Text = " ";
+		GetNode<RichTextLabel>("TurnAlertLabel").Text = "";
 		// reset the animation player
 		GetNode<AnimationPlayer>("AnimationPlayer").Stop();
 		// reset the notify new turn in update game status
@@ -48,7 +50,6 @@ public partial class IngamePanel : Panel
 	public void SetInvalidMessage(string invalidMessage)
 	{
 		var WarningMessageLabel = GetNode<RichTextLabel>("WarningMessageLabel");
-		var Timer = WarningMessageLabel.GetNode<Godot.Timer>("WarningMessageTimer");
 		WarningMessageLabel.Text = invalidMessage;
 		GetNode<AnimationPlayer>("AnimationPlayer").Play("NotifyWarningSubmission");
 	}
@@ -185,7 +186,7 @@ public partial class IngamePanel : Panel
 		if (AnimationName == "notifyNewTurn"){
 			var gameManager = GameManager.GetInstance();
 			if (gameManager.LocalPlayerName == gameManager.CurrentPlayer.Name){
-				GetNode<Godot.Timer>("GuessTimerButton/GuessTimer").Start(20);
+				GetNode<Godot.Timer>("GuessTimerButton/GuessTimer").Start(10);
 				GetNode<Button>("GuessTimerButton").SetProcess(true);
 			}
 		}
@@ -195,22 +196,11 @@ public partial class IngamePanel : Panel
 	}
 	public void OnGuessTimerTimeout(){
 		GetNode<Button>("GuessTimerButton").SetProcess(false);
+		GetNode<Godot.Timer>("GuessTimerButton/GuessTimer").Stop();
 		var GuessEditText = GetNode<LineEdit>("GuessEditText");
 		string Guess = GuessEditText.Text;
-		if (Guess.Length == 0)
-		{
-			GameManager.GetInstance().TimeOut();
-			return;
-		}
-		foreach (char character in Guess){
-			if (character == ' '){
-				GameManager.GetInstance().TimeOut();
-				return;
-			}
-		}
-		var ItemList = new ItemList();
-		ItemList.AddItem(Guess);
-		GameManager.GetInstance().Guess(GuessCharMode, Guess);
+		NotifyNewTurnInUpdateGameStatus = true;
+		GameManager.GetInstance().TimeOut();
 	}
 
 }
